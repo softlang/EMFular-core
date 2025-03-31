@@ -1,6 +1,6 @@
 {
   "name": "emfular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Pure TS library with basic types and parser to move from XPath references to runtime models",
   "keywords": ["XPath", "Parser", "TS", "EMF"],
   "author": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/softlang/EMFular/tree/main/projects/EMFular"
+    "url": "https://github.com/softlang/EMFular/tree/main/projects/emfular"
   },
   "peerDependencies": {
     "@angular/common": "^19.2.0",
