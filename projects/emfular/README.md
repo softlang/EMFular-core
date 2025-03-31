@@ -1,63 +1,32 @@
 # EMFular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+This small TS library deals with the conversion of "flat" model representations of [emf-jackson](https://emfjson.github.io/projects/jackson/latest/), which we now call **json** representation, into a traversable in-memory representation which we call **core** representation.
+Basically, it converts the XPath-based references of [emf-jackson](https://emfjson.github.io/projects/jackson/latest/) into object references.
+It consists of two parts:
+1. **Referencing:** defines the main properties both for the json (flat) and the core (traversable) representation.
+2. **Deserialization:** deals with the conversion of json models into core models.
 
-## Code scaffolding
+## Referencing
+Referencing consists of two classes:
+ * The **Ref** class consists of an XPath reference $ref and the EClass eClass. It holds basic facilities to work with XPath, including traversal and path concatenation and is the basis for working with references in the JSON form that emf-jackson exports.
+ * The **Referencable** class defines a contract for the core representation: Referencables have a UUID gId which is used for global identification and cross-referencing on graphical components. There are also references to all EMF-tree-children. These relationships are used on object creation and destruction. Each object also holds a Ref which might be out-dated but is updated and used on serialization into JSON.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Deserialization
 
-```bash
-ng generate component component-name
-```
+Deserialization handles the construction of the core model from the JSON model.
+We handle the replacement of Ref references by object references during object construction. 
+Hence, we need a deserializer that manages the already created objects and constructs new ones on demand.
+Basically, the whole construction process is triggered by calling the constructor of the EMF model's root element with the whole json and the deserializer as parameters.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The objects' constructors are responsible for the correct creation of their representations.
+The deserializer offers general methods to help them and relies on certain types, that the library exposes:
 
-```bash
-ng generate --help
-```
+The deserializer stores objects via put, and delivers objects on getOrCreate(ref: Ref).
 
-## Building
 
-To build the library, run:
+There is a method getJsonFromTree($ref: string) to get the json for a specific XPath.
+Additionally, there are methods to adapt eClasses. Emf-jackson sometimes omits them but since our deserialization heavily relies on them we need to set them right.
 
-```bash
-ng build EMFular
-```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
 
-### Publishing the Library
-
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/emfular
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+In our current reference implementation, [KEML.web](https://github.com/keml-group/keml.web), the interplay of deserializer and constructors is visible.
