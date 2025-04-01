@@ -5,4 +5,4 @@
 export * from './lib/referencing/ref';
 export * from './lib/referencing/referenceable';
 export * from './lib/deserialization/constructor-pointers';
-export * from './lib/deserialization/parser';
+export * from './lib/deserialization/deserializer';

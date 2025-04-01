@@ -1,6 +1,9 @@
 import {Ref} from "./ref";
 import { v4 as uuidv4 } from 'uuid';
 
+/** base class for CORE models.
+ *
+ */
 export abstract class Referencable {
 
   protected ref: Ref;
