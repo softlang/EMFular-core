@@ -8,7 +8,7 @@ import {Ref} from "../referencing/ref";
 import {Referencable} from "../referencing/referenceable";
 import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
 
-export class Parser {
+export class Deserializer {
 
   private readonly completeJSON: any;
   private readonly constructorPointers: Map<string, ConstructorPointer>;
