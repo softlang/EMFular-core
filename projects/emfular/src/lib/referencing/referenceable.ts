@@ -18,7 +18,9 @@ export abstract class Referencable {
   singleChildren: Map<string, Referencable> = new Map();
   listChildren: Map<string, Referencable[]> = new Map();
 
-  protected abstract getTreeParent<T extends Referencable>(): T | undefined
+  public getTreeParent(): Referencable | undefined {
+    return undefined;
+  }
 
   protected constructor(ref: Ref) {
     this.ref = ref;
