@@ -1,3 +1,5 @@
+import {Referencable} from "../referencing/referenceable";
+
 export class ListUpdater {
 
   // ************** Helper *********************
@@ -23,6 +25,12 @@ export class ListUpdater {
     } else {
       list.push(elem);
       return true;
+    }
+  }
+
+  static destructAllFromChangingList<T extends Referencable>(list: T[]) {
+    while(list?.length > 0){
+      list[0].destruct()
     }
   }
 

@@ -74,10 +74,7 @@ export abstract class Referencable {
       child.destruct()
     })
     this.listChildren.forEach(list => {
-      list.forEach((ref: Referencable) => {
-        ref.destruct()
-      })
-      list.splice(0, list.length)
+      ListUpdater.destructAllFromChangingList(list)
     })
   }
 
