@@ -1,6 +1,7 @@
 import {Ref} from "./ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ListUpdater} from "../utils/list-updater";
+import {ReferencableContainer} from "./referencable-container";
 
 /** base class for CORE models.
  *
@@ -78,4 +79,11 @@ export abstract class Referencable {
     })
   }
 
+  public addToReferencableContainer(name: string, item: Referencable): boolean {
+    let refContainers = Object.entries(this)
+    let refContainer = refContainers.find((v: [string, any]) => v[0] == name )
+    if (refContainer) {
+      return (refContainer[1] as ReferencableContainer<Referencable>).add(item)
+    } else return false;
+  }
 }
