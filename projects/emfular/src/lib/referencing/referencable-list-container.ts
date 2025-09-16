@@ -26,4 +26,16 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
         return this._instance;
     }
 
+    override remove(item: T): boolean {
+        const index = this._instance.indexOf(item)
+        if(index > -1) {
+            this._instance.splice(index, 1);
+            if(this.inverseName !== undefined) {
+                return item.removeFromReferencableContainer(this.inverseName, this._parent)
+            }
+            return true;
+        }
+        return false;
+    }
+
 }

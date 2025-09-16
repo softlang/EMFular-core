@@ -79,11 +79,20 @@ export abstract class Referencable {
     })
   }
 
-  public addToReferencableContainer(name: string, item: Referencable): boolean {
+  private getAttr(name: string): ReferencableContainer<Referencable> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReferencableContainer<Referencable>).add(item)
-    } else return false; //todo throw instead?
+      return (refContainer[1] as ReferencableContainer<Referencable>)
+    } else
+      throw new Error("Attribute _"+name + " not found on "+refContainers)
+  }
+
+  public addToReferencableContainer(name: string, item: Referencable): boolean {
+    return this.getAttr(name).add(item)
+  }
+
+  public removeFromReferencableContainer(name: string, item: Referencable): boolean {
+    return this.getAttr(name).remove(item)
   }
 }
