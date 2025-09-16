@@ -81,9 +81,9 @@ export abstract class Referencable {
 
   public addToReferencableContainer(name: string, item: Referencable): boolean {
     let refContainers = Object.entries(this)
-    let refContainer = refContainers.find((v: [string, any]) => v[0] == name )
+    let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
       return (refContainer[1] as ReferencableContainer<Referencable>).add(item)
-    } else return false;
+    } else return false; //todo throw instead?
   }
 }

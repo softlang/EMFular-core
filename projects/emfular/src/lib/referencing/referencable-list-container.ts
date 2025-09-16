@@ -5,8 +5,8 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
 
     readonly _instance: T[] = [];
 
-    constructor(name: string, inverse?: string) {
-        super(name, inverse);
+    constructor(parent: Referencable, name: string, inverse?: string) {
+        super(parent, name, inverse);
     }
 
     override add(item: T): boolean {
@@ -15,9 +15,15 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
             return false;
         } else {
             this._instance.push(item);
-            //todo also add to inverse
+            if(this.inverseName !== undefined) {
+                return item.addToReferencableContainer(this.inverseName, this._parent)
+            }
             return true;
         }
+    }
+
+    get(): T[] {
+        return this._instance;
     }
 
 }
