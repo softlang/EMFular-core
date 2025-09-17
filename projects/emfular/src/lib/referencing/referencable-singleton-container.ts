@@ -1,2 +1,34 @@
-export class ReferencableSingletonContainer {
+import {Referencable} from "./referenceable";
+import {ReferencableContainer} from "./referencable-container";
+
+export class ReferencableSingletonContainer<T extends Referencable> extends ReferencableContainer<T> {
+
+    _instance?: T
+
+    get(): T | undefined {
+        return this._instance;
+    }
+
+    private set(instance: T): void {
+        this._instance = instance;
+    }
+
+    add(item: T): boolean {
+        if (this._instance == item) {
+            return false;
+        } else {
+            this.set(item);
+            return true;
+        }
+    }
+
+    remove(item: T): boolean {
+        if(this._instance == item) {
+            this._instance = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

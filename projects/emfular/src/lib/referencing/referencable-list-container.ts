@@ -9,7 +9,7 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
         super(parent, name, inverse);
     }
 
-    override add(item: T): boolean {
+    add(item: T): boolean {
         const index = this._instance.indexOf(item);
         if(index > -1) {
             return false;
@@ -26,7 +26,7 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
         return this._instance;
     }
 
-    override remove(item: T): boolean {
+    remove(item: T): boolean {
         const index = this._instance.indexOf(item)
         if(index > -1) {
             this._instance.splice(index, 1);
