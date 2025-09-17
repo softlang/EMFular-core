@@ -12,7 +12,7 @@ export abstract class ReferencableContainer<T extends Referencable> {
         this.inverseName = inverseName;
     }
 
-    abstract get(): any
+    abstract get(): T[] | T | undefined;
 
     abstract add(item: T): boolean;
 
