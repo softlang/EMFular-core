@@ -5,6 +5,10 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
 
     _instance?: T
 
+    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
+        super(parent, referenceName, inverseName);
+    }
+
     get(): T | undefined {
         return this._instance;
     }
