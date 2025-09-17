@@ -14,6 +14,10 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
     }
 
     private set(instance: T): void {
+        if(this.inverseName !== undefined) {
+            this._instance?.removeFromReferencableContainer(this.inverseName, this._parent)
+            instance.addToReferencableContainer(this.inverseName, this._parent)
+        }
         this._instance = instance;
     }
 
@@ -28,6 +32,9 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
 
     remove(item: T): boolean {
         if(this._instance == item) {
+            if (this.inverseName != undefined) {
+                return item.removeFromReferencableContainer(this.inverseName, this._parent)
+            }
             this._instance = undefined;
             return true;
         } else {
