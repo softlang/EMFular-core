@@ -33,7 +33,7 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
     remove(item: T): boolean {
         if(this._instance == item) {
             if (this.inverseName != undefined) {
-                return item.removeFromReferencableContainer(this.inverseName, this._parent)
+                item.removeFromReferencableContainer(this.inverseName, this._parent)
             }
             this._instance = undefined;
             return true;
