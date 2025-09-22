@@ -2,6 +2,7 @@ import {Ref} from "./ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ListUpdater} from "../utils/list-updater";
 import {ReferencableContainer} from "./referencable-container";
+import {RefHandler} from "./ref-handler";
 
 /** base class for CORE models.
  *
@@ -33,23 +34,23 @@ export abstract class Referencable {
   }
 
   private setRef(ownPos: string) {
-    this.ref = new Ref(ownPos, this.ref.eClass)
+    this.ref.$ref = ownPos
   }
 
   prepare(ownPos: string) {
     this.setRef(ownPos)
     for (let single of this.singleChildren) {
-      single[1].prepare(Ref.computePrefix(ownPos, single[0]));
+      single[1].prepare(RefHandler.computePrefix(ownPos, single[0]));
     }
     for (let list of this.listChildren) {
-      Referencable.prepareList(Ref.computePrefix(ownPos, list[0]) ,list[1])
+      Referencable.prepareList(RefHandler.computePrefix(ownPos, list[0]) ,list[1])
     }
   }
 
   static prepareList<T extends Referencable>(prefix: string, list: T[]): void {
     if (list?.length > 0) {
       list.map((ref: Referencable, index) => {
-        ref.prepare(Ref.mixWithIndex(prefix, index))
+        ref.prepare(RefHandler.mixWithIndex(prefix, index))
       })
     }
   }

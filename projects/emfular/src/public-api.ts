@@ -3,6 +3,7 @@
  */
 
 export * from './lib/referencing/ref';
+export * from './lib/referencing/ref-handler';
 export * from './lib/referencing/referenceable';
 export * from './lib/referencing/referencable-container';
 export * from './lib/referencing/referencable-list-container';
