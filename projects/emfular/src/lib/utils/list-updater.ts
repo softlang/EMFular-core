@@ -1,4 +1,4 @@
-import {Referencable} from "../referencing/referenceable";
+import {Referencable} from "../referencing/referencable/referenceable";
 
 export class ListUpdater {
 

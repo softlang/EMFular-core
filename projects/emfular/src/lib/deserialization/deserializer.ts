@@ -4,9 +4,10 @@ idea:
   1) store any element with complete xPath, on lookup during construction you trigger the creation if the object does not exist yet
   2) after returning from all triggered creations, finish your own job ;)
  */
-import {Ref} from "../referencing/ref";
-import {Referencable} from "../referencing/referenceable";
+import {Ref} from "../referencing/ref/ref";
+import {Referencable} from "../referencing/referencable/referenceable";
 import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
+import {RefHandler} from "../referencing/ref/ref-handler";
 
 export class Deserializer {
 
@@ -23,7 +24,7 @@ export class Deserializer {
 
   getJsonFromTree<T>($ref: string): T {
     //first replace index access (.) by normal $ref divider, since they are all finally [] accesses
-    const accessPaths = $ref.replaceAll('.', Ref.pathDivider).split(Ref.pathDivider)
+    const accessPaths = $ref.replaceAll('.', RefHandler.pathDivider).split(RefHandler.pathDivider)
     let res = this.completeJSON;
     for (let i = 1; i<accessPaths.length; i++) {
       res = res[(accessPaths[i])]
@@ -63,14 +64,14 @@ export class Deserializer {
 
   // for setting eClass assignment (i.e. on subtypes)
   static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
-    const prefix = Ref.computePrefix(formerPrefix, ownHeader);
+    const prefix = RefHandler.computePrefix(formerPrefix, ownHeader);
     let res = eClasses? eClasses : []
-    return res.map((eClass, index) => new Ref(Ref.mixWithIndex(prefix, index), eClass))
+    return res.map((eClass, index) => RefHandler.createRef(RefHandler.mixWithIndex(prefix, index), eClass))
   }
 
   static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {
-    const ref = Ref.computePrefix(formerPrefix, ownHeader)
-    return new Ref(ref, eClass)
+    const ref = RefHandler.computePrefix(formerPrefix, ownHeader)
+    return RefHandler.createRef(ref, eClass)
   }
 
 }
