@@ -1,5 +1,5 @@
 import { ReferencableTester } from './referencable-tester';
-import {RefHandler} from "./ref-handler";
+import {RefHandler} from "../ref/ref-handler";
 
 describe('ReferencableTester', () => {
   it('should create an instance', () => {

@@ -1,6 +1,6 @@
 import { ReferencableSingletonContainer } from './referencable-singleton-container';
 import {ReferencableTester} from "./referencable-tester";
-import {RefHandler} from "./ref-handler";
+import {RefHandler} from "../ref/ref-handler";
 
 describe('ReferencableSingletonContainer', () => {
   it('should create an instance', () => {

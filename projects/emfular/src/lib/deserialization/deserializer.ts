@@ -4,10 +4,10 @@ idea:
   1) store any element with complete xPath, on lookup during construction you trigger the creation if the object does not exist yet
   2) after returning from all triggered creations, finish your own job ;)
  */
-import {Ref} from "../referencing/ref";
-import {Referencable} from "../referencing/referenceable";
+import {Ref} from "../referencing/ref/ref";
+import {Referencable} from "../referencing/referencable/referenceable";
 import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
-import {RefHandler} from "../referencing/ref-handler";
+import {RefHandler} from "../referencing/ref/ref-handler";
 
 export class Deserializer {
 

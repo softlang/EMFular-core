@@ -1,8 +1,8 @@
-import {Ref} from "./ref";
+import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
-import {ListUpdater} from "../utils/list-updater";
+import {ListUpdater} from "../../utils/list-updater";
 import {ReferencableContainer} from "./referencable-container";
-import {RefHandler} from "./ref-handler";
+import {RefHandler} from "../ref/ref-handler";
 
 /** base class for CORE models.
  *

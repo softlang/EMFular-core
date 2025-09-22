@@ -1,6 +1,6 @@
 import { ReferencableListContainer } from './referencable-list-container';
 import {ReferencableTester} from "./referencable-tester";
-import {RefHandler} from "./ref-handler";
+import {RefHandler} from "../ref/ref-handler";
 
 describe('ReferencableListContainer', () => {
   it('should create an instance', () => {
