@@ -9,4 +9,9 @@ describe('RefHandler', () => {
   it('should deliver the final part (after last .) from the string as number', () => {
     expect(RefHandler.getIndexFromString('/...../vhgvh.78')).toBe(78);
   })
+
+  it('should combine prefix and suffix into path', () => {
+    expect(RefHandler.computePrefix('', '')).toEqual('/@')
+
+  })
 });

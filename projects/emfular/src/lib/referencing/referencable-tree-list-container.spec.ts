@@ -1,7 +1,10 @@
 import { ReferencableTreeListContainer } from './referencable-tree-list-container';
+import {ReferencableTester} from "./referencable-tester";
+import {RefHandler} from "./ref-handler";
 
 describe('ReferencableTreeListContainer', () => {
   it('should create an instance', () => {
-    expect(new ReferencableTreeListContainer()).toBeTruthy();
+    let tester = new ReferencableTester(RefHandler.createRef('1', 'http://www.uni-koblenz.de/Tester'))
+    expect(new ReferencableTreeListContainer(tester, 'refName')).toBeTruthy();
   });
 });

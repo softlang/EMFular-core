@@ -1,7 +1,10 @@
 import { ReferencableSingletonContainer } from './referencable-singleton-container';
+import {ReferencableTester} from "./referencable-tester";
+import {RefHandler} from "./ref-handler";
 
 describe('ReferencableSingletonContainer', () => {
   it('should create an instance', () => {
-    expect(new ReferencableSingletonContainer()).toBeTruthy();
+    let tester = new ReferencableTester(RefHandler.createRef('1', 'http://www.uni-koblenz.de/Tester'))
+    expect(new ReferencableSingletonContainer(tester, 'refName')).toBeTruthy();
   });
 });

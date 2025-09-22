@@ -29,7 +29,7 @@ export class RefHandler {
         }
     }
 
-    static createRefFromRef(eClass: string, ref?: Ref): Ref {
+    static createRefIfMissing(eClass: string, ref?: Ref) {
         return ref? ref: {$ref: '', eClass: eClass};
     }
 }
