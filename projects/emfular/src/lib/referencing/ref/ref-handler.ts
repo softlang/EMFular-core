@@ -22,6 +22,11 @@ export class RefHandler {
         return prefix+'.'+index;
     }
 
+    static mixWithPrefixAndIndex(formerPrefix: string, ownHeader: string, index: number): string {
+        let prefix = this.computePrefix(formerPrefix, ownHeader);
+        return this.mixWithIndex(prefix, index);
+    }
+
     static createRef(ref: string, eClass: string): Ref {
         return {
             $ref: ref,
