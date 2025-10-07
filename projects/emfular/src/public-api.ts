@@ -14,3 +14,4 @@ export * from './lib/referencing/referencable/referencable-tree-parent-container
 export * from './lib/deserialization/constructor-pointers';
 export * from './lib/deserialization/deserializer';
 export * from './lib/utils/list-updater';
+export * from './lib/utils/json-comparer';
