@@ -9,6 +9,7 @@ export * from './lib/referencing/referencable/referencable-container';
 export * from './lib/referencing/referencable/referencable-list-container';
 export * from './lib/referencing/referencable/referencable-singleton-container';
 export * from './lib/referencing/referencable/referencable-tree-list-container';
+export * from './lib/referencing/referencable/referencable-tree-singleton-container';
 export * from './lib/referencing/referencable/referencable-tree-parent-container';
 
 export * from './lib/deserialization/constructor-pointers';
