@@ -74,4 +74,9 @@ export class Deserializer {
     return RefHandler.createRef(ref, eClass)
   }
 
+  addAllReferences() {
+    this.context.forEach((ref: Referencable) => {
+      ref.addReferences(this)
+    })
+  }
 }

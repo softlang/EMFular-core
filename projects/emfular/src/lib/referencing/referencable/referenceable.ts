@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {ListUpdater} from "../../utils/list-updater";
 import {ReferencableContainer} from "./referencable-container";
 import {RefHandler} from "../ref/ref-handler";
+import {Deserializer} from "../../deserialization/deserializer";
 
 /** base class for CORE models.
  *
@@ -53,6 +54,10 @@ export abstract class Referencable {
         ref.prepare(RefHandler.mixWithIndex(prefix, index))
       })
     }
+  }
+
+  public addReferences(context: Deserializer) {
+
   }
 
   removeFromListChild<T extends Referencable>(elem: T, list: T[]): void {
