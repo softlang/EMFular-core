@@ -2,7 +2,6 @@ import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ListUpdater} from "../../utils/list-updater";
 import {ReferencableContainer} from "./referencable-container";
-import {RefHandler} from "../ref/ref-handler";
 import {Deserializer} from "../../deserialization/deserializer";
 
 /** base class for CORE models.
@@ -18,8 +17,9 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  singleChildren: Map<string, Referencable> = new Map();
-  listChildren: Map<string, Referencable[]> = new Map();
+  singleChildren: Map<string, ReferencableContainer<any>> = new Map();
+  listChildren: Map<string, ReferencableContainer<any>> = new Map();
+
 
   public getTreeParent(): Referencable | undefined {
     return undefined;
@@ -41,18 +41,10 @@ export abstract class Referencable {
   prepare(ownPos: string) {
     this.setRef(ownPos)
     for (let single of this.singleChildren) {
-      single[1].prepare(RefHandler.computePrefix(ownPos, single[0]));
+      single[1].prepare(ownPos);
     }
     for (let list of this.listChildren) {
-      Referencable.prepareList(RefHandler.computePrefix(ownPos, list[0]) ,list[1])
-    }
-  }
-
-  static prepareList<T extends Referencable>(prefix: string, list: T[]): void {
-    if (list?.length > 0) {
-      list.map((ref: Referencable, index) => {
-        ref.prepare(RefHandler.mixWithIndex(prefix, index))
-      })
+      list[1].prepare(ownPos);
     }
   }
 
@@ -76,12 +68,13 @@ export abstract class Referencable {
       return []
   }
 
+  //todo
   destruct() {
     this.singleChildren.forEach(child => {
-      child.destruct()
+      child.get().destruct()
     })
     this.listChildren.forEach(list => {
-      ListUpdater.destructAllFromChangingList(list)
+      ListUpdater.destructAllFromChangingList(list.get())
     })
   }
 
@@ -101,4 +94,5 @@ export abstract class Referencable {
   public removeFromReferencableContainer(name: string, item: Referencable): boolean {
     return this.getAttr(name).remove(item)
   }
+
 }

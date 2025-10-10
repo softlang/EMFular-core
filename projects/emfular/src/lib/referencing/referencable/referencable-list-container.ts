@@ -1,5 +1,6 @@
 import {Referencable} from "./referenceable";
 import {ReferencableContainer} from "./referencable-container";
+import {RefHandler} from "../ref/ref-handler";
 
 export class ReferencableListContainer<T extends Referencable> extends ReferencableContainer<T> {
 

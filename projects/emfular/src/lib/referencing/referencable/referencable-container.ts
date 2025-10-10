@@ -17,4 +17,6 @@ export abstract class ReferencableContainer<T extends Referencable> {
     abstract add(item: T): boolean;
 
     abstract remove(item: T): boolean;
+
+    prepare(ref: string): void {}
 }
