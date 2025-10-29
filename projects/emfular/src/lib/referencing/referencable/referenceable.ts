@@ -19,7 +19,8 @@ export abstract class Referencable {
 
   singleChildren: Map<string, ReferencableContainer<any>> = new Map();
   listChildren: Map<string, ReferencableContainer<any>> = new Map();
-
+  $treeChildren: ReferencableContainer<any>[] = [];
+  $otherReferences: ReferencableContainer<any>[] = [];
 
   public getTreeParent(): Referencable | undefined {
     return undefined;
@@ -49,6 +50,29 @@ export abstract class Referencable {
   }
 
   public addReferences(context: Deserializer) {
+    let json: any = context.getJsonFromTree(this.ref.$ref)
+    for (let elem of this.$otherReferences) {
+      //let refType =
+      let jsonElem: any = json[elem.referenceName] //assumes same name on json and internal representation
+      if (Array.isArray(jsonElem)) {
+        elem.addReferences(context,...jsonElem);
+      } else {
+        elem.addReferences(context, jsonElem);
+      }
+    }
+    for (let elem of this.$treeChildren) {
+      // just call on all real children
+      let children = elem.get()
+      if (Array.isArray(children)) {
+        children.map(child => {
+          let c = (child as Referencable);
+          c.addReferences(context)
+        })
+      } else {
+        let c = (children as Referencable);
+        c.addReferences(context)
+      }
+    }
 
   }
 

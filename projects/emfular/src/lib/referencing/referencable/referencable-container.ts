@@ -1,4 +1,6 @@
 import {Referencable} from "./referenceable";
+import {Deserializer} from "../../deserialization/deserializer";
+import {Ref} from "../ref/ref";
 
 export abstract class ReferencableContainer<T extends Referencable> {
     readonly _parent: Referencable;
@@ -17,6 +19,14 @@ export abstract class ReferencableContainer<T extends Referencable> {
     abstract add(item: T): boolean;
 
     abstract remove(item: T): boolean;
+
+    //adds the real elements behind refs as received from getOrCreate to the container
+    addReferences(context: Deserializer, ...refs: Ref[]): void {
+        refs.map((ref: Ref) => {
+            let elem: T = context.getOrCreate(ref) as T //should just be get now
+            this.add(elem)
+        })
+    }
 
     prepare(ref: string): void {}
 }
