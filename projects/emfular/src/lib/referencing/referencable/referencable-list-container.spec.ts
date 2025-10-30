@@ -1,5 +1,5 @@
 import { ReferencableListContainer } from './referencable-list-container';
-import {ReferencableTester} from "./referencable-tester";
+import {ReferencableTester} from "../test/referencable-tester";
 import {RefHandler} from "../ref/ref-handler";
 
 describe('ReferencableListContainer', () => {

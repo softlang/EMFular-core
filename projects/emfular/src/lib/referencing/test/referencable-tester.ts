@@ -1,4 +1,4 @@
-import {Referencable} from "./referenceable";
+import {Referencable} from "../referencable/referenceable";
 import {Ref} from "../ref/ref";
 
 export class ReferencableTester extends Referencable {

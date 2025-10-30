@@ -1,5 +1,5 @@
 import { ReferencableTreeListContainer } from './referencable-tree-list-container';
-import {ReferencableTester} from "./referencable-tester";
+import {ReferencableTester} from "../test/referencable-tester";
 import {RefHandler} from "../ref/ref-handler";
 
 describe('ReferencableTreeListContainer', () => {
