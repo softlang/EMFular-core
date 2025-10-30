@@ -17,8 +17,6 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  singleChildren: Map<string, ReferencableContainer<any>> = new Map();
-  listChildren: Map<string, ReferencableContainer<any>> = new Map();
   $treeChildren: ReferencableContainer<any>[] = [];
   $otherReferences: ReferencableContainer<any>[] = [];
 
@@ -41,11 +39,8 @@ export abstract class Referencable {
 
   prepare(ownPos: string) {
     this.setRef(ownPos)
-    for (let single of this.singleChildren) {
-      single[1].prepare(ownPos);
-    }
-    for (let list of this.listChildren) {
-      list[1].prepare(ownPos);
+    for (let child of this.$treeChildren) {
+      child.prepare(ownPos);
     }
   }
 
@@ -94,12 +89,12 @@ export abstract class Referencable {
 
   //todo
   destruct() {
-    this.singleChildren.forEach(child => {
-      child.get().destruct()
+    this.$treeChildren.forEach(child => {
+      child.delete()
     })
-    this.listChildren.forEach(list => {
+    /*this.$otherReferences.forEach(list => {
       ListUpdater.destructAllFromChangingList(list.get())
-    })
+    })*/
   }
 
   private getAttr(name: string): ReferencableContainer<Referencable> {

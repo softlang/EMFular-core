@@ -42,4 +42,8 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
         }
     }
 
+    override delete() {
+        this._instance?.destruct()
+    }
+
 }

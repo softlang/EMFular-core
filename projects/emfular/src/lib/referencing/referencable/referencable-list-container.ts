@@ -1,5 +1,6 @@
 import {Referencable} from "./referenceable";
 import {ReferencableContainer} from "./referencable-container";
+import {ListUpdater} from "../../utils/list-updater";
 
 export class ReferencableListContainer<T extends Referencable> extends ReferencableContainer<T> {
 
@@ -36,6 +37,10 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
             return true;
         }
         return false;
+    }
+
+    override delete() {
+        ListUpdater.destructAllFromChangingList(this._instance)
     }
 
 }

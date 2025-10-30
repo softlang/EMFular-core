@@ -29,4 +29,8 @@ export abstract class ReferencableContainer<T extends Referencable> {
     }
 
     prepare(ref: string): void {}
+
+    //called to destruct all elements in the container (e.g. when destroying a parent
+    abstract delete(): void
+
 }
