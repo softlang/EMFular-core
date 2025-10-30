@@ -52,7 +52,8 @@ export abstract class Referencable {
       if (Array.isArray(jsonElem)) {
         elem.addReferences(context,...jsonElem);
       } else {
-        elem.addReferences(context, jsonElem);
+        if (jsonElem != undefined)
+          elem.addReferences(context, jsonElem);
       }
     }
     for (let elem of this.$treeChildren) {
@@ -64,8 +65,10 @@ export abstract class Referencable {
           c.addReferences(context)
         })
       } else {
-        let c = (children as Referencable);
-        c.addReferences(context)
+        if (children != undefined) {
+          let c = (children as Referencable);
+          c.addReferences(context)
+        }
       }
     }
 
