@@ -23,7 +23,7 @@ export abstract class ReferencableContainer<T extends Referencable> {
     //adds the real elements behind refs as received from getOrCreate to the container
     addReferences(context: Deserializer, ...refs: Ref[]): void {
         refs.map((ref: Ref) => {
-            let elem: T = context.getOrCreate(ref) as T //should just be get now
+            let elem: T = context.get(ref.$ref) as T //should just be get now
             this.add(elem)
         })
     }

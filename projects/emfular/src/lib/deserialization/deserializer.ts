@@ -43,7 +43,7 @@ export class Deserializer {
     }
   }
 
-  private get<T extends Referencable>($ref: string): T {
+  get<T extends Referencable>($ref: string): T {
     return (this.context.get($ref) as T);
   }
 
