@@ -6,7 +6,7 @@ idea:
  */
 import {Ref} from "../referencing/ref/ref";
 import {Referencable} from "../referencing/referencable/referenceable";
-import {ConstructorPointer, ConstructorPointers} from "./constructor-pointers";
+import {ConstructorPointers} from "./constructor-pointers";
 import {RefHandler} from "../referencing/ref/ref-handler";
 
 export class Deserializer {
@@ -32,30 +32,8 @@ export class Deserializer {
     return (res as T);
   }
 
-  getOrCreate<T extends Referencable>(ref: Ref): T {
-    //get constructor from ref.eClass
-    let res = this.get<T>(ref.$ref)
-    if (res)
-      return res
-    else {
-      // construct via pointer....
-      return this.create<T>(ref)
-    }
-  }
-
   get<T extends Referencable>($ref: string): T {
     return (this.context.get($ref) as T);
-  }
-
-  private create<T extends Referencable>(ref: Ref): T {
-    let constrPointer: ConstructorPointer | undefined
-      = this.constructorPointers.get(ref.eClass)
-    if (constrPointer) {
-      let constr = constrPointer(ref.$ref)
-      return (constr(this) as T);
-    } else {
-      throw(`Constructor pointer for ${ref} not set.`);
-    }
   }
 
   put<T extends Referencable>(elem: T ) {
