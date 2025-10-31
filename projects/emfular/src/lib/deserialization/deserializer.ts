@@ -12,7 +12,7 @@ import {RefHandler} from "../referencing/ref/ref-handler";
 export class Deserializer {
 
   private readonly completeJSON: any;
-  private readonly constructorPointers: Map<string, ConstructorPointer>;
+  private readonly constructorPointers: ConstructorPointers;
 
   // all so far parsed objects
   private context: Map<string, any> = new Map<string, any>();
