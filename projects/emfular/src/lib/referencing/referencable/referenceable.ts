@@ -90,14 +90,13 @@ export abstract class Referencable {
       return []
   }
 
-  //todo
   destruct() {
+    this.$otherReferences.forEach(refContainer => {
+      refContainer.remove(this)
+    })
     this.$treeChildren.forEach(child => {
       child.delete()
     })
-    /*this.$otherReferences.forEach(list => {
-      ListUpdater.destructAllFromChangingList(list.get())
-    })*/
   }
 
   private getAttr(name: string): ReferencableContainer<Referencable> {
