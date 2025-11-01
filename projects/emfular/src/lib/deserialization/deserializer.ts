@@ -6,20 +6,17 @@ idea:
  */
 import {Ref} from "../referencing/ref/ref";
 import {Referencable} from "../referencing/referencable/referenceable";
-import {ConstructorPointers} from "./constructor-pointers";
 import {RefHandler} from "../referencing/ref/ref-handler";
 
 export class Deserializer {
 
   private readonly completeJSON: any;
-  private readonly constructorPointers: ConstructorPointers;
 
   // all so far parsed objects
   private context: Map<string, any> = new Map<string, any>();
 
-  constructor(json: any, constructorPointers: ConstructorPointers) {
+  constructor(json: any) {
     this.completeJSON = json;
-    this.constructorPointers = constructorPointers
   }
 
   getJsonFromTree<T>($ref: string): T {
