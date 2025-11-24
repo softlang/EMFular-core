@@ -1,6 +1,5 @@
 import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
-import {ListUpdater} from "../../utils/list-updater";
 import {ReferencableContainer} from "./referencable-container";
 import {Deserializer} from "../../deserialization/deserializer";
 
@@ -70,16 +69,6 @@ export abstract class Referencable {
           c.addReferences(context)
         }
       }
-    }
-
-  }
-
-  removeFromListChild<T extends Referencable>(elem: T, list: T[]): void {
-    // todo should I use the index on list children rather than the explicit list?
-    if (elem.getTreeParent() == undefined || elem.getTreeParent() != this) {
-      ListUpdater.removeFromList(elem, list)
-    } else {
-      console.log("Cannot remove from list, since I am currently the tree parent")
     }
   }
 
