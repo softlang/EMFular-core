@@ -20,6 +20,8 @@ export abstract class ReferencableContainer<T extends Referencable> {
 
     abstract remove(item: T): boolean;
 
+    abstract removeFromInverse(item: T): boolean;
+
     //adds the real elements behind refs as received from getOrCreate to the container
     addReferences(context: Deserializer, ...refs: Ref[]): void {
         refs.map((ref: Ref) => {

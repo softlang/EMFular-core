@@ -46,4 +46,12 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
         this._instance?.destruct()
     }
 
+    removeFromInverse(item: T): boolean {
+        if(this.inverseName !== undefined) {
+            this._instance?.removeFromReferencableContainer(this.inverseName, item)
+            return true; // todo refine?
+        }
+        return false;
+    }
+
 }

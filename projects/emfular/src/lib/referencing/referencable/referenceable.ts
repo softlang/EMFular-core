@@ -92,7 +92,7 @@ export abstract class Referencable {
 
   destruct() {
     this.$otherReferences.forEach(refContainer => {
-      refContainer.remove(this)
+      refContainer.removeFromInverse(this)
     })
     this.$treeChildren.forEach(child => {
       child.delete()

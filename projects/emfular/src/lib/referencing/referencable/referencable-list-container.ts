@@ -43,4 +43,14 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
         ListUpdater.destructAllFromChangingList(this._instance)
     }
 
+    removeFromInverse(item: T): boolean {
+        if(this.inverseName !== undefined) {
+            for (const child of this._instance) {
+                child.removeFromReferencableContainer(this.inverseName, item)
+            }
+            return true; // todo - refine?
+        }
+        return false;
+    }
+
 }
