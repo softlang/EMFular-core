@@ -19,10 +19,6 @@ export abstract class Referencable {
   $treeChildren: ReferencableContainer<any>[] = [];
   $otherReferences: ReferencableContainer<any>[] = [];
 
-  public getTreeParent(): Referencable | undefined {
-    return undefined;
-  }
-
   protected constructor(ref: Ref) {
     this.ref = ref;
     this.gId = uuidv4();
