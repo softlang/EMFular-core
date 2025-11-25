@@ -1,8 +1,8 @@
 
 /*
 idea:
-  1) store any element with complete xPath, on lookup during construction you trigger the creation if the object does not exist yet
-  2) after returning from all triggered creations, finish your own job ;)
+  1) create the tree backbone, only following tree relationships
+  2) use add references to add all created references afterwards
  */
 import {Ref} from "../referencing/ref/ref";
 import {Referencable} from "../referencing/referencable/referenceable";
@@ -42,11 +42,6 @@ export class Deserializer {
     const prefix = RefHandler.computePrefix(formerPrefix, ownHeader);
     let res = eClasses? eClasses : []
     return res.map((eClass, index) => RefHandler.createRef(RefHandler.mixWithIndex(prefix, index), eClass))
-  }
-
-  static createSingleRef(formerPrefix: string, ownHeader: string, eClass: string): Ref {
-    const ref = RefHandler.computePrefix(formerPrefix, ownHeader)
-    return RefHandler.createRef(ref, eClass)
   }
 
   addAllReferences() {
