@@ -1,6 +1,6 @@
 {
   "name": "emfular",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Pure TS library with basic types and parser to move from XPath references to runtime models",
   "keywords": ["XPath", "Parser", "TS", "EMF"],
   "author": {
