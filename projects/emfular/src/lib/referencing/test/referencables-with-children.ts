@@ -9,8 +9,8 @@ export class Referencable1WithChildren extends Referencable {
     static readonly c1_2_prefix: string = "c1_2";
 
 
-    private readonly _c1_1: ReferencableTreeListContainer<Referencable2WithChildren>;
-    private readonly _c1_2: ReferencableListContainer<Referencable3WithChildren>;
+    readonly _c1_1: ReferencableTreeListContainer<Referencable2WithChildren>;
+    readonly _c1_2: ReferencableListContainer<Referencable3WithChildren>;
 
     constructor(ref: Ref) {
         super(ref);
@@ -31,7 +31,7 @@ export class Referencable1WithChildren extends Referencable {
 
 export class Referencable2WithChildren extends Referencable {
     static readonly c2_1_prefix: string = "c2_1";
-    private readonly _c2_1: ReferencableTreeListContainer<Referencable3WithChildren>;
+    readonly _c2_1: ReferencableTreeListContainer<Referencable3WithChildren>;
 
     constructor(ref: Ref) {
         super(ref);
@@ -46,7 +46,7 @@ export class Referencable2WithChildren extends Referencable {
 
 export class Referencable3WithChildren extends Referencable {
     static readonly c1_2_reversed_prefix: string = "c1_2_reversed";
-    private readonly _c1_2_reversed: ReferencableListContainer<Referencable1WithChildren>;
+    readonly _c1_2_reversed: ReferencableListContainer<Referencable1WithChildren>;
 
     constructor(ref: Ref) {
         super(ref);

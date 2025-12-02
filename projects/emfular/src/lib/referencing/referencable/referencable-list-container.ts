@@ -32,7 +32,7 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
         if(index > -1) {
             this._instance.splice(index, 1);
             if(this.inverseName !== undefined) {
-                return item.removeFromReferencableContainer(this.inverseName, this._parent)
+                item.removeFromReferencableContainer(this.inverseName, this._parent)
             }
             return true;
         }
