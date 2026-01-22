@@ -1,7 +1,7 @@
 import {Referencable} from "./referenceable";
 import {ReContainer} from "./re-container";
 
-export class ReferencableSingletonContainer<T extends Referencable> extends ReContainer<T> {
+export class ReSingleContainer<T extends Referencable> extends ReContainer<T> {
 
     _instance?: T
 

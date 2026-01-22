@@ -7,7 +7,7 @@ export * from './lib/referencing/ref/ref-handler';
 export * from './lib/referencing/referencable/referenceable';
 export * from './lib/referencing/referencable/re-container';
 export * from './lib/referencing/referencable/re-list-container';
-export * from './lib/referencing/referencable/referencable-singleton-container';
+export * from './lib/referencing/referencable/re-single-container';
 export * from './lib/referencing/referencable/referencable-tree-list-container';
 export * from './lib/referencing/referencable/referencable-tree-singleton-container';
 export * from './lib/referencing/referencable/referencable-tree-parent-container';

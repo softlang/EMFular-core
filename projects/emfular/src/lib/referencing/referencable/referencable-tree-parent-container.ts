@@ -1,6 +1,6 @@
 import {Referencable} from "./referenceable";
-import {ReferencableSingletonContainer} from "./referencable-singleton-container";
+import {ReSingleContainer} from "./re-single-container";
 
-export class ReferencableTreeParentContainer<T extends Referencable> extends ReferencableSingletonContainer<T> {
+export class ReferencableTreeParentContainer<T extends Referencable> extends ReSingleContainer<T> {
 
 }
