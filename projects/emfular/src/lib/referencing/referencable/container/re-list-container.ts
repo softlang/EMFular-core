@@ -1,13 +1,12 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../../utils/list-updater";
-import {Ref} from "../../ref/ref";
 
-export class ReListContainer<T extends Referencable> extends ReContainer<T> {
+export abstract class ReListContainer<T extends Referencable> extends ReContainer<T> {
 
     readonly _instance: T[];
 
-    constructor(parent: Referencable, name: string, inverse?: string) {
+    protected constructor(parent: Referencable, name: string, inverse?: string) {
         super(parent, name, inverse);
         this._instance = []
     }
@@ -53,10 +52,6 @@ export class ReListContainer<T extends Referencable> extends ReContainer<T> {
             return true; // todo - refine?
         }
         return false;
-    }
-
-    override toJson(): Ref[] {
-        return this._instance.map(i => i.getRef())
     }
 
 }
