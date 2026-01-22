@@ -1,10 +1,10 @@
-import { ReferencableTreeSingletonContainer } from './referencable-tree-singleton-container';
+import { ReTreeParentContainer } from './re-tree-parent-container';
 import {ReferencableTester} from "../test/referencable-tester";
 import {RefHandler} from "../ref/ref-handler";
 
-describe('ReferencableTreeSingletonContainer', () => {
+describe('ReferencableTreeParentContainer', () => {
   it('should create an instance', () => {
     let tester = new ReferencableTester(RefHandler.createRef('1', 'http://www.uni-koblenz.de/Tester'))
-    expect(new ReferencableTreeSingletonContainer(tester, 'test')).toBeTruthy();
+    expect(new ReTreeParentContainer(tester, 'refName')).toBeTruthy();
   });
 });

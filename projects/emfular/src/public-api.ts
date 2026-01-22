@@ -9,8 +9,8 @@ export * from './lib/referencing/referencable/re-container';
 export * from './lib/referencing/referencable/re-list-container';
 export * from './lib/referencing/referencable/re-single-container';
 export * from './lib/referencing/referencable/re-tree-list-container';
-export * from './lib/referencing/referencable/referencable-tree-singleton-container';
-export * from './lib/referencing/referencable/referencable-tree-parent-container';
+export * from './lib/referencing/referencable/re-tree-single-container';
+export * from './lib/referencing/referencable/re-tree-parent-container';
 
 export * from './lib/deserialization/deserializer';
 export * from './lib/utils/list-updater';
