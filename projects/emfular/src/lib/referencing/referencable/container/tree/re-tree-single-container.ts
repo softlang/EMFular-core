@@ -3,6 +3,11 @@ import {ReSingleContainer} from "../re-single-container";
 import {RefHandler} from "../../../ref/ref-handler";
 
 export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T>  {
+
+    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
+        super(parent, referenceName, inverseName);
+    }
+
     override prepare(ref: string) {
         let newRef = RefHandler.computePrefix(ref, this.referenceName)
         this._instance?.prepare(newRef)

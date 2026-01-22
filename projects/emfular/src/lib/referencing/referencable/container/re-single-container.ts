@@ -1,20 +1,16 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 
-export class ReSingleContainer<T extends Referencable> extends ReContainer<T> {
+export abstract class ReSingleContainer<T extends Referencable> extends ReContainer<T> {
 
     _instance?: T
 
-    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
+    protected constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
     }
 
     get(): T | undefined {
         return this._instance;
-    }
-
-    override toJson(): any {
-        return this._instance?.getRef()
     }
 
     private set(instance: T): void {
