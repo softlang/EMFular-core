@@ -1,7 +1,7 @@
-import {ReTreeListContainer} from "../referencable/re-tree-list-container";
+import {ReTreeListContainer} from "../referencable/container/re-tree-list-container";
 import {Referencable} from "../referencable/referenceable";
 import {Ref} from "../ref/ref";
-import {ReListContainer} from "../referencable/re-list-container";
+import {ReListContainer} from "../referencable/container/re-list-container";
 import {
     Referencable1WithChildrenJson,
     Referencable2WithChildrenJson,

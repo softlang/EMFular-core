@@ -1,6 +1,6 @@
-import {Referencable} from "./referenceable";
+import {Referencable} from "../referenceable";
 import {ReListContainer} from "./re-list-container";
-import {RefHandler} from "../ref/ref-handler";
+import {RefHandler} from "../../ref/ref-handler";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 

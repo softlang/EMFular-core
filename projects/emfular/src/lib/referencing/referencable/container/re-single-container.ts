@@ -1,4 +1,4 @@
-import {Referencable} from "./referenceable";
+import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 
 export class ReSingleContainer<T extends Referencable> extends ReContainer<T> {

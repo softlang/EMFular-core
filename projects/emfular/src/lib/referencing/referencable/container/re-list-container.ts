@@ -1,7 +1,7 @@
-import {Referencable} from "./referenceable";
+import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
-import {ListUpdater} from "../../utils/list-updater";
-import {Ref} from "../ref/ref";
+import {ListUpdater} from "../../../utils/list-updater";
+import {Ref} from "../../ref/ref";
 
 export class ReListContainer<T extends Referencable> extends ReContainer<T> {
 

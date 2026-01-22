@@ -1,6 +1,6 @@
 import { ReSingleContainer } from './re-single-container';
-import {ReferencableTester} from "../test/referencable-tester";
-import {RefHandler} from "../ref/ref-handler";
+import {ReferencableTester} from "../../test/referencable-tester";
+import {RefHandler} from "../../ref/ref-handler";
 
 describe('ReferencableSingletonContainer', () => {
   it('should create an instance', () => {

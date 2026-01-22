@@ -1,7 +1,7 @@
 import { ReListContainer } from './re-list-container';
-import {ReferencableTester} from "../test/referencable-tester";
-import {RefHandler} from "../ref/ref-handler";
-import {Referencable1WithChildren, Referencable3WithChildren} from "../test/referencables-with-children";
+import {ReferencableTester} from "../../test/referencable-tester";
+import {RefHandler} from "../../ref/ref-handler";
+import {Referencable1WithChildren, Referencable3WithChildren} from "../../test/referencables-with-children";
 
 describe('ReferencableListContainer', () => {
   it('should create an instance', () => {

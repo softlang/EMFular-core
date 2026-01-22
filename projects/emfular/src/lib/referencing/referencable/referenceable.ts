@@ -1,6 +1,6 @@
 import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
-import {ReContainer} from "./re-container";
+import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../deserialization/deserializer";
 
 /** base class for CORE models.
