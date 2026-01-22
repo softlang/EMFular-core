@@ -8,8 +8,8 @@ export class ReTreeParentContainer<T extends Referencable> extends ReSingleConta
         super(parent, referenceName, inverseName);
     }
 
-    override toJson(): Ref {
-        return this._parent.getRef() //todo
+    override toJson(): Ref | undefined {
+        return this._instance?.getRef()
     }
 
 }

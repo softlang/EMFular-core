@@ -7,4 +7,8 @@ describe('ReferencableTreeParentContainer', () => {
     let tester = new ReferencableTester(RefHandler.createRef('1', 'http://www.uni-koblenz.de/Tester'))
     expect(new ReTreeParentContainer(tester, 'refName')).toBeTruthy();
   });
+
+  it('should serialize a contained ref', () => {
+
+  })
 });
