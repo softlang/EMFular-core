@@ -1,6 +1,6 @@
-import {Referencable} from "../referenceable";
-import {ReSingleContainer} from "./re-single-container";
-import {RefHandler} from "../../ref/ref-handler";
+import {Referencable} from "../../referenceable";
+import {ReSingleContainer} from "../re-single-container";
+import {RefHandler} from "../../../ref/ref-handler";
 
 export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T>  {
     override prepare(ref: string) {

@@ -1,6 +1,6 @@
 import { ReTreeParentContainer } from './re-tree-parent-container';
-import {ReferencableTester} from "../../test/referencable-tester";
-import {RefHandler} from "../../ref/ref-handler";
+import {ReferencableTester} from "../../../test/referencable-tester";
+import {RefHandler} from "../../../ref/ref-handler";
 
 describe('ReferencableTreeParentContainer', () => {
   it('should create an instance', () => {

@@ -1,6 +1,6 @@
 import { ReTreeSingleContainer } from './re-tree-single-container';
-import {ReferencableTester} from "../../test/referencable-tester";
-import {RefHandler} from "../../ref/ref-handler";
+import {ReferencableTester} from "../../../test/referencable-tester";
+import {RefHandler} from "../../../ref/ref-handler";
 
 describe('ReferencableTreeSingletonContainer', () => {
   it('should create an instance', () => {
