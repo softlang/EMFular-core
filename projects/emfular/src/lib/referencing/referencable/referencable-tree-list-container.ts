@@ -16,4 +16,11 @@ export class ReferencableTreeListContainer<T extends Referencable> extends Refer
         ReferencableTreeListContainer.prepareList(RefHandler.computePrefix(ref, this.referenceName),this._instance)
     }
 
+    //todo actually wider than parent (Ref[])
+    override toJson(): any[] {
+        return this._instance.map(
+            (ref: T) => ref.toJson()
+        )
+    }
+
 }

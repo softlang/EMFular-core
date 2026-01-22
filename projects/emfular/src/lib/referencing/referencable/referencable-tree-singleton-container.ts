@@ -7,4 +7,8 @@ export class ReferencableTreeSingletonContainer<T extends Referencable> extends 
         let newRef = RefHandler.computePrefix(ref, this.referenceName)
         this._instance?.prepare(newRef)
     }
+
+    override toJson(): any {
+        return this._instance?.toJson()
+    }
 }

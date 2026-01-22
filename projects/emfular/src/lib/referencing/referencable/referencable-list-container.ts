@@ -1,13 +1,15 @@
 import {Referencable} from "./referenceable";
 import {ReferencableContainer} from "./referencable-container";
 import {ListUpdater} from "../../utils/list-updater";
+import {Ref} from "../ref/ref";
 
 export class ReferencableListContainer<T extends Referencable> extends ReferencableContainer<T> {
 
-    readonly _instance: T[] = [];
+    readonly _instance: T[];
 
     constructor(parent: Referencable, name: string, inverse?: string) {
         super(parent, name, inverse);
+        this._instance = []
     }
 
     add(item: T): boolean {
@@ -51,6 +53,10 @@ export class ReferencableListContainer<T extends Referencable> extends Referenca
             return true; // todo - refine?
         }
         return false;
+    }
+
+    override toJson(): Ref[] {
+        return this._instance.map(i => i.getRef())
     }
 
 }

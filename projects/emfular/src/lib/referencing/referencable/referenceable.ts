@@ -94,4 +94,6 @@ export abstract class Referencable {
     return this.getAttr(name).remove(item)
   }
 
+  abstract toJson(): any
+
 }

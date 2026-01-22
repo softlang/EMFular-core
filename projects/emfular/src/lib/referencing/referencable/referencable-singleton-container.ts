@@ -13,6 +13,10 @@ export class ReferencableSingletonContainer<T extends Referencable> extends Refe
         return this._instance;
     }
 
+    override toJson(): any {
+        return this._instance?.getRef()
+    }
+
     private set(instance: T): void {
         if(this.inverseName !== undefined) {
             this._instance?.removeFromReferencableContainer(this.inverseName, this._parent)
