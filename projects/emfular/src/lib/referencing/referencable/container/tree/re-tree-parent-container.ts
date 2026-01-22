@@ -1,5 +1,6 @@
 import {Referencable} from "../../referenceable";
 import {ReSingleContainer} from "../re-single-container";
+import {Ref} from "../../../ref/ref";
 
 export class ReTreeParentContainer<T extends Referencable> extends ReSingleContainer<T> {
 
@@ -7,7 +8,8 @@ export class ReTreeParentContainer<T extends Referencable> extends ReSingleConta
         super(parent, referenceName, inverseName);
     }
 
-    override toJson(): any {
+    override toJson(): Ref {
+        return this._parent.getRef() //todo
     }
 
 }
