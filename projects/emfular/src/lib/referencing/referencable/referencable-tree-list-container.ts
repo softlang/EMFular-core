@@ -1,8 +1,8 @@
 import {Referencable} from "./referenceable";
-import {ReferencableListContainer} from "./referencable-list-container";
+import {ReListContainer} from "./re-list-container";
 import {RefHandler} from "../ref/ref-handler";
 
-export class ReferencableTreeListContainer<T extends Referencable> extends ReferencableListContainer<T> {
+export class ReferencableTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 
     static prepareList<T extends Referencable>(prefix: string, list: T[]): void {
         if (list?.length > 0) {

@@ -1,4 +1,4 @@
-import { ReferencableListContainer } from './referencable-list-container';
+import { ReListContainer } from './re-list-container';
 import {ReferencableTester} from "../test/referencable-tester";
 import {RefHandler} from "../ref/ref-handler";
 import {Referencable1WithChildren, Referencable3WithChildren} from "../test/referencables-with-children";
@@ -6,7 +6,7 @@ import {Referencable1WithChildren, Referencable3WithChildren} from "../test/refe
 describe('ReferencableListContainer', () => {
   it('should create an instance', () => {
     let tester = new ReferencableTester(RefHandler.createRef('1', 'http://www.uni-koblenz.de/Tester'))
-    expect(new ReferencableListContainer(tester, 'refName')).toBeTruthy();
+    expect(new ReListContainer(tester, 'refName')).toBeTruthy();
   });
 
   it("should give true if the remove and remove inverse chain triggered an element removal", () => {

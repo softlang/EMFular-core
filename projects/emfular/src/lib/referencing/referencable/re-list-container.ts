@@ -3,7 +3,7 @@ import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../utils/list-updater";
 import {Ref} from "../ref/ref";
 
-export class ReferencableListContainer<T extends Referencable> extends ReContainer<T> {
+export class ReListContainer<T extends Referencable> extends ReContainer<T> {
 
     readonly _instance: T[];
 
