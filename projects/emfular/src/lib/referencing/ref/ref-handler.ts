@@ -2,6 +2,8 @@ import {Ref} from "./ref";
 
 export class RefHandler {
 
+    public static readonly rootPath: string = "/";
+
     static readonly pathDivider: string = '/@';
 
     static getIndexFromString(ref: string): number {
