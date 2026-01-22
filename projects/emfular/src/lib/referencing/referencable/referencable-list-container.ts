@@ -1,9 +1,9 @@
 import {Referencable} from "./referenceable";
-import {ReferencableContainer} from "./referencable-container";
+import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../utils/list-updater";
 import {Ref} from "../ref/ref";
 
-export class ReferencableListContainer<T extends Referencable> extends ReferencableContainer<T> {
+export class ReferencableListContainer<T extends Referencable> extends ReContainer<T> {
 
     readonly _instance: T[];
 

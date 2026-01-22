@@ -2,7 +2,7 @@ import {Referencable} from "./referenceable";
 import {Deserializer} from "../../deserialization/deserializer";
 import {Ref} from "../ref/ref";
 
-export abstract class ReferencableContainer<T extends Referencable> {
+export abstract class ReContainer<T extends Referencable> {
     readonly _parent: Referencable;
     readonly referenceName: string;
     readonly inverseName?: string;

@@ -1,6 +1,6 @@
 import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
-import {ReferencableContainer} from "./referencable-container";
+import {ReContainer} from "./re-container";
 import {Deserializer} from "../../deserialization/deserializer";
 
 /** base class for CORE models.
@@ -16,8 +16,8 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  $treeChildren: ReferencableContainer<any>[] = [];
-  $otherReferences: ReferencableContainer<any>[] = [];
+  $treeChildren: ReContainer<any>[] = [];
+  $otherReferences: ReContainer<any>[] = [];
 
   protected constructor(ref: Ref) {
     this.ref = ref;
@@ -77,11 +77,11 @@ export abstract class Referencable {
     })
   }
 
-  private getAttr(name: string): ReferencableContainer<Referencable> {
+  private getAttr(name: string): ReContainer<Referencable> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReferencableContainer<Referencable>)
+      return (refContainer[1] as ReContainer<Referencable>)
     } else
       throw new Error("Attribute _"+name + " not found on "+refContainers)
   }
