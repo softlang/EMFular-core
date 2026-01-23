@@ -6,6 +6,7 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
 
     constructor(parent: Referencable, name: string, inverse?: string) {
         super(parent, name, inverse);
+        this._parent.$treeChildren.push(this)
     }
 
     static prepareList<T extends Referencable>(prefix: string, list: T[]): void {

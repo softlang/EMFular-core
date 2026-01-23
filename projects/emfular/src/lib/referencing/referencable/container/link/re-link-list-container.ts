@@ -6,6 +6,7 @@ export class ReLinkListContainer<T extends Referencable> extends ReListContainer
 
     constructor(parent: Referencable, name: string, inverse?: string) {
         super(parent, name, inverse);
+        this._parent.$otherReferences.push(this)
     }
 
     override toJson(): Ref[] {

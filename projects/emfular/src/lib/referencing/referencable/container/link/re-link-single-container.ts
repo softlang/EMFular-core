@@ -6,6 +6,7 @@ export class ReLinkSingleContainer<T extends Referencable> extends ReSingleConta
 
     constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
+        this._parent.$otherReferences.push(this)
     }
 
     override toJson(): Ref|undefined {

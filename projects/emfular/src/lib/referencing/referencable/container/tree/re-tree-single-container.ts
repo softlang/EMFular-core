@@ -6,6 +6,7 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
 
     constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
+        this._parent.$treeChildren.push(this)
     }
 
     override prepare(ref: string) {
