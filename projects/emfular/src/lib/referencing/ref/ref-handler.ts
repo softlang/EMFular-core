@@ -39,4 +39,11 @@ export class RefHandler {
     static createRefIfMissing(eClass: string, ref?: Ref) {
         return ref? ref: {$ref: '', eClass: eClass};
     }
+
+    // for setting eClass assignment (i.e. on subtypes)
+    static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
+        const prefix = RefHandler.computePrefix(formerPrefix, ownHeader);
+        let res = eClasses? eClasses : []
+        return res.map((eClass, index) => RefHandler.createRef(RefHandler.mixWithIndex(prefix, index), eClass))
+    }
 }

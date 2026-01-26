@@ -4,7 +4,6 @@ idea:
   1) create the tree backbone, only following tree relationships
   2) use add references to add all created references afterwards
  */
-import {Ref} from "../referencing/ref/ref";
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 
@@ -13,7 +12,7 @@ export class Deserializer {
   private readonly completeJSON: any;
 
   // all so far parsed objects
-  private context: Map<string, any> = new Map<string, any>();
+  private context: Map<string, Referencable> = new Map<string, Referencable>();
 
   constructor(json: any) {
     this.completeJSON = json;
@@ -35,13 +34,6 @@ export class Deserializer {
 
   put<T extends Referencable>(elem: T ) {
     this.context.set(elem.getRef().$ref, elem);
-  }
-
-  // for setting eClass assignment (i.e. on subtypes)
-  static createRefList(formerPrefix: string, ownHeader: string, eClasses: string[] = []): Ref[] {
-    const prefix = RefHandler.computePrefix(formerPrefix, ownHeader);
-    let res = eClasses? eClasses : []
-    return res.map((eClass, index) => RefHandler.createRef(RefHandler.mixWithIndex(prefix, index), eClass))
   }
 
   addAllReferences() {
