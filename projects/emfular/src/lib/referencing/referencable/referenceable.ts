@@ -51,21 +51,6 @@ export abstract class Referencable {
           elem.addReferences(context, jsonElem);
       }
     }
-    for (let elem of this.$treeChildren) {
-      // just call on all real children
-      let children = elem.get()
-      if (Array.isArray(children)) {
-        children.map(child => {
-          let c = (child as Referencable);
-          c.addReferences(context)
-        })
-      } else {
-        if (children != undefined) {
-          let c = (children as Referencable);
-          c.addReferences(context)
-        }
-      }
-    }
   }
 
   destruct() {
