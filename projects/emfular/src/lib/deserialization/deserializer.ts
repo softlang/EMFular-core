@@ -33,7 +33,7 @@ export class Deserializer {
 
   createWithChildren<T extends Referencable>( ref: Ref ): T {
     const t: T = this.create<T>(ref)
-    t.createChildren(this)
+    t.createChildren(this, ref)
     return t
   }
 
@@ -53,6 +53,9 @@ export class Deserializer {
   }
 
   static getEClasses(json: any[], defaultStr?: string): (string|undefined)[] {
+    if (!json) {
+      return []
+    }
     return  json.map((item) => this.getEClass(item, defaultStr))
   }
 

@@ -85,9 +85,9 @@ export abstract class Referencable implements JsonSerializable<any>{
   abstract toJson(): any
 
   //todo use json: any?
-  createChildren(context: Deserializer) {
+  createChildren(context: Deserializer, parent: Ref) {
     this.$treeChildren.forEach(child => {
-      child.fromJson(this.ref.$ref, context)
+      child.fromJson(parent.$ref, context)
     })
   }
 
