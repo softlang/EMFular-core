@@ -52,7 +52,7 @@ export class Deserializer {
     return (this.createdObjects.get($ref) as T);
   }
 
-  put<T extends Referencable>(elem: T ) {
+  private put<T extends Referencable>(elem: T ) {
     this.createdObjects.set(elem.getRef().$ref, elem);
   }
 
