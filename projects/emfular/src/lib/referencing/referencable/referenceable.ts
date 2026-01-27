@@ -2,11 +2,14 @@ import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../deserialization/deserializer";
+import {JsonSerializable} from "../../serialization/json-serializable";
+import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
+import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 
 /** base class for CORE models.
  *
  */
-export abstract class Referencable {
+export abstract class Referencable implements JsonSerializable<any>{
 
   protected ref: Ref;
   gId: string;
@@ -16,7 +19,7 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  $treeChildren: ReContainer<any>[] = [];
+  $treeChildren: (ReTreeListContainer<any>|ReTreeSingleContainer<any>)[] = [];
   $otherReferences: ReContainer<any>[] = [];
 
   protected constructor(ref: Ref) {
@@ -45,10 +48,10 @@ export abstract class Referencable {
       //let refType =
       let jsonElem: any = json[elem.referenceName] //assumes same name on json and internal representation
       if (Array.isArray(jsonElem)) {
-        elem.addReferences(context,...jsonElem);
+        elem.addLinks(context,...jsonElem);
       } else {
         if (jsonElem != undefined)
-          elem.addReferences(context, jsonElem);
+          elem.addLinks(context, jsonElem);
       }
     }
   }
@@ -80,5 +83,12 @@ export abstract class Referencable {
   }
 
   abstract toJson(): any
+
+  //todo use json: any?
+  createChildren(context: Deserializer) {
+    this.$treeChildren.forEach(child => {
+      child.fromJson(this.ref.$ref, context)
+    })
+  }
 
 }

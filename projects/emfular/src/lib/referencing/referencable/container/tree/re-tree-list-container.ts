@@ -1,6 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
+import {Deserializer} from "../../../../deserialization/deserializer";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 
@@ -25,6 +26,16 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         return this._instance.map(
             (ref: T) => ref.toJson()
         )
+    }
+
+    //creates one child level plus calls next createChildren
+    fromJson(formerPrefix: string, context: Deserializer, eClasses?: string[]) {
+        //todo get eclasses inside?
+        let eclasses: string[] = [];
+        let refList = RefHandler.createRefList(formerPrefix, this.referenceName, eClasses)
+        refList.forEach(ref => {
+          this.add(context.create<T>(ref))
+        })
     }
 
 }

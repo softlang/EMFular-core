@@ -6,16 +6,31 @@ idea:
  */
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
+import {Ref} from "../referencing/ref/ref";
+import {JsonOf} from "../serialization/json-deserializable";
+import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
 
   private readonly completeJSON: any;
 
-  // all so far parsed objects
-  private context: Map<string, Referencable> = new Map<string, Referencable>();
+  private registry: ModelRegistry
 
-  constructor(json: any) {
+  // all so far parsed objects
+  private createdObjects: Map<string, Referencable> = new Map<string, Referencable>();
+
+  constructor(json: any, registry: ModelRegistry) {
     this.completeJSON = json;
+    this.registry = registry;
+  }
+
+  create<T extends Referencable>( ref: Ref): T {
+    const entry = this.registry.get<T>(ref.eClass)
+    const json = this.getJsonFromTree(ref.$ref) as JsonOf<typeof entry.cls>
+    const obj: T = entry.cls.fromJson(json)
+    this.put(obj)
+    obj.createChildren(this)
+    return obj
   }
 
   getJsonFromTree<T>($ref: string): T {
@@ -29,15 +44,15 @@ export class Deserializer {
   }
 
   get<T extends Referencable>($ref: string): T {
-    return (this.context.get($ref) as T);
+    return (this.createdObjects.get($ref) as T);
   }
 
   put<T extends Referencable>(elem: T ) {
-    this.context.set(elem.getRef().$ref, elem);
+    this.createdObjects.set(elem.getRef().$ref, elem);
   }
 
   addAllReferences() {
-    this.context.forEach((ref: Referencable) => {
+    this.createdObjects.forEach((ref: Referencable) => {
       ref.addReferences(this)
     })
   }
