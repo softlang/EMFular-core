@@ -23,6 +23,6 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         let eClass = "noEclass";
         if (eClasses) eClass = eClasses[0];
         let ref = RefHandler.createRef(RefHandler.computePrefix(formerPrefix, this.referenceName), eClass)
-        this.add(context.create<T>(ref))
+        this.add(context.createWithChildren<T>(ref))
     }
 }

@@ -34,7 +34,7 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         let eclasses: string[] = [];
         let refList = RefHandler.createRefList(formerPrefix, this.referenceName, eClasses)
         refList.forEach(ref => {
-          this.add(context.create<T>(ref))
+          this.add(context.createWithChildren<T>(ref))
         })
     }
 

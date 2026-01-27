@@ -29,8 +29,13 @@ export class Deserializer {
     const json = this.getJsonFromTree(ref.$ref) as JsonOf<typeof entry.cls>
     const obj: T = entry.cls.fromJson(json)
     this.put(obj)
-    obj.createChildren(this)
     return obj
+  }
+
+  createWithChildren<T extends Referencable>( ref: Ref ): T {
+    const t: T = this.create<T>(ref)
+    t.createChildren(this)
+    return t
   }
 
   getJsonFromTree<T>($ref: string): T {
