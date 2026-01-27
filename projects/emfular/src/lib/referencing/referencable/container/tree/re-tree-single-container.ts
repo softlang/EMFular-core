@@ -2,11 +2,15 @@ import {Referencable} from "../../referenceable";
 import {ReSingleContainer} from "../re-single-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../deserialization/deserializer";
+import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T>  {
 
-    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
+    readonly defaultEClass?: string;
+
+    constructor(parent: Referencable, referenceName: string, inverseName?: string, eClass?: string) {
         super(parent, referenceName, inverseName);
+        this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
 
@@ -19,10 +23,18 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         return this._instance?.toJson()
     }
 
-    fromJson(formerPrefix: string, context: Deserializer, eClasses?: string[]) {
-        let eClass = "noEclass";
-        if (eClasses) eClass = eClasses[0];
-        let ref = RefHandler.createRef(RefHandler.computePrefix(formerPrefix, this.referenceName), eClass)
+    fromJson(formerPrefix: string, context: Deserializer) {
+        let eClass;
+        let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
+        let json: JsonOf<T> = context.getJsonFromTree(refStr)
+        if (json) eClass = Deserializer.getEClass(json, this.defaultEClass);
+        if (!eClass){
+            eClass = this.defaultEClass
+            if(!eClass){
+                throw "Cannot determine eClass for "+formerPrefix
+            }
+        }
+        let ref = RefHandler.createRef(refStr, eClass)
         this.add(context.createWithChildren<T>(ref))
     }
 }

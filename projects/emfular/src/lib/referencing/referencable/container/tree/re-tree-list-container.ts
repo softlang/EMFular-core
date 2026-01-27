@@ -2,11 +2,15 @@ import {Referencable} from "../../referenceable";
 import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../deserialization/deserializer";
+import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 
-    constructor(parent: Referencable, name: string, inverse?: string) {
+    private defaultEClass?: string;
+
+    constructor(parent: Referencable, name: string, inverse?: string, eClass?: string) {
         super(parent, name, inverse);
+        this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
 
@@ -29,9 +33,11 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
     }
 
     //creates one child level plus calls next createChildren
-    fromJson(formerPrefix: string, context: Deserializer, eClasses?: string[]) {
-        //todo get eclasses inside?
-        let eclasses: string[] = [];
+    fromJson(formerPrefix: string, context: Deserializer) {
+        let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
+        let json: JsonOf<T>[] = context.getJsonFromTree(refStr)
+        let eClasses: string[] = Deserializer.getEClasses(json, this.defaultEClass);
+
         let refList = RefHandler.createRefList(formerPrefix, this.referenceName, eClasses)
         refList.forEach(ref => {
           this.add(context.createWithChildren<T>(ref))

@@ -1,4 +1,3 @@
-
 /*
 idea:
   1) create the tree backbone, only following tree relationships
@@ -8,7 +7,8 @@ import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
 import {JsonOf} from "../serialization/json-deserializable";
-import {ModelRegistry} from "../binding/model-registry";
+import {MODEL_REGISTRY, ModelRegistry} from "../binding/model-registry";
+import {inject} from "@angular/core";
 
 export class Deserializer {
 
@@ -46,6 +46,17 @@ export class Deserializer {
       res = res[(accessPaths[i])]
     }
     return (res as T);
+  }
+
+  static getEClass(json: any, defaultStr?: string): string {
+    const jsonEclass: (string|undefined) = json['eClass']
+    let res = jsonEclass? jsonEclass: defaultStr
+    if(res) return res;
+    else throw "Cannot determine EClass for default str "+defaultStr+"\n with\n"+ json
+  }
+
+  static getEClasses(json: any[], defaultStr?: string): string[] {
+    return  json.map((item) => this.getEClass(item, defaultStr))
   }
 
   get<T extends Referencable>($ref: string): T {
