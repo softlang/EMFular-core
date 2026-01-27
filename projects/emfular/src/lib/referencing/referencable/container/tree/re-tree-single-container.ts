@@ -31,7 +31,7 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         if (!eClass){
             eClass = this.defaultEClass
             if(!eClass){
-                throw "Cannot determine eClass for "+formerPrefix
+                throw new Error("Cannot determine eClass for "+formerPrefix)
             }
         }
         let ref = RefHandler.createRef(refStr, eClass)

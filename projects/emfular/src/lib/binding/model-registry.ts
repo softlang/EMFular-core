@@ -1,7 +1,6 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RegistryEntry} from "./registry-entry";
 import {JsonDeserializable, JsonOf} from "../serialization/json-deserializable";
-import {InjectionToken} from "@angular/core";
 
 export class ModelRegistry {
     private map = new Map<string, RegistryEntry<any>>()
@@ -14,8 +13,11 @@ export class ModelRegistry {
     }
 
     get<T extends Referencable>(key: string): RegistryEntry<T> {
-        return this.map.get(key) as RegistryEntry<T>
+        const entry = this.map.get(key);
+        if (entry) {
+            return entry as RegistryEntry<T>;
+        } else {
+            throw new Error(`Unable to find a json constructor for ${key}`);
+        }
     }
 }
-
-export const MODEL_REGISTRY = new InjectionToken<ModelRegistry>('MODEL_REGISTRY');

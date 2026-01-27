@@ -7,8 +7,7 @@ import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
 import {JsonOf} from "../serialization/json-deserializable";
-import {MODEL_REGISTRY, ModelRegistry} from "../binding/model-registry";
-import {inject} from "@angular/core";
+import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
 
@@ -48,14 +47,12 @@ export class Deserializer {
     return (res as T);
   }
 
-  static getEClass(json: any, defaultStr?: string): string {
+  static getEClass(json: any, defaultStr?: string): (string|undefined) {
     const jsonEclass: (string|undefined) = json['eClass']
-    let res = jsonEclass? jsonEclass: defaultStr
-    if(res) return res;
-    else throw "Cannot determine EClass for default str "+defaultStr+"\n with\n"+ json
+    return jsonEclass? jsonEclass: defaultStr
   }
 
-  static getEClasses(json: any[], defaultStr?: string): string[] {
+  static getEClasses(json: any[], defaultStr?: string): (string|undefined)[] {
     return  json.map((item) => this.getEClass(item, defaultStr))
   }
 

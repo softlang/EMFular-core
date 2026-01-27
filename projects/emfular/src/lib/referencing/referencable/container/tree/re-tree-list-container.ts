@@ -36,9 +36,13 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
     fromJson(formerPrefix: string, context: Deserializer) {
         let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
         let json: JsonOf<T>[] = context.getJsonFromTree(refStr)
-        let eClasses: string[] = Deserializer.getEClasses(json, this.defaultEClass);
+        let eClasses: (string|undefined)[] = Deserializer.getEClasses(json, this.defaultEClass);
+        let definedEClasses: string[] = eClasses.filter(i => i !=undefined)
+        if (definedEClasses.length < eClasses.length) {
+            throw new Error("Could not determine all EClasses for "+formerPrefix+": we have "+eClasses.join(","))
+        }
 
-        let refList = RefHandler.createRefList(formerPrefix, this.referenceName, eClasses)
+        let refList = RefHandler.createRefList(formerPrefix, this.referenceName, definedEClasses)
         refList.forEach(ref => {
           this.add(context.createWithChildren<T>(ref))
         })
