@@ -23,17 +23,16 @@ export class Deserializer {
     this.registry = registry;
   }
 
-  create<T extends Referencable>( ref: Ref): T {
+  create<T extends Referencable>( ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
-    const json = this.getJsonFromTree(ref.$ref) as JsonOf<typeof entry.cls>
     const obj: T = entry.cls.fromJson(json, ref)
-    this.put(obj)
+    this.put(ref,obj)
     return obj
   }
 
-  createWithChildren<T extends Referencable>( ref: Ref ): T {
-    const t: T = this.create<T>(ref)
-    t.createChildren(this, ref)
+  createWithChildren<T extends Referencable>( ref: Ref, json: JsonOf<T> ): T {
+    const t: T = this.create<T>(ref, json)
+    t.createChildren(this, ref, json)
     return t
   }
 
@@ -63,8 +62,8 @@ export class Deserializer {
     return (this.createdObjects.get($ref) as T);
   }
 
-  private put<T extends Referencable>(elem: T ) {
-    this.createdObjects.set(elem.getRef().$ref, elem);
+  private put<T extends Referencable>(ref: Ref, elem: T ) {
+    this.createdObjects.set(ref.$ref, elem);
   }
 
   addAllReferences() {

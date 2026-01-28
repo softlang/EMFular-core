@@ -12,7 +12,7 @@ import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 export abstract class Referencable implements JsonSerializable<any>{
 
   protected ref: Ref;
-  gId: string;
+  gId: string; //graphical ID
 
   /* todo two open points:
       1) we could enforce eClass already here and use it instead if deferring that to the constructor,
@@ -85,9 +85,9 @@ export abstract class Referencable implements JsonSerializable<any>{
   abstract toJson(): any
 
   //todo use json: any?
-  createChildren(context: Deserializer, parent: Ref) {
+  createChildren(context: Deserializer, parent: Ref, json: any) {
     this.$treeChildren.forEach(child => {
-      child.fromJson(parent.$ref, context)
+      child.fromJson(parent.$ref, context, json)
     })
   }
 

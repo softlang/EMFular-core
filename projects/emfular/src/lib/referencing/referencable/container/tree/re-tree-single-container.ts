@@ -23,11 +23,11 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         return this._instance?.toJson()
     }
 
-    fromJson(formerPrefix: string, context: Deserializer) {
+    fromJson(formerPrefix: string, context: Deserializer, json: any) {
         let eClass;
         let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
-        let json: JsonOf<T> = context.getJsonFromTree(refStr)
-        if (json) eClass = Deserializer.getEClass(json, this.defaultEClass);
+        let myJson: JsonOf<T> = json[this.referenceName]
+        if (myJson) eClass = Deserializer.getEClass(myJson, this.defaultEClass);
         if (!eClass){
             eClass = this.defaultEClass
             if(!eClass){
@@ -35,6 +35,6 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
             }
         }
         let ref = RefHandler.createRef(refStr, eClass)
-        this.add(context.createWithChildren<T>(ref))
+        this.add(context.createWithChildren<T>(ref, myJson))
     }
 }
