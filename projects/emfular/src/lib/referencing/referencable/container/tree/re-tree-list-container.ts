@@ -1,7 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
-import {Deserializer} from "../../../../deserialization/deserializer";
+import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {

@@ -1,7 +1,7 @@
 import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ReContainer} from "./container/re-container";
-import {Deserializer} from "../../deserialization/deserializer";
+import {Deserializer} from "../../serialization/deserializer";
 import {JsonSerializable} from "../../serialization/json-serializable";
 import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
 import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";

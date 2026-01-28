@@ -1,5 +1,5 @@
 import {Referencable} from "../referenceable";
-import {Deserializer} from "../../../deserialization/deserializer";
+import {Deserializer} from "../../../serialization/deserializer";
 import {Ref} from "../../ref/ref";
 
 export abstract class ReContainer<T extends Referencable> {

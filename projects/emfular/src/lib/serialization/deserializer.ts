@@ -6,7 +6,7 @@ idea:
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
-import {JsonOf} from "../serialization/json-deserializable";
+import {JsonOf} from "./json-deserializable";
 import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
