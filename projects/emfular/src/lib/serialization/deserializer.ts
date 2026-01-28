@@ -71,4 +71,15 @@ export class Deserializer {
       ref.addReferences(this)
     })
   }
+
+  static fromJSON<T extends Referencable> (json: JsonOf<T>, registry: ModelRegistry, rootEClass: string): T {
+    let context = new Deserializer(json, registry);
+    let ref: Ref = {
+      $ref: RefHandler.rootPath,
+      eClass: rootEClass
+    }
+    let model: T = context.createWithChildren<T>(ref, json as JsonOf<T>);
+    context.addAllReferences()
+    return model;
+  }
 }

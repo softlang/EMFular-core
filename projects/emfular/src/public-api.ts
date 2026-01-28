@@ -15,6 +15,8 @@ export * from './lib/referencing/referencable/container/tree/re-tree-single-cont
 export * from './lib/referencing/referencable/container/tree/re-tree-parent-container';
 
 export * from './lib/serialization/deserializer';
+export * from './lib/serialization/json-deserializable';
+export * from './lib/serialization/json-serializable';
 export * from './lib/utils/list-updater';
 export * from './lib/utils/json-comparer';
 
