@@ -6,7 +6,7 @@ idea:
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
-import {JsonOf} from "./json-deserializable";
+import {JsonDeserializable, JsonOf} from "./json-deserializable";
 import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
@@ -72,14 +72,20 @@ export class Deserializer {
     })
   }
 
-  static fromJSON<T extends Referencable> (json: JsonOf<T>, registry: ModelRegistry, rootEClass: string): T {
+  static fromJSON<C extends JsonDeserializable<any, any>>(
+      _: C, //type hint for compilation errors if lib uses it wrongly
+      json: JsonOf<C>,
+      registry: ModelRegistry,
+      rootEClass: string
+  ): InstanceType<C> {
     let context = new Deserializer(json, registry);
     let ref: Ref = {
       $ref: RefHandler.rootPath,
       eClass: rootEClass
     }
-    let model: T = context.createWithChildren<T>(ref, json as JsonOf<T>);
+    let model: InstanceType<C> = context.createWithChildren<InstanceType<C>>(ref, json);
     context.addAllReferences()
     return model;
   }
+
 }
