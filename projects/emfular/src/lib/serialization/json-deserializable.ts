@@ -1,15 +1,9 @@
 import {Referencable} from "../referencing/referencable/referenceable";
+import {Ref} from "../referencing/ref/ref";
 
 export interface JsonDeserializable<T extends Referencable, J> {
-    fromJson(json: J): T
+    fromJson(json: J, ref: Ref): T
     new (...args: any[]): T
-}
-
-export function deserialize<T extends Referencable, J>(
-    cls: JsonDeserializable<T, J>,
-    json: J
-): T {
-    return cls.fromJson(json)
 }
 
 export type JsonOf<C> =

@@ -6,7 +6,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 
-    private defaultEClass?: string;
+    readonly defaultEClass?: string;
 
     constructor(parent: Referencable, name: string, inverse?: string, eClass?: string) {
         super(parent, name, inverse);
