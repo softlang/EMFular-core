@@ -1,8 +1,20 @@
+// attribute-decorator.ts
 import "reflect-metadata";
 
 export const ATTRIBUTES_KEY = Symbol("attributes");
 
-export function attribute(target: any, propertyKey: string) {
-    const existing = Reflect.getMetadata(ATTRIBUTES_KEY, target.constructor) || [];
-    Reflect.defineMetadata(ATTRIBUTES_KEY, [...existing, propertyKey], target.constructor);
+export interface AttributeOptions {
+    default?: any;
+}
+
+export function attribute(options: AttributeOptions = {}) {
+    return function (target: any, propertyKey: string) {
+        // target is the prototype
+        const existing: Record<string, AttributeOptions> =
+            Reflect.getMetadata(ATTRIBUTES_KEY, target) || {};
+
+        existing[propertyKey] = options;
+
+        Reflect.defineMetadata(ATTRIBUTES_KEY, existing, target);
+    };
 }

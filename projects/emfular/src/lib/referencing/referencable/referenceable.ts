@@ -5,7 +5,7 @@ import {Deserializer} from "../../serialization/deserializer";
 import {JsonSerializable} from "../../serialization/json-serializable";
 import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
 import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
-import {ATTRIBUTES_KEY} from "../../binding/attribute-decorator";
+import {getAllAttributes} from "../../binding/attribute-collector";
 
 /** base class for CORE models.
  *
@@ -93,12 +93,14 @@ export abstract class Referencable implements JsonSerializable<any>{
 
   fill(json: any) {
     const ctor = this.constructor as any;
-    const attributes: string[] = Reflect.getMetadata(ATTRIBUTES_KEY, ctor) || [];
-    for (const key of attributes) {
+    const attributes = getAllAttributes(ctor);
+    attributes.forEach((options, key) => {
       if (json[key] !== undefined) {
         (this as any)[key] = json[key];
+      } else if (options?.default !== undefined) {
+        (this as any)[key] = options.default;
       }
-    }
+    })
   }
 
 }
