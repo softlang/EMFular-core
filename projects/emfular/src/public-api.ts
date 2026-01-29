@@ -22,3 +22,4 @@ export * from './lib/utils/json-comparer';
 
 export * from './lib/binding/model-registry'
 export * from './lib/binding/registry-entry'
+export * from './lib/binding/attribute-decorator'
