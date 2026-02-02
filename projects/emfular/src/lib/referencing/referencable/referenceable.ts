@@ -88,10 +88,12 @@ export abstract class Referencable implements JsonSerializable<any>{
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
     attributes.forEach((options, key) => {
-      let value = (this as any)[key];
-      //todo we could even supress defaults here
-      //todo use json names?
-      json[key] = value;
+      if (this.hasOwnProperty(key)) { // skip sibling attributes that are on prototype
+        let value = (this as any)[key];
+        //todo we could even suppress defaults here
+        //todo use json names?
+        json[key] = value;
+      }
     })
     json["eClass"]=this.ref.eClass; //todo not always necessary
     this.toJsonRefs(json)
