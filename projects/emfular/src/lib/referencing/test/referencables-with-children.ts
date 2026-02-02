@@ -1,12 +1,9 @@
 import {ReTreeListContainer} from "../referencable/container/tree/re-tree-list-container";
 import {Referencable} from "../referencable/referenceable";
 import {Ref} from "../ref/ref";
-import {
-    Referencable1WithChildrenJson,
-    Referencable2WithChildrenJson,
-    Referencable3WithChildrenJson
-} from "./referencables-with-children-json";
+import {Referencable1WithChildrenJson} from "./referencables-with-children-json";
 import {ReLinkListContainer} from "../referencable/container/link/re-link-list-container";
+import {RefHandler} from "../ref/ref-handler";
 
 export class Referencable1WithChildren extends Referencable {
 
@@ -34,10 +31,8 @@ export class Referencable1WithChildren extends Referencable {
     }
 
     override toJson(): Referencable1WithChildrenJson {
-        return {
-            c1_1: this._c1_1.toJson(),
-            c1_2: this._c1_2.toJson(),
-        }
+        this.prepare(RefHandler.rootPath)
+        return super.toJson()
     }
 }
 
@@ -54,12 +49,6 @@ export class Referencable2WithChildren extends Referencable {
     addc2_1(...c3s: Referencable3WithChildren[]) {
         c3s.map(c3 => this._c2_1.add(c3))
     }
-
-    override toJson(): Referencable2WithChildrenJson {
-        return {
-            c2_1: this._c2_1.toJson(),
-        }
-    }
 }
 
 export class Referencable3WithChildren extends Referencable {
@@ -73,11 +62,5 @@ export class Referencable3WithChildren extends Referencable {
     }
     addc1_2_reversed(...c1s: Referencable1WithChildren[]) {
         c1s.map(c1 => this._c1_2_reversed.add(c1))
-    }
-
-    override toJson(): Referencable3WithChildrenJson {
-        return {
-            c1_2_reversed: this._c1_2_reversed.toJson()
-        }
     }
 }

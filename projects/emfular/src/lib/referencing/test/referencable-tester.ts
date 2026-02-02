@@ -5,7 +5,4 @@ export class ReferencableTester extends Referencable {
     constructor(ref: Ref) {
         super(ref);
     }
-
-    override toJson(): any {
-    }
 }
