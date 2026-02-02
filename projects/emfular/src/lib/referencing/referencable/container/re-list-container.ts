@@ -4,7 +4,7 @@ import {ListUpdater} from "../../../utils/list-updater";
 
 export abstract class ReListContainer<T extends Referencable> extends ReContainer<T> {
 
-    readonly _instance: T[];
+    readonly _instance: T[] = [];
 
     protected constructor(parent: Referencable, name: string, inverse?: string) {
         super(parent, name, inverse);

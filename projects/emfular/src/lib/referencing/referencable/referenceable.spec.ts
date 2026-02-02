@@ -19,7 +19,7 @@ describe('Referenceable', () => {
   })
 
   it('should deserialize and serialize a JSON with missing arrays', () => {
-    //let json = '{' +
+    let json = '{' +
         'c1_1: [' +
           '{' +
             'c2_1: [' +

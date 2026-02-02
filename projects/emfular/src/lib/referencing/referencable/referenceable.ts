@@ -83,7 +83,30 @@ export abstract class Referencable implements JsonSerializable<any>{
     return this.getAttr(name).remove(item)
   }
 
-  abstract toJson(): any
+  toJson(): any {
+    let json: any = {};
+    const ctor = this.constructor as any;
+    const attributes = getAllAttributes(ctor);
+    attributes.forEach((options, key) => {
+      let value = (this as any)[key];
+      //todo we could even supress defaults here
+      //todo use json names?
+      json[key] = value;
+    })
+    json["eClass"]=this.ref.eClass; //todo not always necessary
+    this.toJsonRefs(json)
+    return json;
+  }
+
+  private toJsonRefs(json: any) {
+    this.$treeChildren.forEach(child => {
+      json[child.referenceName] = child.toJson()
+    })
+    this.$otherReferences.forEach(child => {
+      json[child.referenceName] = child.toJson()
+    })
+  }
+
 
   createChildren(context: Deserializer, parent: Ref, json: any) {
     this.$treeChildren.forEach(child => {
