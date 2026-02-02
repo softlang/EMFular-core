@@ -5,6 +5,7 @@ export const ATTRIBUTES_KEY = Symbol("attributes");
 
 export interface AttributeOptions {
     default?: any;
+    jsonName?: string;
 }
 
 export function attribute(options: AttributeOptions = {}) {

@@ -6,6 +6,7 @@ import {JsonSerializable} from "../../serialization/json-serializable";
 import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
 import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 import {getAllAttributes} from "../../binding/attribute-collector";
+import {AttributeOptions} from "../../binding/attribute-decorator";
 
 /** base class for CORE models.
  *
@@ -87,12 +88,17 @@ export abstract class Referencable implements JsonSerializable<any>{
     let json: any = {};
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
-    attributes.forEach((options, key) => {
+    attributes.forEach((options: AttributeOptions, key) => {
       if (this.hasOwnProperty(key)) { // skip sibling attributes that are on prototype
-        let value = (this as any)[key];
-        //todo we could even suppress defaults here
-        //todo use json names?
-        json[key] = value;
+        let value: any = (this as any)[key];
+        //suppress defaults here:
+        if(value == undefined || value == "" || value ==false || value == options.default) return;
+        // use right name (jsonName)
+        if(options.jsonName) {
+          json[options.jsonName] = value;
+        } else {
+          json[key] = value;
+        }
       }
     })
     json["eClass"]=this.ref.eClass; //todo not always necessary
@@ -102,13 +108,18 @@ export abstract class Referencable implements JsonSerializable<any>{
 
   private toJsonRefs(json: any) {
     this.$treeChildren.forEach(child => {
-      json[child.referenceName] = child.toJson()
+      const jsc = child.toJson()
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
     })
     this.$otherReferences.forEach(child => {
-      json[child.referenceName] = child.toJson()
+      const jsc = child.toJson()
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
     })
   }
-
 
   createChildren(context: Deserializer, parent: Ref, json: any) {
     this.$treeChildren.forEach(child => {
