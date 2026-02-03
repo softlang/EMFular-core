@@ -1,5 +1,7 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
+import {Deserializer} from "../../../serialization/deserializer";
+import {JsonOf} from "../../../serialization/json-deserializable";
 
 export abstract class ReSingleContainer<T extends Referencable> extends ReContainer<T> {
 
@@ -52,6 +54,13 @@ export abstract class ReSingleContainer<T extends Referencable> extends ReContai
             return true; // todo refine?
         }
         return false;
+    }
+
+    createRefsOnChildren(context: Deserializer, json: any) {
+        let myJson: JsonOf<T> = json[this.referenceName];
+        if(this._instance && myJson ) {
+            this._instance.addRefWithJson(context, myJson)
+        }
     }
 
 }

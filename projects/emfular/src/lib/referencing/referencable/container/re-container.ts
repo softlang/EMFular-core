@@ -24,7 +24,7 @@ export abstract class ReContainer<T extends Referencable> {
 
     //adds the real elements behind refs as received from getOrCreate to the container
     addLinks(context: Deserializer, ...refs: Ref[]): void {
-        refs.map((ref: Ref) => {
+        refs?.map((ref: Ref) => {
             let elem: T = context.get(ref.$ref) as T
             this.add(elem)
         })
@@ -35,5 +35,4 @@ export abstract class ReContainer<T extends Referencable> {
     abstract toJson(): any
     //called to destruct all elements in the container (e.g. when destroying a parent
     abstract delete(): void
-
 }

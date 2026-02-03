@@ -84,7 +84,8 @@ export class Deserializer {
       eClass: rootEClass
     }
     let model: InstanceType<C> = context.createWithChildren<InstanceType<C>>(ref, json);
-    context.addAllReferences()
+    //context.addAllReferences()
+    model.addRefWithJson(context, json)
     return model;
   }
 
