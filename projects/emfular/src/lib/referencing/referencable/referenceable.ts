@@ -2,7 +2,6 @@ import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../serialization/deserializer";
-import {JsonSerializable} from "../../serialization/json-serializable";
 import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
 import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 import {getAllAttributes} from "../../binding/attribute-collector";
@@ -11,7 +10,7 @@ import {AttributeOptions} from "../../binding/attribute-decorator";
 /** base class for CORE models.
  *
  */
-export abstract class Referencable implements JsonSerializable<any>{
+export abstract class Referencable {
 
   protected ref: Ref;
   gId: string; //graphical ID
