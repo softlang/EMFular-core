@@ -1,7 +1,7 @@
 /*
 idea:
   1) create the tree backbone, only following tree relationships
-  2) use add references to add all created references afterwards
+  2) use addRefWithJson to add all created references afterwards
  */
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
@@ -11,15 +11,12 @@ import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
 
-  private readonly completeJSON: any;
-
   private registry: ModelRegistry
 
   // all so far parsed objects
   private createdObjects: Map<string, Referencable> = new Map<string, Referencable>();
 
-  constructor(json: any, registry: ModelRegistry) {
-    this.completeJSON = json;
+  constructor(registry: ModelRegistry) {
     this.registry = registry;
   }
 
@@ -34,16 +31,6 @@ export class Deserializer {
     const t: T = this.create<T>(ref, json)
     t.createChildren(this, ref, json)
     return t
-  }
-
-  getJsonFromTree<T>($ref: string): T {
-    //first replace index access (.) by normal $ref divider, since they are all finally [] accesses
-    const accessPaths = $ref.replaceAll('.', RefHandler.pathDivider).split(RefHandler.pathDivider)
-    let res = this.completeJSON;
-    for (let i = 1; i<accessPaths.length; i++) {
-      res = res[(accessPaths[i])]
-    }
-    return (res as T);
   }
 
   static getEClass(json: any, defaultStr?: string): (string|undefined) {
@@ -66,25 +53,18 @@ export class Deserializer {
     this.createdObjects.set(ref.$ref, elem);
   }
 
-  addAllReferences() {
-    this.createdObjects.forEach((ref: Referencable) => {
-      ref.addReferences(this)
-    })
-  }
-
   static fromJSON<C extends JsonDeserializable<any, any>>(
       _: C, //type hint for compilation errors if lib uses it wrongly
       json: JsonOf<C>,
       registry: ModelRegistry,
       rootEClass: string
   ): InstanceType<C> {
-    let context = new Deserializer(json, registry);
+    let context = new Deserializer(registry);
     let ref: Ref = {
       $ref: RefHandler.rootPath,
       eClass: rootEClass
     }
     let model: InstanceType<C> = context.createWithChildren<InstanceType<C>>(ref, json);
-    //context.addAllReferences()
     model.addRefWithJson(context, json)
     return model;
   }

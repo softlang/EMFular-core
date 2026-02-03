@@ -59,19 +59,6 @@ export abstract class Referencable implements JsonSerializable<any>{
     }
   }
 
-  public addReferences(context: Deserializer) {
-    let json: any = context.getJsonFromTree(this.ref.$ref)
-    for (let elem of this.$otherReferences) {
-      let jsonElem: any = json[elem.referenceName]
-      if (Array.isArray(jsonElem)) {
-        elem.addLinks(context,...jsonElem);
-      } else {
-        if (jsonElem != undefined)
-          elem.addLinks(context, jsonElem);
-      }
-    }
-  }
-
   destruct() {
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this)
@@ -139,10 +126,6 @@ export abstract class Referencable implements JsonSerializable<any>{
     this.$treeChildren.forEach(child => {
       child.fromJson(parent.$ref, context, json)
     })
-  }
-
-  triggerRefCreationOnChildren(context: Deserializer, json: any) {
-
   }
 
   fill(json: any) {

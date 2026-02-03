@@ -5,6 +5,6 @@ describe('Deserializer', () => {
   it('should create an instance', () => {
     let jsonString = "{}"
     let json = JSON.parse(jsonString);
-    expect(new Deserializer(json, new ModelRegistry())).toBeTruthy();
+    expect(new Deserializer( new ModelRegistry())).toBeTruthy();
   });
 });
