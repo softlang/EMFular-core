@@ -44,7 +44,7 @@ export abstract class Referencable implements JsonSerializable<any>{
     }
   }
 
-  public addRefWithJson(context: Deserializer, json: any) {
+  public deserializeRefs(context: Deserializer, json: any) {
     for (let elem of this.$otherReferences) {
       let jsonElem: any = json[elem.referenceName]
       if (Array.isArray(jsonElem)) {
@@ -68,25 +68,46 @@ export abstract class Referencable implements JsonSerializable<any>{
     })
   }
 
-  private getAttr(name: string): ReContainer<Referencable> {
+  private getContainer(name: string): ReContainer<Referencable> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
       return (refContainer[1] as ReContainer<Referencable>)
     } else
-      throw new Error("Attribute _"+name + " not found on "+refContainers)
+      throw new Error("Container _"+name + " not found on "+refContainers)
   }
 
   public addToReferencableContainer(name: string, item: Referencable): boolean {
-    return this.getAttr(name).add(item)
+    return this.getContainer(name).add(item)
   }
 
   public removeFromReferencableContainer(name: string, item: Referencable): boolean {
-    return this.getAttr(name).remove(item)
+    return this.getContainer(name).remove(item)
   }
 
   toJson(): any {
     let json: any = {};
+    this.attributesToJson(json)
+    this.refContainersToJson(json)
+    return json;
+  }
+
+  private refContainersToJson(json: any) {
+    this.$treeChildren.forEach(child => {
+      const jsc = child.toJson()
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
+    })
+    this.$otherReferences.forEach(child => {
+      const jsc = child.toJson()
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
+    })
+  }
+
+  private attributesToJson(json: any) {
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
     attributes.forEach((options: AttributeOptions, key) => {
@@ -103,23 +124,6 @@ export abstract class Referencable implements JsonSerializable<any>{
       }
     })
     json["eClass"]=this.ref.eClass; //todo not always necessary
-    this.toJsonRefs(json)
-    return json;
-  }
-
-  private toJsonRefs(json: any) {
-    this.$treeChildren.forEach(child => {
-      const jsc = child.toJson()
-      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
-        json[child.referenceName] = jsc
-      }
-    })
-    this.$otherReferences.forEach(child => {
-      const jsc = child.toJson()
-      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
-        json[child.referenceName] = jsc
-      }
-    })
   }
 
   createChildren(context: Deserializer, parent: Ref, json: any) {

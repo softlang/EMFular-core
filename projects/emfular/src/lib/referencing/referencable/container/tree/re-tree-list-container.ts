@@ -55,7 +55,7 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         let myJson: JsonOf<T>[] = json[this.referenceName];
         if(myJson && myJson.length == this._instance.length) {
             myJson.forEach((ref, index) => {
-                this._instance[index].addRefWithJson(context, ref)
+                this._instance[index].deserializeRefs(context, ref)
             })
         }
     }
