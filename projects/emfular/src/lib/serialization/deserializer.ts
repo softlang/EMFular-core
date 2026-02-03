@@ -20,7 +20,7 @@ export class Deserializer {
     this.registry = registry;
   }
 
-  create<T extends Referencable>( ref: Ref, json: JsonOf<T>): T {
+  private create<T extends Referencable>( ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
     const obj: T = entry.cls.fromJson(json, ref)
     this.put(ref,obj)
@@ -65,7 +65,7 @@ export class Deserializer {
       eClass: rootEClass
     }
     let model: InstanceType<C> = context.createWithChildren<InstanceType<C>>(ref, json);
-    model.addRefWithJson(context, json)
+    model.deserializeRefs(context, json)
     return model;
   }
 
