@@ -1,9 +1,7 @@
 import {ReTreeListContainer} from "../referencable/container/tree/re-tree-list-container";
 import {Referencable} from "../referencable/referenceable";
 import {Ref} from "../ref/ref";
-import {Referencable1WithChildrenJson} from "./referencables-with-children-json";
 import {ReLinkListContainer} from "../referencable/container/link/re-link-list-container";
-import {RefHandler} from "../ref/ref-handler";
 
 export class Referencable1WithChildren extends Referencable {
 
@@ -30,10 +28,6 @@ export class Referencable1WithChildren extends Referencable {
         c3s.map(c3 => this._c1_2.add(c3))
     }
 
-    override toJson(): Referencable1WithChildrenJson {
-        this.prepare(RefHandler.rootPath)
-        return super.toJson()
-    }
 }
 
 export class Referencable2WithChildren extends Referencable {

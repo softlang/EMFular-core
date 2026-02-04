@@ -1,4 +1,3 @@
-import {Referencable1WithChildrenJson} from "../test/referencables-with-children-json";
 import {Referencable1WithChildren, Referencable2WithChildren, Referencable3WithChildren} from "../test/referencables-with-children";
 
 describe('Referenceable', () => {
