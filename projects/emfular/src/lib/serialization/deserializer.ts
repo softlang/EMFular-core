@@ -50,7 +50,6 @@ export class Deserializer {
   }
 
   static fromJSON<C extends JsonDeserializable<any>>(
-      _: C, //type hint for compilation errors if lib uses it wrongly
       json: JsonOf<C>,
       registry: ModelRegistry,
       rootEClass: string
