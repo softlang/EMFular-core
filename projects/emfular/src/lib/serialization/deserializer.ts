@@ -6,7 +6,7 @@ idea:
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
-import {JsonDeserializable, JsonOf} from "./json-deserializable";
+import {JsonOf} from "./json-deserializable";
 import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
@@ -49,17 +49,18 @@ export class Deserializer {
     this.createdObjects.set(ref.$ref, elem);
   }
 
-  static fromJSON<C extends JsonDeserializable<any>>(
+  //only call on the root to trigger the complete deserialization
+  static fromJSON<C extends Referencable>(
       json: JsonOf<C>,
       registry: ModelRegistry,
       rootEClass: string
-  ): InstanceType<C> {
-    let context = new Deserializer(registry);
-    let ref: Ref = {
+  ): C {
+    const context = new Deserializer(registry);
+    const ref: Ref = {
       $ref: RefHandler.rootPath,
       eClass: rootEClass
     }
-    let model: InstanceType<C> = context.createTreeBackbone<InstanceType<C>>(ref, json);
+    const model: C = context.createTreeBackbone<C>(ref, json);
     model.deserializeLinks(context, json)
     return model;
   }
