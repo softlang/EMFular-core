@@ -35,6 +35,6 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
             }
         }
         let ref = RefHandler.createRef(refStr, eClass)
-        this.add(context.createWithChildren<T>(ref, myJson))
+        this.add(context.createTreeBackbone<T>(ref, myJson))
     }
 }

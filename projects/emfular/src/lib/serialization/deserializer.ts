@@ -20,11 +20,11 @@ export class Deserializer {
     this.registry = registry;
   }
 
-  createWithChildren<T extends Referencable>( ref: Ref, json: JsonOf<T> ): T {
+  createTreeBackbone<T extends Referencable>(ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
     const obj: T = new entry.cls(ref)
     this.put(ref,obj)
-    obj.fill(json)
+    obj.attributesFromJson(json)
     obj.createChildren(this, ref, json)
     return obj
   }
@@ -60,8 +60,8 @@ export class Deserializer {
       $ref: RefHandler.rootPath,
       eClass: rootEClass
     }
-    let model: InstanceType<C> = context.createWithChildren<InstanceType<C>>(ref, json);
-    model.deserializeRefs(context, json)
+    let model: InstanceType<C> = context.createTreeBackbone<InstanceType<C>>(ref, json);
+    model.deserializeLinks(context, json)
     return model;
   }
 

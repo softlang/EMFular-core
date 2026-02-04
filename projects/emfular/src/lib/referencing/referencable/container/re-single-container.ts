@@ -59,7 +59,7 @@ export abstract class ReSingleContainer<T extends Referencable> extends ReContai
     createRefsOnChildren(context: Deserializer, json: any) {
         let myJson: JsonOf<T> = json[this.referenceName];
         if(this._instance && myJson ) {
-            this._instance.deserializeRefs(context, myJson)
+            this._instance.deserializeLinks(context, myJson)
         }
     }
 

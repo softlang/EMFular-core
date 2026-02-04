@@ -43,21 +43,6 @@ export abstract class Referencable {
     }
   }
 
-  public deserializeRefs(context: Deserializer, json: any) {
-    for (let elem of this.$otherReferences) {
-      let jsonElem: any = json[elem.referenceName]
-      if (Array.isArray(jsonElem)) {
-        elem.addLinks(context,...jsonElem);
-      } else {
-        if (jsonElem != undefined)
-          elem.addLinks(context, jsonElem);
-      }
-    }
-    for (let elem of this.$treeChildren) {
-      elem.createRefsOnChildren(context, json)
-    }
-  }
-
   destruct() {
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this)
@@ -131,7 +116,7 @@ export abstract class Referencable {
     })
   }
 
-  fill(json: any) {
+  attributesFromJson(json: any) {
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
     attributes.forEach((options, key) => {
@@ -141,6 +126,21 @@ export abstract class Referencable {
         (this as any)[key] = options.default;
       }
     })
+  }
+
+  public deserializeLinks(context: Deserializer, json: any) {
+    for (let elem of this.$otherReferences) {
+      let jsonElem: any = json[elem.referenceName]
+      if (Array.isArray(jsonElem)) {
+        elem.addLinks(context,...jsonElem);
+      } else {
+        if (jsonElem != undefined)
+          elem.addLinks(context, jsonElem);
+      }
+    }
+    for (let elem of this.$treeChildren) {
+      elem.createRefsOnChildren(context, json)
+    }
   }
 
 }

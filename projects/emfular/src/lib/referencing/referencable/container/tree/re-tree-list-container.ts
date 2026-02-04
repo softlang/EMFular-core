@@ -46,7 +46,7 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
             }
             let refList = RefHandler.createRefList(formerPrefix, this.referenceName, definedEClasses)
             myJson.forEach((js, index) => {
-                this.add(context.createWithChildren<T>(refList[index], js))
+                this.add(context.createTreeBackbone<T>(refList[index], js))
             })
         }
     }
@@ -55,7 +55,7 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         let myJson: JsonOf<T>[] = json[this.referenceName];
         if(myJson && myJson.length == this._instance.length) {
             myJson.forEach((ref, index) => {
-                this._instance[index].deserializeRefs(context, ref)
+                this._instance[index].deserializeLinks(context, ref)
             })
         }
     }
