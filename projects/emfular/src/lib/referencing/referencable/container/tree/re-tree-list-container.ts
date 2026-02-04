@@ -3,6 +3,7 @@ import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
+import {SerializationContext} from "../../../../serialization/serialization-context";
 
 export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> {
 
@@ -24,6 +25,13 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
 
     override prepare(ref: string) {
         ReTreeListContainer.prepareList(RefHandler.computePrefix(ref, this.referenceName),this._instance)
+    }
+
+    assignRefs(ctx: SerializationContext, path: string) {
+        const ownPath = RefHandler.computePrefix(path, this.referenceName)
+        this._instance.map((elem, index) =>
+            elem.assignRefs(ctx, RefHandler.mixWithIndex(ownPath, index))
+        )
     }
 
     override toJson(): any[] {

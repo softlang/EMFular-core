@@ -3,6 +3,7 @@ import {ReSingleContainer} from "../re-single-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
+import {SerializationContext} from "../../../../serialization/serialization-context";
 
 export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T>  {
 
@@ -12,6 +13,10 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         super(parent, referenceName, inverseName);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
+    }
+
+    assignRefs(ctx: SerializationContext, path: string) {
+        this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
     override prepare(ref: string) {

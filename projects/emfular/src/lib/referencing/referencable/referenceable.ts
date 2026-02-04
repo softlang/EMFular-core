@@ -7,6 +7,9 @@ import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 import {getAllAttributes} from "../../binding/attribute-collector";
 import {AttributeOptions} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
+import {ECLASS_METADATA_KEY} from "../../binding/eclass-decorator";
+import {SerializationContext} from "../../serialization/serialization-context";
+import {RefHandler} from "../ref/ref-handler";
 
 /** base class for CORE models.
  *
@@ -35,6 +38,24 @@ export abstract class Referencable {
 
   private setRef(ownPos: string) {
     this.ref.$ref = ownPos
+  }
+
+  getEClass(): string {
+    const eClass = Reflect.getMetadata(ECLASS_METADATA_KEY, this.constructor);
+    if (!eClass) {
+      throw new Error(
+          `Missing @eClass decorator on ${this.constructor.name}.`
+      );
+    }
+    return eClass;
+  }
+
+  assignRefs(ctx: SerializationContext, path: string) {
+    const ref: Ref = RefHandler.createRef(path, this.getEClass())
+    ctx.put(this, ref)
+    for(let child of this.$treeChildren) {
+      child.assignRefs(ctx, path)
+    }
   }
 
   prepare(ownPos: string) {
