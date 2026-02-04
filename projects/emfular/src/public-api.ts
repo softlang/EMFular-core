@@ -16,9 +16,11 @@ export * from './lib/referencing/referencable/container/tree/re-tree-parent-cont
 
 export * from './lib/serialization/deserializer';
 export * from './lib/serialization/json-deserializable';
+export * from './lib/serialization/serialization-context';
 export * from './lib/utils/list-updater';
 export * from './lib/utils/json-comparer';
 
 export * from './lib/binding/model-registry'
 export * from './lib/binding/attribute-decorator'
 export * from './lib/binding/attribute-collector'
+export * from './lib/binding/eclass-decorator'

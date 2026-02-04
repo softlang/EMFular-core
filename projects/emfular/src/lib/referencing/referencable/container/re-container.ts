@@ -1,6 +1,7 @@
 import {Referencable} from "../referenceable";
 import {Deserializer} from "../../../serialization/deserializer";
 import {Ref} from "../../ref/ref";
+import {SerializationContext} from "../../../serialization/serialization-context";
 
 export abstract class ReContainer<T extends Referencable> {
     readonly _parent: Referencable;
@@ -32,7 +33,7 @@ export abstract class ReContainer<T extends Referencable> {
 
     prepare(ref: string): void {}
 
-    abstract toJson(): any
+    abstract toJson(ctx: SerializationContext): any
     //called to destruct all elements in the container (e.g. when destroying a parent
     abstract delete(): void
 }

@@ -1,6 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {Ref} from "../../../ref/ref";
 import {ReListContainer} from "../re-list-container";
+import {SerializationContext} from "../../../../serialization/serialization-context";
 
 export class ReLinkListContainer<T extends Referencable> extends ReListContainer<T> {
 
@@ -9,8 +10,8 @@ export class ReLinkListContainer<T extends Referencable> extends ReListContainer
         this._parent.$otherReferences.push(this)
     }
 
-    override toJson(): Ref[] {
-        return this._instance.map(i => i.getRef())
+    override toJson(ctx: SerializationContext): Ref[] {
+        return this._instance.map(i => ctx.get(i))
     }
 
 }

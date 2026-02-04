@@ -91,22 +91,30 @@ export abstract class Referencable {
     return this.getContainer(name).remove(item)
   }
 
-  toJson(): any {
-    let json: any = {};
-    this.attributesToJson(json)
-    this.refContainersToJson(json)
-    return json;
+  toJson(ctxOPt?: SerializationContext): JsonOf<this> {
+    const ctx = ctxOPt ? ctxOPt : new SerializationContext(this)
+    //todo: this creates one assuming that the current element is root, once we have all parent pointers we can walk up first and then start
+
+    const json: any = {};
+
+    this.attributesToJson(json);
+    this.refContainersToJson(json, ctx);
+
+    json["eClass"] = this.getEClass(); //todo not always necessary
+
+    return json as JsonOf<this>;
   }
 
-  private refContainersToJson(json: any) {
+
+  private refContainersToJson(json: any, ctx: SerializationContext) {
     this.$treeChildren.forEach(child => {
-      const jsc = child.toJson()
+      const jsc = child.toJson(ctx)
       if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
         json[child.referenceName] = jsc
       }
     })
     this.$otherReferences.forEach(child => {
-      const jsc = child.toJson()
+      const jsc = child.toJson(ctx)
       if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
         json[child.referenceName] = jsc
       }
@@ -129,7 +137,6 @@ export abstract class Referencable {
         }
       }
     })
-    json["eClass"]=this.ref.eClass; //todo not always necessary
   }
 
   createChildren<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {

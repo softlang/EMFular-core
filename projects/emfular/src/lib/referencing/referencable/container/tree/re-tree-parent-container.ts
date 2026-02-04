@@ -1,6 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {ReSingleContainer} from "../re-single-container";
 import {Ref} from "../../../ref/ref";
+import {SerializationContext} from "../../../../serialization/serialization-context";
 
 export class ReTreeParentContainer<T extends Referencable> extends ReSingleContainer<T> {
 
@@ -9,8 +10,10 @@ export class ReTreeParentContainer<T extends Referencable> extends ReSingleConta
         this._parent.$otherReferences.push(this)
     }
 
-    override toJson(): Ref | undefined {
-        return this._instance?.getRef()
+    override toJson(ctx: SerializationContext): Ref | undefined {
+        if (this._instance)
+            return ctx.get(this._instance)
+        else return undefined
     }
 
 }

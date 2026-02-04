@@ -24,8 +24,8 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         this._instance?.prepare(newRef)
     }
 
-    override toJson(): any {
-        return this._instance?.toJson()
+    override toJson(ctx: SerializationContext): any {
+        return this._instance?.toJson(ctx)
     }
 
     fromJson(formerPrefix: string, context: Deserializer, json: any) {

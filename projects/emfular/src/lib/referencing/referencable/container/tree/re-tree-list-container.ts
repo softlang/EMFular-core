@@ -34,9 +34,9 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         )
     }
 
-    override toJson(): any[] {
+    override toJson(ctx: SerializationContext): any[] {
         return this._instance.map(
-            (ref: T) => ref.toJson()
+            (ref: T) => ref.toJson(ctx)
         )
     }
 
