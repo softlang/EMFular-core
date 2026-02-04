@@ -20,18 +20,13 @@ export class Deserializer {
     this.registry = registry;
   }
 
-  private create<T extends Referencable>( ref: Ref, json: JsonOf<T>): T {
+  createWithChildren<T extends Referencable>( ref: Ref, json: JsonOf<T> ): T {
     const entry = this.registry.get<T>(ref.eClass)
     const obj: T = new entry.cls(ref)
     this.put(ref,obj)
     obj.fill(json)
+    obj.createChildren(this, ref, json)
     return obj
-  }
-
-  createWithChildren<T extends Referencable>( ref: Ref, json: JsonOf<T> ): T {
-    const t: T = this.create<T>(ref, json)
-    t.createChildren(this, ref, json)
-    return t
   }
 
   static getEClass(json: any, defaultStr?: string): (string|undefined) {
