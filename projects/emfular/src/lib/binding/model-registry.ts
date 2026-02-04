@@ -1,23 +1,22 @@
 import {Referencable} from "../referencing/referencable/referenceable";
-import {RegistryEntry} from "./registry-entry";
-import {JsonDeserializable, JsonOf} from "../serialization/json-deserializable";
+import {JsonDeserializable} from "../serialization/json-deserializable";
 
 export class ModelRegistry {
-    private map = new Map<string, RegistryEntry<any>>()
+    private map = new Map<string, JsonDeserializable<any>>()
 
     set<T extends Referencable>(
         key: string,
-        cls: JsonDeserializable<T, JsonOf<T>>
+        cls: JsonDeserializable<T>
     ) {
-        this.map.set(key, { cls })
+        this.map.set(key, cls )
     }
 
-    get<T extends Referencable>(key: string): RegistryEntry<T> {
+    get<T extends Referencable>(key: string): JsonDeserializable<T> {
         const entry = this.map.get(key);
         if (entry) {
-            return entry as RegistryEntry<T>;
+            return entry as JsonDeserializable<T>;
         } else {
-            throw new Error(`Unable to find a json constructor for ${key}`);
+            throw new Error(`Unable to find a constructor for ${key}`);
         }
     }
 }

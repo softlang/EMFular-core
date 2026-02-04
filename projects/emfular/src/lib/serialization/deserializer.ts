@@ -22,7 +22,7 @@ export class Deserializer {
 
   createTreeBackbone<T extends Referencable>(ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
-    const obj: T = new entry.cls(ref)
+    const obj: T = new entry(ref)
     this.put(ref,obj)
     obj.attributesFromJson(json)
     obj.createChildren(this, ref, json)
@@ -49,7 +49,7 @@ export class Deserializer {
     this.createdObjects.set(ref.$ref, elem);
   }
 
-  static fromJSON<C extends JsonDeserializable<any, any>>(
+  static fromJSON<C extends JsonDeserializable<any>>(
       _: C, //type hint for compilation errors if lib uses it wrongly
       json: JsonOf<C>,
       registry: ModelRegistry,

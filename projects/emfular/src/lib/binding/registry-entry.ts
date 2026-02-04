@@ -1,6 +1,6 @@
 import {Referencable} from "../referencing/referencable/referenceable";
-import {JsonDeserializable, JsonOf} from "../serialization/json-deserializable";
+import {Ref} from "../referencing/ref/ref";
 
 export interface RegistryEntry<T extends Referencable> {
-    cls: JsonDeserializable<T, JsonOf<JsonDeserializable<T, any>>>
+    new (ref?: Ref) : T
 }

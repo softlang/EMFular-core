@@ -6,6 +6,7 @@ import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
 import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 import {getAllAttributes} from "../../binding/attribute-collector";
 import {AttributeOptions} from "../../binding/attribute-decorator";
+import {JsonOf} from "../../serialization/json-deserializable";
 
 /** base class for CORE models.
  *
@@ -116,7 +117,8 @@ export abstract class Referencable {
     })
   }
 
-  attributesFromJson(json: any) {
+  attributesFromJson<J extends JsonOf<this>>(jsonTyped: J) {
+    const json: any = jsonTyped as any
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
     attributes.forEach((options, key) => {
