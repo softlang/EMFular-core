@@ -111,7 +111,7 @@ export abstract class Referencable {
     json["eClass"]=this.ref.eClass; //todo not always necessary
   }
 
-  createChildren(context: Deserializer, parent: Ref, json: any) {
+  createChildren<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {
     this.$treeChildren.forEach(child => {
       child.fromJson(parent.$ref, context, json)
     })
@@ -130,7 +130,8 @@ export abstract class Referencable {
     })
   }
 
-  public deserializeLinks(context: Deserializer, json: any) {
+  public deserializeLinks<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
+    const json = jsonTyped as any
     for (let elem of this.$otherReferences) {
       let jsonElem: any = json[elem.referenceName]
       if (Array.isArray(jsonElem)) {
