@@ -22,8 +22,9 @@ export class Deserializer {
 
   private create<T extends Referencable>( ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
-    const obj: T = entry.cls.fromJson(json, ref)
+    const obj: T = new entry.cls(ref)
     this.put(ref,obj)
+    obj.fill(json)
     return obj
   }
 
