@@ -19,11 +19,6 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
-    override prepare(ref: string) {
-        let newRef = RefHandler.computePrefix(ref, this.referenceName)
-        this._instance?.prepare(newRef)
-    }
-
     override toJson(ctx: SerializationContext): T|undefined {
         return this._instance?.toJson(ctx)
     }

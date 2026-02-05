@@ -58,13 +58,6 @@ export abstract class Referencable {
     }
   }
 
-  prepare(ownPos: string) {
-    this.setRef(ownPos)
-    for (let child of this.$treeChildren) {
-      child.prepare(ownPos);
-    }
-  }
-
   destruct() {
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this)
