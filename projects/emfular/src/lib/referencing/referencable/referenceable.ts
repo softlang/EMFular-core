@@ -10,6 +10,7 @@ import {JsonOf} from "../../serialization/json-deserializable";
 import {ECLASS_METADATA_KEY} from "../../binding/eclass-decorator";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
+import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 
 /** base class for CORE models.
  *
@@ -24,7 +25,7 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  $treeChildren: (ReTreeListContainer<any>|ReTreeSingleContainer<any>)[] = [];
+  $treeChildren: ReTreeChildrenContainer<any>[] = [];
   $otherReferences: ReContainer<any>[] = [];
 
   protected constructor(ref: Ref) {

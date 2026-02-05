@@ -4,8 +4,9 @@ import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
+import {ReTreeChildrenContainer} from "./re-tree-children-container";
 
-export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T>  {
+export class ReTreeSingleContainer<T extends Referencable> extends ReSingleContainer<T> implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
