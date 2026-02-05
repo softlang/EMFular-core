@@ -11,6 +11,7 @@ import {ECLASS_METADATA_KEY} from "../../binding/eclass-decorator";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
+import {ReLinkContainer} from "./container/link/re-link-container";
 
 /** base class for CORE models.
  *
@@ -26,7 +27,7 @@ export abstract class Referencable {
   * */
 
   $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  $otherReferences: ReContainer<any>[] = [];
+  $otherReferences: ReLinkContainer<any>[] = [];
 
   protected constructor(ref: Ref) {
     this.ref = ref;
