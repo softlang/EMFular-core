@@ -1,6 +1,7 @@
 import {Referencable} from "../referenceable";
-import {Deserializer} from "../../../deserialization/deserializer";
+import {Deserializer} from "../../../serialization/deserializer";
 import {Ref} from "../../ref/ref";
+import {SerializationContext} from "../../../serialization/serialization-context";
 
 export abstract class ReContainer<T extends Referencable> {
     readonly _parent: Referencable;
@@ -23,17 +24,14 @@ export abstract class ReContainer<T extends Referencable> {
     abstract removeFromInverse(item: T): boolean;
 
     //adds the real elements behind refs as received from getOrCreate to the container
-    addReferences(context: Deserializer, ...refs: Ref[]): void {
-        refs.map((ref: Ref) => {
-            let elem: T = context.get(ref.$ref) as T //should just be get now
+    addLinks(context: Deserializer, ...refs: Ref[]): void {
+        refs?.map((ref: Ref) => {
+            let elem: T = context.get(ref.$ref) as T
             this.add(elem)
         })
     }
 
-    prepare(ref: string): void {}
-
-    abstract toJson(): any
+    abstract toJson(ctx: SerializationContext): any
     //called to destruct all elements in the container (e.g. when destroying a parent
     abstract delete(): void
-
 }
