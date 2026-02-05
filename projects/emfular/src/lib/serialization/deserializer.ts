@@ -22,7 +22,7 @@ export class Deserializer {
 
   createTreeBackbone<T extends Referencable>(ref: Ref, json: JsonOf<T>): T {
     const entry = this.registry.get<T>(ref.eClass)
-    const obj: T = new entry(ref)
+    const obj: T = new entry()
     this.put(ref,obj)
     obj.attributesFromJson(json)
     obj.createChildren(this, ref, json)

@@ -11,11 +11,11 @@ import {SerializationContext} from "../../serialization/serialization-context";
 describe('Referenceable', () => {
 
   it ('should serialize a Referencable1WithChildren correctly', () => {
-      const r1 : Referencable1WithChildren = new Referencable1WithChildren({$ref: 'r1', eClass: "Referencable1WithChildren"});
-      const r2_1: Referencable2WithChildren = new Referencable2WithChildren({$ref: 'r2_1', eClass: "Referencable2WithChildren"});
-      const r2_2: Referencable2WithChildren = new Referencable2WithChildren({$ref: 'r2_2', eClass: "Referencable2WithChildren"});
+      const r1 : Referencable1WithChildren = new Referencable1WithChildren();
+      const r2_1: Referencable2WithChildren = new Referencable2WithChildren();
+      const r2_2: Referencable2WithChildren = new Referencable2WithChildren();
       r1.addc1_1(r2_1, r2_2)
-      const r3_1: Referencable3WithChildren = new Referencable3WithChildren({$ref: 'r3_1', eClass: "Referencable3WithChildren"});
+      const r3_1: Referencable3WithChildren = new Referencable3WithChildren();
       r2_1.addc2_1(r3_1)
       r3_1.addc1_2_reversed(r1)
       const ctx = new SerializationContext(r1)

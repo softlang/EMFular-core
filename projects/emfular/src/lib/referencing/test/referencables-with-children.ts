@@ -1,6 +1,5 @@
 import {ReTreeListContainer} from "../referencable/container/tree/re-tree-list-container";
 import {Referencable} from "../referencable/referenceable";
-import {Ref} from "../ref/ref";
 import {ReLinkListContainer} from "../referencable/container/link/re-link-list-container";
 import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
@@ -18,8 +17,8 @@ export class Referencable1WithChildren extends Referencable {
     @attribute()
     name: string = "referencable1";
 
-    constructor(ref: Ref) {
-        super(ref);
+    constructor() {
+        super();
         this._c1_1 = new ReTreeListContainer<Referencable2WithChildren>(this, Referencable1WithChildren.c1_1_prefix);
         this._c1_2 = new ReLinkListContainer(this, Referencable1WithChildren.c1_2_prefix, Referencable3WithChildren.c1_2_reversed_prefix);
     }
@@ -41,8 +40,8 @@ export class Referencable2WithChildren extends Referencable {
     @attribute()
     name: string = "referencable2";
 
-    constructor(ref: Ref) {
-        super(ref);
+    constructor() {
+        super();
         this._c2_1 = new ReTreeListContainer<Referencable3WithChildren>(this, Referencable2WithChildren.c2_1_prefix)
     }
 
@@ -59,8 +58,8 @@ export class Referencable3WithChildren extends Referencable {
     @attribute()
     name: string = "referencable3";
 
-    constructor(ref: Ref) {
-        super(ref);
+    constructor() {
+        super();
         this._c1_2_reversed = new ReLinkListContainer<Referencable1WithChildren>(this, Referencable3WithChildren.c1_2_reversed_prefix, Referencable1WithChildren.c1_2_prefix)
     }
     addc1_2_reversed(...c1s: Referencable1WithChildren[]) {

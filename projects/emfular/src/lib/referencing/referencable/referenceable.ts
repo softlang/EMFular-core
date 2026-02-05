@@ -2,8 +2,6 @@ import {Ref} from "../ref/ref";
 import { v4 as uuidv4 } from 'uuid';
 import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../serialization/deserializer";
-import {ReTreeListContainer} from "./container/tree/re-tree-list-container";
-import {ReTreeSingleContainer} from "./container/tree/re-tree-single-container";
 import {getAllAttributes} from "../../binding/attribute-collector";
 import {AttributeOptions} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
@@ -18,7 +16,6 @@ import {ReLinkContainer} from "./container/link/re-link-container";
  */
 export abstract class Referencable {
 
-  protected ref: Ref;
   gId: string; //graphical ID
 
   /* todo two open points:
@@ -29,17 +26,8 @@ export abstract class Referencable {
   $treeChildren: ReTreeChildrenContainer<any>[] = [];
   $otherReferences: ReLinkContainer<any>[] = [];
 
-  protected constructor(ref: Ref) {
-    this.ref = ref;
+  protected constructor() {
     this.gId = uuidv4();
-  }
-
-  public getRef(): Ref {
-    return this.ref;
-  }
-
-  private setRef(ownPos: string) {
-    this.ref.$ref = ownPos
   }
 
   getEClass(): string {
