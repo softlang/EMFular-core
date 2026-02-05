@@ -11,17 +11,11 @@ import {ModelRegistry} from "../binding/model-registry";
 
 export class Deserializer {
 
-  private registry: ModelRegistry
-
   // all so far parsed objects
   private createdObjects: Map<string, Referencable> = new Map<string, Referencable>();
 
-  constructor(registry: ModelRegistry) {
-    this.registry = registry;
-  }
-
   createTreeBackbone<T extends Referencable>(ref: Ref, json: JsonOf<T>): T {
-    const entry = this.registry.get<T>(ref.eClass)
+    const entry = ModelRegistry.get<T>(ref.eClass)
     const obj: T = new entry()
     this.put(ref,obj)
     obj.attributesFromJson(json)
@@ -52,10 +46,9 @@ export class Deserializer {
   //only call on the root to trigger the complete deserialization
   static fromJSON<C extends Referencable>(
       json: JsonOf<C>,
-      registry: ModelRegistry,
       rootEClass: string
   ): C {
-    const context = new Deserializer(registry);
+    const context = new Deserializer();
     const ref: Ref = {
       $ref: RefHandler.rootPath,
       eClass: rootEClass
