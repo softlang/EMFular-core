@@ -20,7 +20,7 @@ export class ReTreeSingleContainer<T extends Referencable, Tname extends string>
         this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
-    override toJson(ctx: SerializationContext): T|undefined {
+    override toJson(ctx: SerializationContext): JsonOf<T>|undefined {
         return this._instance?.toJson(ctx)
     }
 
