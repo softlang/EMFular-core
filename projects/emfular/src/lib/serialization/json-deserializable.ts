@@ -14,9 +14,9 @@ export interface JsonDeserializable<T extends Referencable> {
 //  JsonOf<T> — main JSON type
 // ---------------------------------------------------------
 export type JsonOf<T extends Referencable> = {
-    eClass: string;
+    eClass?: string;
 } & {
-    [K in JsonKeys<T>]: JsonValueForKey<T, K>;
+    [K in JsonKeys<T>]?: JsonValueForKey<T, K>;
 };
 
 // ---------------------------------------------------------
