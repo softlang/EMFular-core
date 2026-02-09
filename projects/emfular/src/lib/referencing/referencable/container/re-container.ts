@@ -3,13 +3,13 @@ import {Deserializer} from "../../../serialization/deserializer";
 import {Ref} from "../../ref/ref";
 import {SerializationContext} from "../../../serialization/serialization-context";
 
-export abstract class ReContainer<T extends Referencable> {
+export abstract class ReContainer<T extends Referencable, Tname extends string> {
     readonly _parent: Referencable;
-    readonly referenceName: string;
+    readonly referenceName: Tname;
     readonly inverseName?: string;
 
 
-    protected constructor(parent: Referencable, referenceName: string, inverseName?: string) {
+    protected constructor(parent: Referencable, referenceName: Tname, inverseName?: string) {
         this._parent = parent;
         this.referenceName = referenceName;
         this.inverseName = inverseName;

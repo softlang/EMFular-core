@@ -2,11 +2,11 @@ import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../../utils/list-updater";
 
-export abstract class ReListContainer<T extends Referencable> extends ReContainer<T> {
+export abstract class ReListContainer<T extends Referencable, Tname extends string> extends ReContainer<T, Tname> {
 
     readonly _instance: T[] = [];
 
-    protected constructor(parent: Referencable, name: string, inverse?: string) {
+    protected constructor(parent: Referencable, name: Tname, inverse?: string) {
         super(parent, name, inverse);
         this._instance = []
     }

@@ -3,11 +3,11 @@ import {ReContainer} from "./re-container";
 import {Deserializer} from "../../../serialization/deserializer";
 import {JsonOf} from "../../../serialization/json-deserializable";
 
-export abstract class ReSingleContainer<T extends Referencable> extends ReContainer<T> {
+export abstract class ReSingleContainer<T extends Referencable, Tname extends string> extends ReContainer<T, Tname> {
 
     _instance?: T
 
-    protected constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
+    protected constructor(parent: Referencable, referenceName: Tname, inverseName?: string ) {
         super(parent, referenceName, inverseName);
     }
 

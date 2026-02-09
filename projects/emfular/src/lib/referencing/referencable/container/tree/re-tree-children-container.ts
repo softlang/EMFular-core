@@ -3,7 +3,7 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {Referencable} from "../../referenceable";
 import { ReContainer } from "../re-container";
 
-export interface ReTreeChildrenContainer<T extends Referencable> extends ReContainer<T> {
+export interface ReTreeChildrenContainer<T extends Referencable, Tname extends string> extends ReContainer<T, Tname> {
     // serialization
     assignRefs(ctx: SerializationContext, path: string) : void
     toJson(ctx: SerializationContext): T[] | T | undefined

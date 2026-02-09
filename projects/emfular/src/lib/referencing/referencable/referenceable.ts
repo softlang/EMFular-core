@@ -23,8 +23,8 @@ export abstract class Referencable {
       2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
   * */
 
-  $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  $otherReferences: ReLinkContainer<any>[] = [];
+  $treeChildren: ReTreeChildrenContainer<any, string>[] = [];
+  $otherReferences: ReLinkContainer<any, string>[] = [];
 
   protected constructor() {
     this.gId = uuidv4();
@@ -57,11 +57,11 @@ export abstract class Referencable {
     })
   }
 
-  private getContainer(name: string): ReContainer<Referencable> {
+  private getContainer<Tname extends string>(name: Tname): ReContainer<Referencable, Tname> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReContainer<Referencable>)
+      return (refContainer[1] as ReContainer<Referencable, Tname>)
     } else
       throw new Error("Container _"+name + " not found on "+refContainers)
   }
