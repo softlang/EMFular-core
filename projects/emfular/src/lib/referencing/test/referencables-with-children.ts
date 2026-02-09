@@ -52,7 +52,7 @@ export class Referencable2WithChildren extends Referencable {
 
 @eClass(EClasses.Referencable3WithChildren)
 export class Referencable3WithChildren extends Referencable {
-    static readonly c1_2_reversed_prefix: string = "c1_2_reversed";
+    static readonly c1_2_reversed_prefix = "c1_2_reversed";
     readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren, typeof Referencable3WithChildren.c1_2_reversed_prefix>;
 
     @attribute()
