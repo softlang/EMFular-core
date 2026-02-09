@@ -4,7 +4,7 @@ import {Referencable} from "../referenceable";
 import {ReSingleContainer} from "./re-single-container";
 
 describe('ReferencableListContainer', () => {
-  class ReListTester<T extends Referencable> extends ReSingleContainer<T> {
+  class ReListTester<T extends Referencable> extends ReSingleContainer<T, string> {
     constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
       super(parent, referenceName, inverseName);
     }
