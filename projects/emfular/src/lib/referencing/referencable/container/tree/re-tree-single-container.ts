@@ -25,17 +25,18 @@ export class ReTreeSingleContainer<T extends Referencable, Tname extends string>
     }
 
     fromJson(formerPrefix: string, context: Deserializer, json: any) {
-        let eClass;
-        let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
         let myJson: JsonOf<T> = json[this.referenceName]
-        if (myJson) eClass = Deserializer.getEClass(myJson, this.defaultEClass);
-        if (!eClass){
-            eClass = this.defaultEClass
-            if(!eClass){
-                throw new Error("Cannot determine eClass for "+formerPrefix)
+        if (myJson) {
+            let eClass = Deserializer.getEClass(myJson, this.defaultEClass);
+            if (!eClass){
+                eClass = this.defaultEClass
+                if(!eClass){
+                    throw new Error("Cannot determine eClass for "+formerPrefix)
+                }
             }
+            let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
+            let ref = RefHandler.createRef(refStr, eClass)
+            this.add(context.createTreeBackbone<T>(ref, myJson))
         }
-        let ref = RefHandler.createRef(refStr, eClass)
-        this.add(context.createTreeBackbone<T>(ref, myJson))
     }
 }

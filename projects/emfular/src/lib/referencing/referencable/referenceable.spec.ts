@@ -7,6 +7,11 @@ import {
 import {RefHandler} from "../ref/ref-handler";
 import {EClasses} from "../test/eclasses";
 import {SerializationContext} from "../../serialization/serialization-context";
+import {
+    EClassesSingleChild,
+    ReContainersWithSingleChild,
+    ReSingleChildExample
+} from "../test/re-containers-with-single-child";
 
 describe('Referenceable', () => {
 
@@ -50,4 +55,42 @@ describe('Referenceable', () => {
 
  //todo deserialization test
 
+
+    it('should serialize and deserialize a ReContainersWithSingleChild (todo both directions for tree parent)', () => {
+        const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
+        const child: ReSingleChildExample = new ReSingleChildExample();
+
+        const rootJson = root.toJson()
+
+        expect(rootJson).toEqual({name: "re1", eClass: EClassesSingleChild.ReContainersWithSingleChild})
+        const rootFromJson: ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(rootJson)
+        expect(rootFromJson.name).toEqual(root.name)
+        expect(rootFromJson.child).toBeUndefined()
+        expect(rootFromJson.link).toBeUndefined()
+
+        // now create parent/child:
+        child.myParent = root; //todo both directions now necessary
+        root.child = child;
+        expect(child.myParent?.name).toEqual(root.name)
+        expect(child.myParent?.link).toBeUndefined()
+
+        const jsonNoLinks = root.toJson()
+        expect(jsonNoLinks.child).toBeDefined()
+        expect(jsonNoLinks.link).toBeUndefined()
+
+        const fromNoLinks : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(jsonNoLinks)
+        expect(fromNoLinks.link).toBeUndefined()
+        expect(fromNoLinks.child?.myParent?.name).toEqual(root.name)
+
+        //add other links:
+        root.link = child;
+        expect(child.otherLink).toEqual(root)
+        const completeJson = root.toJson()
+        expect(completeJson.name).toEqual(root.name)
+        expect(completeJson.link).toBeDefined()
+
+        const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
+        expect(completeFromJson.name).toEqual(root.name)
+        expect(completeFromJson.link).toEqual(completeFromJson.child)
+    })
 })

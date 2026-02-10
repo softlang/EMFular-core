@@ -18,9 +18,11 @@ export abstract class ReSingleContainer<T extends Referencable, Tname extends st
     private set(instance: T): void {
         if(this.inverseName !== undefined) {
             this._instance?.removeFromReferencableContainer(this.inverseName, this._parent)
+            this._instance = instance;
             instance.addToReferencableContainer(this.inverseName, this._parent)
+        } else {
+            this._instance = instance;
         }
-        this._instance = instance;
     }
 
     add(item: T): boolean {
