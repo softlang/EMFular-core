@@ -18,11 +18,6 @@ export abstract class Referencable {
 
   $gId: string; //graphical ID
 
-  /* todo two open points:
-      1) we could enforce eClass already here and use it instead if deferring that to the constructor,
-      2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
-  * */
-
   $treeChildren: ReTreeChildrenContainer<any, string>[] = [];
   $otherReferences: ReLinkContainer<any, string>[] = [];
 
