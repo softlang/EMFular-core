@@ -18,8 +18,8 @@ export abstract class Referencable {
 
   $gId: string; //graphical ID
 
-  $treeChildren: ReTreeChildrenContainer<any, string>[] = [];
-  $otherReferences: ReLinkContainer<any, string>[] = [];
+  $treeChildren: ReTreeChildrenContainer<any>[] = [];
+  $otherReferences: ReLinkContainer<any>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -52,11 +52,11 @@ export abstract class Referencable {
     })
   }
 
-  private getContainer<Tname extends string>(name: Tname): ReContainer<Referencable, Tname> {
+  private getContainer(name: string): ReContainer<Referencable> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReContainer<Referencable, Tname>)
+      return (refContainer[1] as ReContainer<Referencable>)
     } else
       throw new Error("Container _"+name + " not found on "+refContainers)
   }

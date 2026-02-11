@@ -4,11 +4,9 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "../link/re-link-container";
 
-export class ReTreeParentContainer<T extends Referencable, Tname extends string>
-    extends ReSingleContainer<T, Tname>
-    implements ReLinkContainer<T, Tname> {
+export class ReTreeParentContainer<T extends Referencable> extends ReSingleContainer<T> implements ReLinkContainer<T> {
 
-    constructor(parent: Referencable, referenceName: Tname, inverseName?: string ) {
+    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
         this._parent.$otherReferences.push(this)
     }

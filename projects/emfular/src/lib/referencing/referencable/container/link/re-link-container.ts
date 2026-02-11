@@ -3,7 +3,6 @@ import { ReContainer } from "../re-container";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {Ref} from "../../../ref/ref";
 
-export interface ReLinkContainer<T extends Referencable, Tname extends string>
-    extends ReContainer<T, Tname>{
+export interface ReLinkContainer<T extends Referencable> extends ReContainer<T>{
     toJson(ctx: SerializationContext): Ref[] | Ref | undefined
 }
