@@ -3,7 +3,7 @@ import {ReferencableTester} from "../../test/referencable-tester";
 import {Referencable} from "../referenceable";
 
 describe('ReferencableSingletonContainer', () => {
-  class ReSingleTester<T extends Referencable> extends ReSingleContainer<T, string> {
+  class ReSingleTester<T extends Referencable> extends ReSingleContainer<T> {
     constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
       super(parent, referenceName, inverseName);
     }

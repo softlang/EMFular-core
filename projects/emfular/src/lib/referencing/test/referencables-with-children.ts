@@ -3,7 +3,14 @@ import {Referencable} from "../referencable/referenceable";
 import {ReLinkListContainer} from "../referencable/container/link/re-link-list-container";
 import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
-import {EClasses} from "./eclasses";
+import {JsonOf} from "../../serialization/json-deserializable";
+
+export enum EClasses {
+    'Referencable1WithChildren' = 'namespace/Referencable1WithChildren',
+    'Referencable2WithChildren' = 'namespace/Referencable2WithChildren',
+    'Referencable3WithChildren' = 'namespace/Referencable3WithChildren'
+}
+
 
 @eClass(EClasses.Referencable1WithChildren)
 export class Referencable1WithChildren extends Referencable {
@@ -11,8 +18,8 @@ export class Referencable1WithChildren extends Referencable {
     static readonly c1_1_prefix = "c1_1";
     static readonly c1_2_prefix = "c1_2";
 
-    readonly _c1_1: ReTreeListContainer<Referencable2WithChildren, typeof Referencable1WithChildren.c1_1_prefix>;
-    readonly _c1_2: ReLinkListContainer<Referencable3WithChildren, typeof Referencable1WithChildren.c1_2_prefix>;
+    readonly _c1_1: ReTreeListContainer<Referencable2WithChildren>;
+    readonly _c1_2: ReLinkListContainer<Referencable3WithChildren>;
 
     @attribute()
     name: string = "referencable1";
@@ -35,7 +42,7 @@ export class Referencable1WithChildren extends Referencable {
 @eClass(EClasses.Referencable2WithChildren)
 export class Referencable2WithChildren extends Referencable {
     static readonly c2_1_prefix = "c2_1";
-    readonly _c2_1: ReTreeListContainer<Referencable3WithChildren, typeof Referencable2WithChildren.c2_1_prefix>;
+    readonly _c2_1: ReTreeListContainer<Referencable3WithChildren>;
 
     @attribute()
     name: string = "referencable2";
@@ -53,7 +60,7 @@ export class Referencable2WithChildren extends Referencable {
 @eClass(EClasses.Referencable3WithChildren)
 export class Referencable3WithChildren extends Referencable {
     static readonly c1_2_reversed_prefix = "c1_2_reversed";
-    readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren, typeof Referencable3WithChildren.c1_2_reversed_prefix>;
+    readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren>;
 
     @attribute()
     name: string = "referencable3";
@@ -66,3 +73,10 @@ export class Referencable3WithChildren extends Referencable {
         c1s.map(c1 => this._c1_2_reversed.add(c1))
     }
 }
+
+
+
+export type Referencable1WithChildrenJson = JsonOf<Referencable1WithChildren>
+export type Referencable2WithChildrenJson = JsonOf<Referencable2WithChildren>
+export type Referencable3WithChildrenJson = JsonOf<Referencable3WithChildren>
+

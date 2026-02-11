@@ -2,10 +2,10 @@ import {Referencable1WithChildren, Referencable2WithChildren, Referencable3WithC
 import {
     Referencable1WithChildrenJson,
     Referencable2WithChildrenJson,
-    Referencable3WithChildrenJson
-} from "../test/referencables-with-children-json";
+    Referencable3WithChildrenJson,
+    EClasses
+} from "../test/referencables-with-children";
 import {RefHandler} from "../ref/ref-handler";
-import {EClasses} from "../test/eclasses";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {
     EClassesSingleChild,
