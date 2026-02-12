@@ -16,18 +16,13 @@ import {ReLinkContainer} from "./container/link/re-link-container";
  */
 export abstract class Referencable {
 
-  gId: string; //graphical ID
-
-  /* todo two open points:
-      1) we could enforce eClass already here and use it instead if deferring that to the constructor,
-      2) we could allow the parent to set the refpath so that we coul avoid the parameter of prepare
-  * */
+  $gId: string; //graphical ID
 
   $treeChildren: ReTreeChildrenContainer<any>[] = [];
   $otherReferences: ReLinkContainer<any>[] = [];
 
   protected constructor() {
-    this.gId = uuidv4();
+    this.$gId = uuidv4();
   }
 
   getEClass(): string {
