@@ -14,15 +14,25 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 /** base class for CORE models.
  *
  */
-export abstract class Referencable {
+export abstract class Referencable< Parent extends Referencable<any> = Referencable<any> > {
 
   $gId: string; //graphical ID
+
+  $parent?: ReTreeChildrenContainer<this>;
 
   $treeChildren: ReTreeChildrenContainer<any>[] = [];
   $otherReferences: ReLinkContainer<any>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
+  }
+
+  setParent(parent: ReTreeChildrenContainer<this> | undefined) {
+    this.$parent = parent;
+  }
+
+  getParent(): Parent | undefined {
+    return (this.$parent?._parent as Parent)
   }
 
   getEClass(): string {

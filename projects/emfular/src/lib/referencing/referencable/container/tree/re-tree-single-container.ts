@@ -24,6 +24,22 @@ export class ReTreeSingleContainer<T extends Referencable> extends ReSingleConta
         return this._instance?.toJson(ctx)
     }
 
+    override add(item: T): boolean {
+        let res = super.add(item);
+        item.setParent(this);
+        return res;
+    }
+
+    override remove(item: T): boolean {
+        let res = super.remove(item);
+        item.setParent(undefined);
+        return res;
+    }
+
+    override removeFromInverse(item: T): boolean {
+        return false;
+    }
+
     fromJson(formerPrefix: string, context: Deserializer, json: any) {
         let myJson: JsonOf<T> = json[this.referenceName]
         if (myJson) {

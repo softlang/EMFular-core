@@ -29,6 +29,22 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         )
     }
 
+    override add(item: T): boolean {
+        let res = super.add(item);
+        item.setParent(this);
+        return res;
+    }
+
+    override remove(item: T): boolean {
+        let res = super.remove(item);
+        item.setParent(undefined);
+        return res;
+    }
+
+    override removeFromInverse(item: T): boolean {
+        return false;
+    }
+
     //creates one child level plus calls next createChildren
     fromJson(formerPrefix: string, context: Deserializer, json: any) {
         let myJson: JsonOf<T>[] = json[this.referenceName];
