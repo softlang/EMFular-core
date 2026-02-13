@@ -12,14 +12,23 @@ export abstract class ReListContainer<T extends Referencable> extends ReContaine
     }
 
     add(item: T): boolean {
+        let res = this.addIfMissing(item)
+        if (res) {
+            if(this.inverseName !== undefined) {
+                return item.addToReferencableContainer(this.inverseName, this._parent)
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected addIfMissing(item: T): boolean {
         const index = this._instance.indexOf(item);
         if(index > -1) {
             return false;
         } else {
             this._instance.push(item);
-            if(this.inverseName !== undefined) {
-                return item.addToReferencableContainer(this.inverseName, this._parent)
-            }
             return true;
         }
     }
@@ -29,15 +38,23 @@ export abstract class ReListContainer<T extends Referencable> extends ReContaine
     }
 
     remove(item: T): boolean {
-        const index = this._instance.indexOf(item)
-        if(index > -1) {
-            this._instance.splice(index, 1);
+        const res = this.removeIfThere(item);
+        if (res) {
             if(this.inverseName !== undefined) {
                 item.removeFromReferencableContainer(this.inverseName, this._parent)
             }
-            return true;
         }
-        return false;
+        return res; //todo behaviour of flag different to add??
+    }
+
+    protected removeIfThere(item: T): boolean {
+        const index = this._instance.indexOf(item)
+        if(index > -1) {
+            this._instance.splice(index, 1);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     override delete() {

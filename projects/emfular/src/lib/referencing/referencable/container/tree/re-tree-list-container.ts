@@ -30,9 +30,14 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
     }
 
     override add(item: T): boolean {
-        let res = super.add(item);
-        item.setParent(this);
-        return res;
+        const oldParent = item.$parent;
+        if(oldParent == this) {
+            return false;
+        } else {
+            item.setParent(this);
+            oldParent?.remove(item)
+            return this.addIfMissing(item)
+        }
     }
 
     override remove(item: T): boolean {
