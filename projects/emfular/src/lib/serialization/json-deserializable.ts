@@ -15,7 +15,7 @@ type StripPrivate<K> =
 
 // Identify container fields
 type IsContainer<T> =
-    T extends ReContainer<any> ? true : false;
+    T extends ReContainer<any, any> ? true : false;
 
 type ContainerKeys<T> = {
     [K in keyof T]: IsContainer<T[K]> extends true ? K : never
@@ -43,12 +43,12 @@ type AttributeKeys<T> = {
 
 // Map container → JsonOf<X> or Ref, List or Single
 type JsonForContainer<T> =
-    T extends ReTreeChildrenContainer<infer C>
-        ? T extends ReListContainer<any>
+    T extends ReTreeChildrenContainer<infer C, any>
+        ? T extends ReListContainer<any, any>
             ? JsonOf<C>[]
             : JsonOf<C> | null
-        : T extends ReLinkContainer<any>
-            ? T extends ReListContainer<any>
+        : T extends ReLinkContainer<any, any>
+            ? T extends ReListContainer<any, any>
                 ? Ref[]
                 : Ref | null
             : never;

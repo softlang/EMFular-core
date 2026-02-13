@@ -14,25 +14,25 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 /** base class for CORE models.
  *
  */
-export abstract class Referencable< Parent extends Referencable<any> = Referencable<any> > {
+export abstract class Referencable<Parent extends Referencable<any> = Referencable<any> > {
 
   $gId: string; //graphical ID
 
-  $parent?: ReTreeChildrenContainer<this>;
+  $parent?: ReTreeChildrenContainer<this,Parent>;
 
-  $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  $otherReferences: ReLinkContainer<any>[] = [];
+  $treeChildren: ReTreeChildrenContainer<any,Parent>[] = [];
+  $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
   }
 
-  setParent(parent: ReTreeChildrenContainer<this> | undefined) {
+  setParent(parent: ReTreeChildrenContainer<this,Parent> | undefined) {
     this.$parent = parent;
   }
 
   getParent(): Parent | undefined {
-    return (this.$parent?._parent as Parent)
+    return this.$parent?._parent
   }
 
   getEClass(): string {
@@ -62,11 +62,11 @@ export abstract class Referencable< Parent extends Referencable<any> = Referenca
     })
   }
 
-  private getContainer(name: string): ReContainer<Referencable> {
+  private getContainer(name: string): ReContainer<Referencable, Parent> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReContainer<Referencable>)
+      return (refContainer[1] as ReContainer<Referencable, Parent>)
     } else
       throw new Error("Container _"+name + " not found on "+refContainers)
   }

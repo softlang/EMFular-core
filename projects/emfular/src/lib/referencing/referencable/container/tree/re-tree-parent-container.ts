@@ -1,11 +1,11 @@
 import {Referencable} from "../../referenceable";
-import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "../link/re-link-container";
 import {ReContainer} from "../re-container";
-import {ReTreeChildrenContainer} from "./re-tree-children-container";
 
-export class ReTreeParentContainer<T extends Referencable> extends ReContainer<T> implements ReLinkContainer<T> {
+export class ReTreeParentContainer<T extends Referencable, P extends Referencable>
+    extends ReContainer<T,P>
+    implements ReLinkContainer<T,P> {
     override removeFromInverse(item: T): boolean {
         throw new Error("Method not implemented.");
     }
@@ -16,7 +16,7 @@ export class ReTreeParentContainer<T extends Referencable> extends ReContainer<T
 
     override inverseName: string;
 
-    constructor(parent: Referencable, referenceName: string, inverseName: string ) {
+    constructor(parent: P, referenceName: string, inverseName: string ) {
         super(parent, referenceName, inverseName);
         this.inverseName = inverseName;
     }

@@ -18,8 +18,8 @@ export class Referencable1WithChildren extends Referencable {
     static readonly c1_1_prefix = "c1_1";
     static readonly c1_2_prefix = "c1_2";
 
-    readonly _c1_1: ReTreeListContainer<Referencable2WithChildren>;
-    readonly _c1_2: ReLinkListContainer<Referencable3WithChildren>;
+    readonly _c1_1: ReTreeListContainer<Referencable2WithChildren, Referencable1WithChildren>;
+    readonly _c1_2: ReLinkListContainer<Referencable3WithChildren, Referencable1WithChildren>;
 
     @attribute()
     name: string = "referencable1";
@@ -42,7 +42,7 @@ export class Referencable1WithChildren extends Referencable {
 @eClass(EClasses.Referencable2WithChildren)
 export class Referencable2WithChildren extends Referencable {
     static readonly c2_1_prefix = "c2_1";
-    readonly _c2_1: ReTreeListContainer<Referencable3WithChildren>;
+    readonly _c2_1: ReTreeListContainer<Referencable3WithChildren, Referencable2WithChildren>;
 
     @attribute()
     name: string = "referencable2";
@@ -60,7 +60,7 @@ export class Referencable2WithChildren extends Referencable {
 @eClass(EClasses.Referencable3WithChildren)
 export class Referencable3WithChildren extends Referencable {
     static readonly c1_2_reversed_prefix = "c1_2_reversed";
-    readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren>;
+    readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren, Referencable3WithChildren>;
 
     @attribute()
     name: string = "referencable3";
