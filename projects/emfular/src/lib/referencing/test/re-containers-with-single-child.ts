@@ -76,7 +76,7 @@ export class ReSingleChildExample extends Referencable {
 
     constructor() {
         super();
-        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName)
+        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName, ReContainersWithSingleChild.$childName)
         this._otherLink = new ReLinkSingleContainer(this, ReSingleChildExample.$otherLinkName, ReContainersWithSingleChild.$linkName,)
     }
 }

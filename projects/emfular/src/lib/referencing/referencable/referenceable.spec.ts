@@ -56,7 +56,7 @@ describe('Referenceable', () => {
  //todo deserialization test
 
 
-    it('should serialize and deserialize a ReContainersWithSingleChild (todo both directions for tree parent)', () => {
+    it('should serialize and deserialize a ReContainersWithSingleChild', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
         const child: ReSingleChildExample = new ReSingleChildExample();
 
@@ -69,8 +69,7 @@ describe('Referenceable', () => {
         expect(rootFromJson.link).toBeUndefined()
 
         // now create parent/child:
-        child.myParent = root; //todo both directions now necessary
-        root.child = child;
+        child.myParent = root;
         expect(child.myParent?.name).toEqual(root.name)
         expect(child.myParent?.link).toBeUndefined()
 
