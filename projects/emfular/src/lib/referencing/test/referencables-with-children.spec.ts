@@ -13,16 +13,61 @@ describe('ReContainersWithListChild tests', () => {
     let r2_1: Middle2WithChildren;
     let r2_2: Middle2WithChildren;
     let r3_1: ReChild3;
+    let r3_2: ReChild3;
 
     beforeEach(() => {
         r1 = new RootWithChildren();
         r2_1 = new Middle2WithChildren();
         r2_2 = new Middle2WithChildren();
         r3_1 = new ReChild3();
+        r3_2 = new ReChild3();
     })
 
     it('should manage parent pointers correctly', () => {
+        expect(r2_1.child3.length).toBe(0);
+        r2_1.addChild3(r3_1)
+        expect(r2_1.child3.length).toBe(1);
+        expect(r3_1.parentPointer).toEqual(r2_1)
+        r3_2.parentPointer=r2_1
+        expect(r2_1.child3.length).toBe(2);
+        expect(r3_1.parentPointer).toEqual(r2_1)
+        expect(r3_2.parentPointer).toEqual(r2_1)
 
+        expect(r2_2.child3.length).toBe(0);
+        r2_2.addChild3(r3_1)
+        expect(r2_2.child3.length).toBe(1);
+        expect(r2_1.child3.length).toBe(1);
+        expect(r3_1.parentPointer).toEqual(r2_2)
+        expect(r3_2.parentPointer).toEqual(r2_1)
+        r3_2.parentPointer=r2_1
+        expect(r2_2.child3.length).toBe(1);
+        expect(r2_1.child3.length).toBe(1);
+        expect(r3_1.parentPointer).toEqual(r2_2)
+        expect(r3_2.parentPointer).toEqual(r2_1)
+        r3_2.parentPointer=r2_2
+        expect(r2_2.child3.length).toBe(2);
+        expect(r2_1.child3.length).toBe(0);
+        expect(r3_1.parentPointer).toEqual(r2_2)
+        expect(r3_2.parentPointer).toEqual(r2_2)
+
+        //removal:
+        r2_2.removeChild3(r3_1)
+        expect(r2_2.child3.length).toBe(1);
+        expect(r2_1.child3.length).toBe(0);
+        expect(r3_1.parentPointer).toEqual(undefined)
+        expect(r3_2.parentPointer).toEqual(r2_2)
+        // not possible removal:
+        r2_2.removeChild3(r3_1)
+        expect(r2_2.child3.length).toBe(1);
+        expect(r2_1.child3.length).toBe(0);
+        expect(r3_1.parentPointer).toEqual(undefined)
+        expect(r3_2.parentPointer).toEqual(r2_2)
+        //not possible either:
+        r2_1.removeChild3(r3_1)
+        expect(r2_2.child3.length).toBe(1);
+        expect(r2_1.child3.length).toBe(0);
+        expect(r3_1.parentPointer).toEqual(undefined)
+        expect(r3_2.parentPointer).toEqual(r2_2)
 
     });
 

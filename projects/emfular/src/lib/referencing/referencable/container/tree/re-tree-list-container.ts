@@ -43,9 +43,12 @@ export class ReTreeListContainer<T extends Referencable, P extends Referencable>
     }
 
     override remove(item: T): boolean {
-        let res = super.remove(item);
-        item.setParent(undefined);
-        return res;
+        let removed = this.removeIfThere(item)
+        if(removed){
+            item.setParent(undefined);
+            return true
+        }
+        return false;
     }
 
     override removeFromInverse(item: T): boolean {
