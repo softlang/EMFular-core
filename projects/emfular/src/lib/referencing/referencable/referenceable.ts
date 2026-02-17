@@ -22,23 +22,23 @@ export abstract class Referencable<
 
   declare readonly ParentType: Parent;
 
-  private $parent?: ReTreeChildrenContainer<this,Parent>;
+  private $parent?: ReTreeChildrenContainer<this>;
 
-  $treeChildren: ReTreeChildrenContainer<any,Parent>[] = [];
+  $treeChildren: ReTreeChildrenContainer<any>[] = [];
   $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
   }
 
-  setParent(parent: ReTreeChildrenContainer<this,Parent> | undefined) {
+  setParent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this.$parent) {
       this.$parent.remove(this)
     }
     this.$parent = parent;
   }
 
-  get parent(): ReTreeChildrenContainer<this,Parent> | undefined {
+  get parent(): ReTreeChildrenContainer<this> | undefined {
     return this.$parent
   }
 

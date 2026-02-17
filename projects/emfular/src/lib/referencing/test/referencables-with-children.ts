@@ -18,7 +18,7 @@ export class RootWithChildren extends Referencable<any> {
     static readonly $child2Name = "child2";
     static readonly $link3Name = "link3";
 
-    readonly _child2: ReTreeListContainer<Middle2WithChildren, RootWithChildren>;
+    readonly _child2: ReTreeListContainer<Middle2WithChildren>;
     readonly _link3: ReLinkListContainer<ReChild3, RootWithChildren>;
 
     @attribute()
@@ -26,7 +26,7 @@ export class RootWithChildren extends Referencable<any> {
 
     constructor() {
         super();
-        this._child2 = new ReTreeListContainer<Middle2WithChildren, RootWithChildren>(this, RootWithChildren.$child2Name);
+        this._child2 = new ReTreeListContainer<Middle2WithChildren>(this, RootWithChildren.$child2Name);
         this._link3 = new ReLinkListContainer(this, RootWithChildren.$link3Name, ReChild3.$link1Name);
     }
 
@@ -55,14 +55,14 @@ export class RootWithChildren extends Referencable<any> {
 @eClass(EClasses.Middle2WithChildren)
 export class Middle2WithChildren extends Referencable<RootWithChildren> {
     static readonly $child3Name = "child3";
-    readonly _child3: ReTreeListContainer<ReChild3, Middle2WithChildren>;
+    readonly _child3: ReTreeListContainer<ReChild3>;
 
     @attribute()
     name: string = "referencable2";
 
     constructor() {
         super();
-        this._child3 = new ReTreeListContainer<ReChild3, Middle2WithChildren>(this, Middle2WithChildren.$child3Name)
+        this._child3 = new ReTreeListContainer<ReChild3>(this, Middle2WithChildren.$child3Name)
     }
 
     get child3(): ReChild3[] {
@@ -82,7 +82,7 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
     readonly _link1: ReLinkListContainer<RootWithChildren, ReChild3>;
 
     static readonly $parentPointerName = "parentPointer";
-    readonly _parentPointer : ReTreeParentContainer<Middle2WithChildren, ReChild3>;
+    readonly _parentPointer : ReTreeParentContainer<ReChild3>;
 
     @attribute()
     name: string = "referencable3";

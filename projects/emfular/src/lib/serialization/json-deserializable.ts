@@ -5,7 +5,7 @@ import { ReLinkContainer } from "../referencing/referencable/container/link/re-l
 import {ReListContainer} from "../referencing/referencable/container/re-list-container";
 import {ReContainer} from "../referencing/referencable/container/re-container";
 
-export interface JsonDeserializable<T extends Referencable> {
+export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
 }
 
@@ -43,7 +43,7 @@ type AttributeKeys<T> = {
 
 // Map container → JsonOf<X> or Ref, List or Single
 type JsonForContainer<T> =
-    T extends ReTreeChildrenContainer<infer C, any>
+    T extends ReTreeChildrenContainer<infer C>
         ? T extends ReListContainer<any, any>
             ? JsonOf<C>[]
             : JsonOf<C> | null

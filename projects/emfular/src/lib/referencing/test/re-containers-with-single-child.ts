@@ -16,7 +16,7 @@ export enum EClassesSingleChild {
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     static readonly $childName = "child"
-    readonly _child: ReTreeSingleContainer<ReSingleChildExample, ReContainersWithSingleChild>
+    readonly _child: ReTreeSingleContainer<ReSingleChildExample>
     get child(): ReSingleChildExample | undefined  {
         return this._child.get()
     }
@@ -38,7 +38,7 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 
     constructor() {
         super();
-        this._child = new ReTreeSingleContainer<ReSingleChildExample, ReContainersWithSingleChild>(this, ReContainersWithSingleChild.$childName)
+        this._child = new ReTreeSingleContainer<ReSingleChildExample>(this, ReContainersWithSingleChild.$childName)
         this._link = new ReLinkSingleContainer(this, ReContainersWithSingleChild.$linkName, ReSingleChildExample.$otherLinkName)
     }
 
@@ -54,7 +54,7 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 @eClass(EClassesSingleChild.ReSingleChildExample)
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
     static readonly $myParentName = "myParent";
-    readonly _myParent : ReTreeParentContainer<ReContainersWithSingleChild, ReSingleChildExample>
+    readonly _myParent : ReTreeParentContainer<ReSingleChildExample>
     get myParent(): ReContainersWithSingleChild | undefined {
         return this._myParent.get()
     }
