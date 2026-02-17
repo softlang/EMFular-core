@@ -1,24 +1,24 @@
 import {
     EClasses,
-    Referencable1WithChildren, Referencable1WithChildrenJson,
-    Referencable2WithChildren, Referencable2WithChildrenJson,
-    Referencable3WithChildren, Referencable3WithChildrenJson
+    RootWithChildren, RootWithChildrenJson,
+    Middle2WithChildren, Middle2WithChildrenJson,
+    ReChild3, ReChild3Json
 } from "./referencables-with-children";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 
 describe('ReContainersWithListChild tests', () => {
 
-    let r1: Referencable1WithChildren;
-    let r2_1: Referencable2WithChildren;
-    let r2_2: Referencable2WithChildren;
-    let r3_1: Referencable3WithChildren;
+    let r1: RootWithChildren;
+    let r2_1: Middle2WithChildren;
+    let r2_2: Middle2WithChildren;
+    let r3_1: ReChild3;
 
     beforeEach(() => {
-        r1 = new Referencable1WithChildren();
-        r2_1 = new Referencable2WithChildren();
-        r2_2 = new Referencable2WithChildren();
-        r3_1 = new Referencable3WithChildren();
+        r1 = new RootWithChildren();
+        r2_1 = new Middle2WithChildren();
+        r2_2 = new Middle2WithChildren();
+        r3_1 = new ReChild3();
     })
 
     it('should manage parent pointers correctly', () => {
@@ -27,34 +27,34 @@ describe('ReContainersWithListChild tests', () => {
     });
 
     it ('should serialize a Referencable1WithChildren correctly', () => {
-        r1.addc1_1(r2_1, r2_2)
-        r2_1.addc2_1(r3_1)
-        r3_1.addc1_2_reversed(r1)
+        r1.addChild2(r2_1, r2_2)
+        r2_1.addChild3(r3_1)
+        r3_1.addLink1(r1)
         const ctx = new SerializationContext(r1)
-        expect(ctx.get(r3_1).$ref).toEqual("//@c1_1.0/@c2_1.0")
-        const r3json: Referencable3WithChildrenJson = {
+        expect(ctx.get(r3_1).$ref).toEqual("//@child2.0/@child3.0")
+        const r3json: ReChild3Json = {
             name: 'referencable3',
-            eClass: EClasses.Referencable3WithChildren,
-            c1_2_reversed: [{
+            eClass: EClasses.ReChild3,
+            link1: [{
                 $ref: RefHandler.rootPath,
-                eClass: EClasses.Referencable1WithChildren}]
+                eClass: EClasses.RootWithChildren}]
         }
-        const r21json: Referencable2WithChildrenJson = {
+        const r21json: Middle2WithChildrenJson = {
             name: 'referencable2',
-            eClass: EClasses.Referencable2WithChildren,
-            c2_1: [r3json]
+            eClass: EClasses.Middle2WithChildren,
+            child3: [r3json]
         }
-        const r22json: Referencable2WithChildrenJson = {
+        const r22json: Middle2WithChildrenJson = {
             name: 'referencable2',
-            eClass: EClasses.Referencable2WithChildren,
+            eClass: EClasses.Middle2WithChildren,
         }
-        const r1json: Referencable1WithChildrenJson = {
+        const r1json: RootWithChildrenJson = {
             name: 'referencable1',
-            eClass: EClasses.Referencable1WithChildren,
-            c1_1: [r21json, r22json],
-            c1_2: [{
-                $ref: "//@c1_1.0/@c2_1.0",
-                eClass: EClasses.Referencable3WithChildren
+            eClass: EClasses.RootWithChildren,
+            child2: [r21json, r22json],
+            link3: [{
+                $ref: "//@child2.0/@child3.0",
+                eClass: EClasses.ReChild3
             }]
         }
         expect(r1.toJson()).toEqual(r1json)
