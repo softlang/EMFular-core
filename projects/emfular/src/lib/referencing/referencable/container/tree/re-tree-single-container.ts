@@ -30,17 +30,13 @@ export class ReTreeSingleContainer<T extends Referencable, P extends Referencabl
         if(item == this._instance) {
             return false;
         } else {
-            if(this._instance) {
-                this.remove(this._instance);
-            }
-            this._instance = item;
             item.setParent(this);
+            this._instance = item;
             return true;
         }
     }
 
     override remove(item: T): boolean {
-        //let res = super.remove(item);
         if(this._instance == item) {
             this._instance = undefined;
             item.setParent(undefined);
