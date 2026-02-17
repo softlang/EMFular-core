@@ -2,7 +2,10 @@ import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../../utils/list-updater";
 
-export abstract class ReListContainer<T extends Referencable, P extends Referencable> extends ReContainer<T, P> {
+export abstract class ReListContainer<
+    T extends Referencable<any>,
+    P extends Referencable<any>
+> extends ReContainer<T, P> {
 
     readonly _instance: T[] = [];
 

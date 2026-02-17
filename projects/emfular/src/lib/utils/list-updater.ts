@@ -16,7 +16,7 @@ export class ListUpdater {
   }
 
 
-  static destructAllFromChangingList<T extends Referencable>(list: T[]) {
+  static destructAllFromChangingList<T extends Referencable<any>>(list: T[]) {
     while(list?.length > 0){
       list[0].destruct()
     }

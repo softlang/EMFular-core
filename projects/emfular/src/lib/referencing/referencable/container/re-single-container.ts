@@ -3,7 +3,7 @@ import {ReContainer} from "./re-container";
 import {Deserializer} from "../../../serialization/deserializer";
 import {JsonOf} from "../../../serialization/json-deserializable";
 
-export abstract class ReSingleContainer<T extends Referencable, P extends Referencable> extends ReContainer<T,P> {
+export abstract class ReSingleContainer<T extends Referencable<any>, P extends Referencable<any>> extends ReContainer<T,P> {
 
     _instance?: T
 

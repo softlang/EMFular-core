@@ -13,7 +13,7 @@ export enum EClasses {
 }
 
 @eClass(EClasses.RootWithChildren)
-export class RootWithChildren extends Referencable {
+export class RootWithChildren extends Referencable<any> {
 
     static readonly $child2Name = "child2";
     static readonly $link3Name = "link3";

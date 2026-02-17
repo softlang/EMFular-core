@@ -3,7 +3,10 @@ import {Deserializer} from "../../../serialization/deserializer";
 import {Ref} from "../../ref/ref";
 import {SerializationContext} from "../../../serialization/serialization-context";
 
-export abstract class ReContainer<T extends Referencable, P extends Referencable> {
+export abstract class ReContainer<
+    T extends Referencable<any>,
+    P extends Referencable<any>
+> {
     readonly _parent: P;
     readonly referenceName: string;
     readonly inverseName?: string;

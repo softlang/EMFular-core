@@ -14,9 +14,13 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 /** base class for CORE models.
  *
  */
-export abstract class Referencable<Parent extends Referencable<any> = Referencable<any> > {
+export abstract class Referencable<
+    Parent extends Referencable<any>
+> {
 
   $gId: string; //graphical ID
+
+  declare readonly ParentType: Parent;
 
   private $parent?: ReTreeChildrenContainer<this,Parent>;
 
@@ -69,21 +73,21 @@ export abstract class Referencable<Parent extends Referencable<any> = Referencab
     })
   }
 
-  private getContainer(name: string): ReContainer<Referencable, Parent> {
+  private getContainer<T extends Referencable<any>>(name: string): ReContainer<T, Parent> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
-      return (refContainer[1] as ReContainer<Referencable, Parent>)
+      return (refContainer[1] as ReContainer<T, Parent>)
     } else
       throw new Error("Container _"+name + " not found on "+refContainers)
   }
 
-  public addToReferencableContainer(name: string, item: Referencable): boolean {
-    return this.getContainer(name).add(item)
+  public addToReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
+    return this.getContainer<T>(name).add(item)
   }
 
-  public removeFromReferencableContainer(name: string, item: Referencable): boolean {
-    return this.getContainer(name).remove(item)
+  public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
+    return this.getContainer<T>(name).remove(item)
   }
 
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {

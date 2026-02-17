@@ -13,7 +13,7 @@ export enum EClassesSingleChild {
 }
 
 @eClass(EClassesSingleChild.ReContainersWithSingleChild)
-export class ReContainersWithSingleChild extends Referencable {
+export class ReContainersWithSingleChild extends Referencable<any> {
 
     static readonly $childName = "child"
     readonly _child: ReTreeSingleContainer<ReSingleChildExample, ReContainersWithSingleChild>

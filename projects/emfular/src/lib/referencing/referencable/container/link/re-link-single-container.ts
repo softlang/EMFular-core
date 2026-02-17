@@ -4,7 +4,11 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
 
-export class ReLinkSingleContainer<T extends Referencable, P extends Referencable> extends ReSingleContainer<T,P> implements ReLinkContainer<T,P> {
+export class ReLinkSingleContainer<
+    T extends Referencable<any>,
+    P extends Referencable<any>
+> extends ReSingleContainer<T,P>
+    implements ReLinkContainer<T,P> {
 
     constructor(parent: P, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
