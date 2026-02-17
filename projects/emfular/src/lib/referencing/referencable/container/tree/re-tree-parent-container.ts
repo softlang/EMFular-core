@@ -23,12 +23,13 @@ export class ReTreeParentContainer<T extends Referencable, P extends Referencabl
     }
 
     get(): T | undefined {
-        return (this._parent.getParent() as T)
+        return (this._parent.getParentReferencable() as T)
     }
 
+    //todo rewrite without using item parent explicitly?
     add(item: T): boolean {
         let me = this._parent
-        const currPar = this._parent.$parent
+        const currPar = this._parent.parent
         const currentParentCont: ReTreeChildrenContainer< P, any> | undefined = currPar? (currPar  as ReTreeChildrenContainer<P, any>): undefined
         if(currentParentCont != undefined) {
             currentParentCont.remove(this._parent as P)

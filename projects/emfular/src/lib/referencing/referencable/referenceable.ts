@@ -18,7 +18,7 @@ export abstract class Referencable<Parent extends Referencable<any> = Referencab
 
   $gId: string; //graphical ID
 
-  $parent?: ReTreeChildrenContainer<this,Parent>;
+  private $parent?: ReTreeChildrenContainer<this,Parent>;
 
   $treeChildren: ReTreeChildrenContainer<any,Parent>[] = [];
   $otherReferences: ReLinkContainer<any,Parent>[] = [];
@@ -34,7 +34,11 @@ export abstract class Referencable<Parent extends Referencable<any> = Referencab
     this.$parent = parent;
   }
 
-  getParent(): Parent | undefined {
+  get parent(): ReTreeChildrenContainer<this,Parent> | undefined {
+    return this.$parent
+  }
+
+  getParentReferencable(): Parent | undefined {
     return this.$parent?._parent
   }
 

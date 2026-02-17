@@ -8,14 +8,14 @@ describe('ReContainersWithSingleChild tests', () => {
 
     it('should manage parent pointers correctly', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
-        expect(root.$parent).toBeUndefined()
+        expect(root.parent).toBeUndefined()
         expect(root.child).toBeUndefined()
         const child: ReSingleChildExample = new ReSingleChildExample();
         expect(child.myParent).toBeUndefined()
-        expect(child.$parent).toBeUndefined()
+        expect(child.parent).toBeUndefined()
         //set tree parent:
         child.myParent = root;
-        expect(child.$parent).toBeDefined()
+        expect(child.parent).toBeDefined()
         expect(child.myParent).toEqual(root);
         expect(root.child).toBe(child);
 
