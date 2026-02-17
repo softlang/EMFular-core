@@ -2,7 +2,6 @@ import {Referencable} from "../../referenceable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "../link/re-link-container";
 import {ReContainer} from "../re-container";
-import {ReTreeChildrenContainer} from "./re-tree-children-container";
 
 export class ReTreeParentContainer<T extends Referencable, P extends Referencable>
     extends ReContainer<T,P>
@@ -29,8 +28,7 @@ export class ReTreeParentContainer<T extends Referencable, P extends Referencabl
     //todo rewrite without using item parent explicitly?
     add(item: T): boolean {
         let me = this._parent
-        const currPar = this._parent.parent
-        const currentParentCont: ReTreeChildrenContainer< P, any> | undefined = currPar? (currPar  as ReTreeChildrenContainer<P, any>): undefined
+        const currentParentCont = this._parent.parent
         if(currentParentCont != undefined) {
             currentParentCont.remove(this._parent as P)
         }
