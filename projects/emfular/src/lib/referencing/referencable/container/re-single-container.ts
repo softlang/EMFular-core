@@ -15,7 +15,7 @@ export abstract class ReSingleContainer<T extends Referencable, P extends Refere
         return this._instance;
     }
 
-    private set(instance: T): void {
+    protected set(instance: T): void {
         if(this.inverseName !== undefined) {
             this._instance?.removeFromReferencableContainer(this.inverseName, this._parent)
             this._instance = instance;

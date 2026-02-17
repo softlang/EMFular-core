@@ -28,6 +28,9 @@ export abstract class Referencable<Parent extends Referencable<any> = Referencab
   }
 
   setParent(parent: ReTreeChildrenContainer<this,Parent> | undefined) {
+    if(this.$parent) {
+      this.$parent.remove(this)
+    }
     this.$parent = parent;
   }
 

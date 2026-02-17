@@ -27,15 +27,26 @@ export class ReTreeSingleContainer<T extends Referencable, P extends Referencabl
     }
 
     override add(item: T): boolean {
-        let res = super.add(item);
-        item.setParent(this);
-        return res;
+        if(item == this._instance) {
+            return false;
+        } else {
+            if(this._instance) {
+                this.remove(this._instance);
+            }
+            this._instance = item;
+            item.setParent(this);
+            return true;
+        }
     }
 
     override remove(item: T): boolean {
-        let res = super.remove(item);
-        item.setParent(undefined);
-        return res;
+        //let res = super.remove(item);
+        if(this._instance == item) {
+            this._instance = undefined;
+            item.setParent(undefined);
+            return true;
+        }
+        return false;
     }
 
     override removeFromInverse(item: T): boolean {
