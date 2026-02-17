@@ -6,7 +6,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 
-export class ReTreeListContainer<T extends Referencable, P extends Referencable>
+export class ReTreeListContainer<T extends Referencable<P>, P extends Referencable>
     extends ReListContainer<T, P>
     implements ReTreeChildrenContainer<T,P> {
 

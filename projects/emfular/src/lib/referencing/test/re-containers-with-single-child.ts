@@ -38,7 +38,7 @@ export class ReContainersWithSingleChild extends Referencable {
 
     constructor() {
         super();
-        this._child = new ReTreeSingleContainer(this, ReContainersWithSingleChild.$childName)
+        this._child = new ReTreeSingleContainer<ReSingleChildExample, ReContainersWithSingleChild>(this, ReContainersWithSingleChild.$childName)
         this._link = new ReLinkSingleContainer(this, ReContainersWithSingleChild.$linkName, ReSingleChildExample.$otherLinkName)
     }
 
@@ -52,7 +52,7 @@ export class ReContainersWithSingleChild extends Referencable {
 }
 
 @eClass(EClassesSingleChild.ReSingleChildExample)
-export class ReSingleChildExample extends Referencable {
+export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
     static readonly $myParentName = "myParent";
     readonly _myParent : ReTreeParentContainer<ReContainersWithSingleChild, ReSingleChildExample>
     get myParent(): ReContainersWithSingleChild | undefined {

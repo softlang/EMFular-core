@@ -3,7 +3,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReLinkContainer} from "../link/re-link-container";
 import {ReContainer} from "../re-container";
 
-export class ReTreeParentContainer<T extends Referencable, P extends Referencable>
+export class ReTreeParentContainer<T extends Referencable, P extends Referencable<T>>
     extends ReContainer<T,P>
     implements ReLinkContainer<T,P> {
     override removeFromInverse(item: T): boolean {
