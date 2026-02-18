@@ -5,11 +5,11 @@ import {Deserializer} from "../../serialization/deserializer";
 import {getAllAttributes} from "../../binding/attribute-collector";
 import {AttributeOptions} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
-import {ECLASS_METADATA_KEY} from "../../binding/eclass-decorator";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
+import {ModelRegistry} from "../../binding/model-registry";
 
 /** base class for CORE models.
  *
@@ -47,13 +47,7 @@ export abstract class Referencable<
   }
 
   getEClass(): string {
-    const eClass = Reflect.getMetadata(ECLASS_METADATA_KEY, this.constructor);
-    if (!eClass) {
-      throw new Error(
-          `Missing @eClass decorator on ${this.constructor.name}.`
-      );
-    }
-    return eClass;
+    return ModelRegistry.getEClassForInstance(this)
   }
 
   assignRefs(ctx: SerializationContext, path: string) {
