@@ -7,12 +7,9 @@ export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T>
     implements ReLinkContainer<T["ParentType"],T> {
     override removeFromInverse(item: T["ParentType"]): boolean {
-        throw new Error("Method not implemented.");
+        throw new Error("Method should never be called, but was with "+item);
     }
-    override delete(): void {
-        throw new Error("Method not implemented.");
-        //this._parent.destruct() // todo check
-    }
+    override delete(): void {}
 
     override inverseName: string;
 
