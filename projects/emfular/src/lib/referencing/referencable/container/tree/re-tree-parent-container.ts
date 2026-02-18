@@ -1,11 +1,9 @@
 import {Referencable} from "../../referenceable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
-import {ReLinkContainer} from "../link/re-link-container";
 import {ReContainer} from "../re-container";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
-    extends ReContainer<T["ParentType"],T>
-    implements ReLinkContainer<T["ParentType"],T> {
+    extends ReContainer<T["ParentType"],T> {
     override removeFromInverse(item: T["ParentType"]): boolean {
         throw new Error("Method should never be called, but was with "+item);
     }
