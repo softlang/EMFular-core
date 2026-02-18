@@ -65,6 +65,7 @@ export abstract class Referencable<
   }
 
   destruct() {
+    this.$parent?.remove(this)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this)
     })
