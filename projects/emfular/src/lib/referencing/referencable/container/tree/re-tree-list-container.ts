@@ -1,22 +1,27 @@
 import {Referencable} from "../../referenceable";
-import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
+import {ReContainer} from "../re-container";
 
 export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReListContainer<T, T["ParentType"]>
+    extends ReContainer<T, T["ParentType"]>
     implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
+    readonly _instance: T[] = [];
 
     constructor(parent: T["ParentType"], name: string, inverse?: string, eClass?: string) {
         super(parent, name, inverse);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
+    }
+
+    override get(): T[] {
+        return this._instance;
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
@@ -55,6 +60,10 @@ export class ReTreeListContainer<T extends Referencable<any>>
 
     override removeFromInverse(item: T): boolean {
         return false;
+    }
+
+    override delete() {
+        ListUpdater.destructAllFromChangingList(this._instance)
     }
 
     //creates one child level plus calls next createChildren
