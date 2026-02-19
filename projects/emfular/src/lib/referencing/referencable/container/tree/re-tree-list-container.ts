@@ -9,13 +9,10 @@ import {ListUpdater} from "../../../../utils/list-updater";
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReTreeChildrenContainer<T> {
 
-    readonly defaultEClass?: string;
     readonly _instance: T[] = [];
 
     constructor(parent: T["ParentType"], name: string, inverse?: string, eClass?: string) {
-        super(parent, name);
-        this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+        super(parent, name, eClass);
     }
 
     override get(): T[] {

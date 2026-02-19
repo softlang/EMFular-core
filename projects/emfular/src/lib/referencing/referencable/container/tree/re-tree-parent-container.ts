@@ -8,7 +8,7 @@ export class ReTreeParentContainer<T extends Referencable<any>>
     inverseName: string;
 
     constructor(parent: T, referenceName: string, inverseName: string ) {
-        super(parent, referenceName);
+        super(parent, referenceName); // referenceName is actually unused for this container type
         this.inverseName = inverseName;
     }
 

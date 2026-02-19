@@ -8,13 +8,10 @@ import {ReTreeChildrenContainer} from "./re-tree-children-container";
 export class ReTreeSingleContainer<T extends Referencable<any>>
     extends ReTreeChildrenContainer<T> {
 
-    readonly defaultEClass?: string;
     _instance?: T
 
     constructor(parent: T["ParentType"], referenceName: string, inverseName?: string, eClass?: string) {
-        super(parent, referenceName);
-        this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+        super(parent, referenceName, eClass);
     }
 
     override get(): T | undefined {
