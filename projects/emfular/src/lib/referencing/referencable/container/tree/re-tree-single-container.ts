@@ -10,7 +10,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
 
     _instance?: T
 
-    constructor(parent: T["ParentType"], referenceName: string, inverseName?: string, eClass?: string) {
+    constructor(parent: T["ParentType"], referenceName: string, _?: string, eClass?: string) {
         super(parent, referenceName, eClass);
     }
 

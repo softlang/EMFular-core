@@ -11,7 +11,7 @@ export class ReTreeListContainer<T extends Referencable<any>>
 
     readonly _instance: T[] = [];
 
-    constructor(parent: T["ParentType"], name: string, inverse?: string, eClass?: string) {
+    constructor(parent: T["ParentType"], name: string, _?: string, eClass?: string) {
         super(parent, name, eClass);
     }
 
