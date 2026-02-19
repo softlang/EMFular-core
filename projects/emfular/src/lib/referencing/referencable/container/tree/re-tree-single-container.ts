@@ -1,21 +1,26 @@
 import {Referencable} from "../../referenceable";
-import {ReSingleContainer} from "../re-single-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import {ReContainer} from "../re-container";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReSingleContainer<T,T["ParentType"]>
+    extends ReContainer<T,T["ParentType"]>
     implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
+    _instance?: T
 
     constructor(parent: T["ParentType"], referenceName: string, inverseName?: string, eClass?: string) {
-        super(parent, referenceName, inverseName);
+        super(parent, referenceName, undefined);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
+    }
+
+    override get(): T | undefined {
+        return this._instance;
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
@@ -49,6 +54,10 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         return false;
     }
 
+    override delete() {
+        this._instance?.destruct()
+    }
+
     fromJson(formerPrefix: string, context: Deserializer, json: any) {
         let myJson: JsonOf<T> = json[this.referenceName]
         if (myJson) {
@@ -62,6 +71,13 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
             let refStr = RefHandler.computePrefix(formerPrefix, this.referenceName)
             let ref = RefHandler.createRef(refStr, eClass)
             this.add(context.createTreeBackbone<T>(ref, myJson))
+        }
+    }
+
+    createRefsOnChildren(context: Deserializer, json: any) {
+        let myJson: JsonOf<T> = json[this.referenceName];
+        if(this._instance && myJson ) {
+            this._instance.deserializeLinks(context, myJson)
         }
     }
 }
