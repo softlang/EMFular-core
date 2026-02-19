@@ -15,6 +15,15 @@ export class ListUpdater {
     return false;
   }
 
+  static addToListIfMissing<T>(item: T, list: T[]): boolean {
+    const index = list.indexOf(item);
+    if(index > -1) {
+      return false;
+    } else {
+      list.push(item);
+      return true;
+    }
+  }
 
   static destructAllFromChangingList<T extends Referencable<any>>(list: T[]) {
     while(list?.length > 0){

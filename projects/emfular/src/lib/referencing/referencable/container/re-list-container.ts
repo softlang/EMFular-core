@@ -27,13 +27,7 @@ export abstract class ReListContainer<
     }
 
     protected addIfMissing(item: T): boolean {
-        const index = this._instance.indexOf(item);
-        if(index > -1) {
-            return false;
-        } else {
-            this._instance.push(item);
-            return true;
-        }
+        return ListUpdater.addToListIfMissing(item, this._instance)
     }
 
     get(): T[] {
@@ -51,13 +45,7 @@ export abstract class ReListContainer<
     }
 
     protected removeIfThere(item: T): boolean {
-        const index = this._instance.indexOf(item)
-        if(index > -1) {
-            this._instance.splice(index, 1);
-            return true;
-        } else {
-            return false;
-        }
+        return ListUpdater.removeFromList(item, this._instance)
     }
 
     override delete() {
