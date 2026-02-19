@@ -19,7 +19,8 @@ export abstract class ReContainer<
 
     abstract remove(item: T): boolean;
 
-    abstract toJson(ctx: SerializationContext): any
     //called to destruct all elements in the container (e.g. when destroying a parent
     abstract delete(): void
+
+    abstract toJson(ctx: SerializationContext): any
 }

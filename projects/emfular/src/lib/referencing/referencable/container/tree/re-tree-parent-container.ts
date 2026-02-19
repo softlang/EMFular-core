@@ -30,9 +30,9 @@ export class ReTreeParentContainer<T extends Referencable<any>>
         return item.removeFromReferencableContainer(this.inverseName, this._parent)
     }
 
-    override delete(): void {}
+    delete(): void {}
 
-    override toJson(_: SerializationContext):  undefined {
+    toJson(_: SerializationContext):  undefined {
         return undefined
     }
 
