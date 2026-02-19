@@ -3,13 +3,11 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
-import {ReContainer} from "../re-container";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReContainer<T,P>
-    implements ReLinkContainer<T,P> {
+> extends ReLinkContainer<T,P> {
 
     readonly _instance: T[] = [];
 
@@ -52,7 +50,7 @@ export class ReLinkListContainer<
         ListUpdater.destructAllFromChangingList(this._instance)
     }
 
-    override  removeFromInverse(item: T): boolean {
+    override removeFromInverse(item: T): boolean {
         if(this.inverseName !== undefined) {
             for (const child of this._instance) {
                 child.removeFromReferencableContainer(this.inverseName, item)

@@ -14,7 +14,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
     _instance?: T
 
     constructor(parent: T["ParentType"], referenceName: string, inverseName?: string, eClass?: string) {
-        super(parent, referenceName, undefined);
+        super(parent, referenceName);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
@@ -47,10 +47,6 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
             item.setParent(undefined);
             return true;
         }
-        return false;
-    }
-
-    override removeFromInverse(item: T): boolean {
         return false;
     }
 

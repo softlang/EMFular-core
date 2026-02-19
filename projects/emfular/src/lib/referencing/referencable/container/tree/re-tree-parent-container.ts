@@ -4,15 +4,11 @@ import {ReContainer} from "../re-container";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T> {
-    override removeFromInverse(item: T["ParentType"]): boolean {
-        throw new Error("Method should never be called, but was with "+item);
-    }
-    override delete(): void {}
 
-    override inverseName: string;
+    inverseName: string;
 
     constructor(parent: T, referenceName: string, inverseName: string ) {
-        super(parent, referenceName, inverseName);
+        super(parent, referenceName);
         this.inverseName = inverseName;
     }
 
@@ -33,6 +29,8 @@ export class ReTreeParentContainer<T extends Referencable<any>>
     remove(item: T["ParentType"]): boolean {
         return item.removeFromReferencableContainer(this.inverseName, this._parent)
     }
+
+    override delete(): void {}
 
     override toJson(_: SerializationContext):  undefined {
         return undefined

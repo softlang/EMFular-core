@@ -15,7 +15,7 @@ export class ReTreeListContainer<T extends Referencable<any>>
     readonly _instance: T[] = [];
 
     constructor(parent: T["ParentType"], name: string, inverse?: string, eClass?: string) {
-        super(parent, name, inverse);
+        super(parent, name);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
@@ -55,10 +55,6 @@ export class ReTreeListContainer<T extends Referencable<any>>
             item.setParent(undefined);
             return true
         }
-        return false;
-    }
-
-    override removeFromInverse(item: T): boolean {
         return false;
     }
 

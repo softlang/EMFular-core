@@ -2,15 +2,11 @@ import {Referencable} from "../../referenceable";
 import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
-import {ReContainer} from "../re-container";
-import {Deserializer} from "../../../../serialization/deserializer";
-import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReContainer<T,P>
-    implements ReLinkContainer<T,P> {
+> extends ReLinkContainer<T,P> {
 
     _instance?: T
 
@@ -70,13 +66,6 @@ export class ReLinkSingleContainer<
         if (this._instance)
             return ctx.get(this._instance)
         else return undefined
-    }
-
-    createRefsOnChildren(context: Deserializer, json: any) {
-        let myJson: JsonOf<T> = json[this.referenceName];
-        if(this._instance && myJson ) {
-            this._instance.deserializeLinks(context, myJson)
-        }
     }
 
 }
