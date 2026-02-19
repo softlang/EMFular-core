@@ -12,7 +12,6 @@ export class ReLinkSingleContainer<
 
     constructor(parent: P, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
-        this._parent.$otherReferences.push(this)
     }
 
     get(): T | undefined {

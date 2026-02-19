@@ -13,7 +13,6 @@ export class ReLinkListContainer<
 
     constructor(parent: P, name: string, inverse?: string) {
         super(parent, name, inverse);
-        this._parent.$otherReferences.push(this)
     }
 
     override get(): T[] {

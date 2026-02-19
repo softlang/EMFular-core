@@ -14,6 +14,7 @@ export abstract class ReLinkContainer<
     protected constructor(parent: P, referenceName: string, inverseName?: string) {
         super(parent, referenceName);
         this.inverseName = inverseName;
+        this._parent.$otherReferences.push(this)
     }
 
     abstract removeFromInverse(item: T): boolean;
