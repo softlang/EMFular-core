@@ -5,6 +5,7 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import {ListUpdater} from "../../../../utils/list-updater";
 
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReListContainer<T, T["ParentType"]>
@@ -39,12 +40,12 @@ export class ReTreeListContainer<T extends Referencable<any>>
         } else {
             item.setParent(this);
             oldParent?.remove(item)
-            return this.addIfMissing(item)
+            return ListUpdater.addToListIfMissing(item, this._instance)
         }
     }
 
     override remove(item: T): boolean {
-        let removed = this.removeIfThere(item)
+        let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
             item.setParent(undefined);
             return true

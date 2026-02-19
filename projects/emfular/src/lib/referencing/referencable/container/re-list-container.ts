@@ -15,7 +15,7 @@ export abstract class ReListContainer<
     }
 
     add(item: T): boolean {
-        let res = this.addIfMissing(item)
+        let res = ListUpdater.addToListIfMissing(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
                 return item.addToReferencableContainer(this.inverseName, this._parent)
@@ -26,26 +26,18 @@ export abstract class ReListContainer<
         }
     }
 
-    protected addIfMissing(item: T): boolean {
-        return ListUpdater.addToListIfMissing(item, this._instance)
-    }
-
     get(): T[] {
         return this._instance;
     }
 
     remove(item: T): boolean {
-        const res = this.removeIfThere(item);
+        const res =  ListUpdater.removeFromList(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
                 item.removeFromReferencableContainer(this.inverseName, this._parent)
             }
         }
         return res; //todo behaviour of flag different to add??
-    }
-
-    protected removeIfThere(item: T): boolean {
-        return ListUpdater.removeFromList(item, this._instance)
     }
 
     override delete() {
