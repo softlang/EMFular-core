@@ -4,11 +4,9 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
-import {ReContainer} from "../re-container";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReContainer<T,T["ParentType"]>
-    implements ReTreeChildrenContainer<T> {
+    extends ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
     _instance?: T

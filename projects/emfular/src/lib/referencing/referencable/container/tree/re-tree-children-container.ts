@@ -4,13 +4,13 @@ import {Referencable} from "../../referenceable";
 import { ReContainer } from "../re-container";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 
-export interface ReTreeChildrenContainer<
+export abstract class ReTreeChildrenContainer<
     T extends Referencable<any>,
 > extends ReContainer<T, T["ParentType"]> {
     // serialization
-    assignRefs(ctx: SerializationContext, path: string) : void
-    toJson(ctx: SerializationContext): JsonOf<T>[] | JsonOf<T> | undefined
+    abstract assignRefs(ctx: SerializationContext, path: string) : void
+    abstract override toJson(ctx: SerializationContext): JsonOf<T>[] | JsonOf<T> | undefined
     //deserialization
-    fromJson(formerPrefix: string, context: Deserializer, json: any): void
-    createRefsOnChildren(context: Deserializer, json: any): void
+    abstract fromJson(formerPrefix: string, context: Deserializer, json: any): void
+    abstract createRefsOnChildren(context: Deserializer, json: any): void
 }
