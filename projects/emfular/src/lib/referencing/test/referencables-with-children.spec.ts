@@ -107,4 +107,15 @@ describe('ReContainersWithListChild tests', () => {
 
     //todo deserialization test
 
+    it("should register the containers correctly on the parent", () => {
+        expect(r1.$treeChildren.length).toBe(1)
+        expect(r1.$otherReferences.length).toBe(1)
+
+        expect(r2_1.$treeChildren.length).toBe(1)
+        expect(r2_1.$otherReferences.length).toBe(0)
+
+        expect(r3_1.$treeChildren.length).toBe(0)
+        expect(r1.$otherReferences.length).toBe(1)
+    })
+
 });

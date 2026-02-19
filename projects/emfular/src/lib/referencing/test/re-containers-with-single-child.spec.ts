@@ -6,6 +6,19 @@ import {
 
 describe('ReContainersWithSingleChild tests', () => {
 
+
+    it("should register the containers correctly on the parent", () => {
+        const root: ReContainersWithSingleChild = new ReContainersWithSingleChild()
+        const child: ReSingleChildExample = new ReSingleChildExample()
+
+
+        expect(root.$treeChildren.length).toBe(1)
+        expect(root.$otherReferences.length).toBe(1)
+
+        expect(child.$treeChildren.length).toBe(0)
+        expect(child.$otherReferences.length).toBe(1)
+    })
+
     it('should manage parent pointers correctly', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
         expect(root.parent).toBeUndefined()
