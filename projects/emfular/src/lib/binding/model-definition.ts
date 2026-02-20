@@ -1,12 +1,5 @@
 export type TsEnum = Record<string, string | number>;
 
-export interface AttributeMeta {
-    type: string;          // "EString", "EInt", enum name, etc.
-    default?: any;
-    min?: number;
-    max?: number;
-}
-
 export interface ReferenceMeta {
     target: string;        // name of target class
     containment: boolean;
@@ -16,8 +9,6 @@ export interface ReferenceMeta {
 }
 
 export interface ClassMeta {
-
-    attributes: Record<string, AttributeMeta>;
     references: Record<string, ReferenceMeta>;
 }
 
