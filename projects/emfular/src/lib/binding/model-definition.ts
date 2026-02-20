@@ -1,50 +1,31 @@
-import {Referencable} from "../referencing/referencable/referenceable";
-import {JsonDeserializable} from "../serialization/json-deserializable";
+export type TsEnum = Record<string, string | number>;
 
-
-export interface EnumDescriptor {
-    name: string;
-    literals: string[];
-}
-
-export interface AttributeDescriptor<T> {
-    name: string;
-    type: T;
-    default?: T | T[];
-
-    /** Cardinality */
+export interface AttributeMeta {
+    type: string;          // "EString", "EInt", enum name, etc.
+    default?: any;
     min?: number;
     max?: number;
 }
 
-
-export interface FeatureDescriptor<T extends Referencable<any>> {
-    name: string;
-    type: ClassDescriptor<T>;
+export interface ReferenceMeta {
+    target: string;        // name of target class
     containment: boolean;
-    inverse?: string;
-    /** Cardinality */
+    opposite?: string;
     min?: number;
     max?: number;
-    doc?: string;
 }
 
-export interface ClassDescriptor<T extends Referencable<any>> {
-    name: string;
-    ctor: JsonDeserializable<T>;
-}
+export interface ClassMeta {
 
-export interface ClassDefinition<T extends Referencable<any>> {
-    name: string;
-    ctor: JsonDeserializable<T>;
-    features: Record<string, FeatureDescriptor<any>>;
-    attributes: Record<string, AttributeDescriptor<any>>
+    attributes: Record<string, AttributeMeta>;
+    references: Record<string, ReferenceMeta>;
 }
 
 export interface ModelDefinition {
     name: string;
-    classes: Record<string, ClassDefinition<any>>;
-    enums?: Record<string, EnumDescriptor>;
+    prefix: string;
+    uri: string;
+
+    classes: Record<string, ClassMeta>;
+    enums?: Record<string, TsEnum>;
 }
-
-
