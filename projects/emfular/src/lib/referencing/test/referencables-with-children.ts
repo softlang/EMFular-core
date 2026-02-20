@@ -4,79 +4,118 @@ import {ReLinkListContainer} from "../referencable/container/link/re-link-list-c
 import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
+import {ReTreeParentContainer} from "../referencable/container/tree/re-tree-parent-container";
 
 export enum EClasses {
-    'Referencable1WithChildren' = 'namespace/Referencable1WithChildren',
-    'Referencable2WithChildren' = 'namespace/Referencable2WithChildren',
-    'Referencable3WithChildren' = 'namespace/Referencable3WithChildren'
+    'RootWithChildren' = 'namespace/RootWithChildren',
+    'Middle2WithChildren' = 'namespace/Middle2WithChildren',
+    'ReChild3' = 'namespace/Referencable3WithChildren'
 }
 
+@eClass(EClasses.RootWithChildren)
+export class RootWithChildren extends Referencable<any> {
 
-@eClass(EClasses.Referencable1WithChildren)
-export class Referencable1WithChildren extends Referencable {
+    static readonly $child2Name = "child2";
+    static readonly $link3Name = "link3";
 
-    static readonly c1_1_prefix = "c1_1";
-    static readonly c1_2_prefix = "c1_2";
-
-    readonly _c1_1: ReTreeListContainer<Referencable2WithChildren>;
-    readonly _c1_2: ReLinkListContainer<Referencable3WithChildren>;
+    readonly _child2: ReTreeListContainer<Middle2WithChildren>;
+    readonly _link3: ReLinkListContainer<ReChild3, this>;
 
     @attribute()
     name: string = "referencable1";
 
     constructor() {
         super();
-        this._c1_1 = new ReTreeListContainer(this, Referencable1WithChildren.c1_1_prefix);
-        this._c1_2 = new ReLinkListContainer(this, Referencable1WithChildren.c1_2_prefix, Referencable3WithChildren.c1_2_reversed_prefix);
+        this._child2 = new ReTreeListContainer(this, RootWithChildren.$child2Name);
+        this._link3 = new ReLinkListContainer(this, RootWithChildren.$link3Name, ReChild3.$link1Name);
     }
 
-    addc1_1(...c2s: Referencable2WithChildren[]) {
-        c2s.map(c2 => this._c1_1.add(c2))
+    get child2(): Middle2WithChildren[] {
+        return this._child2.get();
     }
-    addc1_2(...c3s: Referencable3WithChildren[]) {
-        c3s.map(c3 => this._c1_2.add(c3))
+    addChild2(...c2s: Middle2WithChildren[]) {
+        c2s.map(c2 => this._child2.add(c2))
+    }
+    removeChild2(...c2s: Middle2WithChildren[]) {
+        c2s.map(c2 => this._child2.remove(c2))
+    }
+
+    get link3() {
+        return this._link3.get()
+    }
+    addLink3(...c3s: ReChild3[]) {
+        c3s.map(c3 => this._link3.add(c3))
+    }
+    removeLink3(...c3s: ReChild3[]) {
+        c3s.map(c3 => this._link3.remove(c3))
     }
 
 }
 
-@eClass(EClasses.Referencable2WithChildren)
-export class Referencable2WithChildren extends Referencable {
-    static readonly c2_1_prefix = "c2_1";
-    readonly _c2_1: ReTreeListContainer<Referencable3WithChildren>;
+@eClass(EClasses.Middle2WithChildren)
+export class Middle2WithChildren extends Referencable<RootWithChildren> {
+    static readonly $child3Name = "child3";
+    readonly _child3: ReTreeListContainer<ReChild3>;
 
     @attribute()
     name: string = "referencable2";
 
     constructor() {
         super();
-        this._c2_1 = new ReTreeListContainer(this, Referencable2WithChildren.c2_1_prefix)
+        this._child3 = new ReTreeListContainer(this, Middle2WithChildren.$child3Name)
     }
 
-    addc2_1(...c3s: Referencable3WithChildren[]) {
-        c3s.map(c3 => this._c2_1.add(c3))
+    get child3(): ReChild3[] {
+        return this._child3.get()
+    }
+    addChild3(...c3s: ReChild3[]) {
+        c3s.map(c3 => this._child3.add(c3))
+    }
+    removeChild3(...c3s: ReChild3[]) {
+        c3s.map(c3 => this._child3.remove(c3))
     }
 }
 
-@eClass(EClasses.Referencable3WithChildren)
-export class Referencable3WithChildren extends Referencable {
-    static readonly c1_2_reversed_prefix = "c1_2_reversed";
-    readonly _c1_2_reversed: ReLinkListContainer<Referencable1WithChildren>;
+@eClass(EClasses.ReChild3)
+export class ReChild3 extends Referencable<Middle2WithChildren> {
+    static readonly $link1Name = "link1";
+    readonly _link1: ReLinkListContainer<RootWithChildren, this>;
+
+    static readonly $parentPointerName = "parentPointer";
+    readonly _parentPointer : ReTreeParentContainer<this>;
 
     @attribute()
     name: string = "referencable3";
 
     constructor() {
         super();
-        this._c1_2_reversed = new ReLinkListContainer(this, Referencable3WithChildren.c1_2_reversed_prefix, Referencable1WithChildren.c1_2_prefix)
+        this._link1 = new ReLinkListContainer(this, ReChild3.$link1Name, RootWithChildren.$link3Name)
+        this._parentPointer = new ReTreeParentContainer(this, ReChild3.$parentPointerName, Middle2WithChildren.$child3Name)
     }
-    addc1_2_reversed(...c1s: Referencable1WithChildren[]) {
-        c1s.map(c1 => this._c1_2_reversed.add(c1))
+    get link1(): RootWithChildren[] {
+        return this._link1.get()
+    }
+    addLink1(...c1s: RootWithChildren[]) {
+        c1s.map(c1 => this._link1.add(c1))
+    }
+    removeLink1(...c1s: RootWithChildren[]) {
+        c1s.map(c1 => this._link1.remove(c1))
+    }
+
+    get parentPointer(): Middle2WithChildren | undefined {
+        return this._parentPointer.get();
+    }
+    /*
+    todo also allow undefined on tree parent setting (on any single container)
+     */
+    set parentPointer(parentPointer : Middle2WithChildren) {
+        this._parentPointer.add(parentPointer)
     }
 }
 
 
 
-export type Referencable1WithChildrenJson = JsonOf<Referencable1WithChildren>
-export type Referencable2WithChildrenJson = JsonOf<Referencable2WithChildren>
-export type Referencable3WithChildrenJson = JsonOf<Referencable3WithChildren>
+export type RootWithChildrenJson = JsonOf<RootWithChildren>
+export type Middle2WithChildrenJson = JsonOf<Middle2WithChildren>
+export type ReChild3Json = JsonOf<ReChild3>
 

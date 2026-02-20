@@ -1,19 +1,22 @@
 import {Referencable} from "../../referenceable";
-import {ReListContainer} from "../re-list-container";
 import {RefHandler} from "../../../ref/ref-handler";
 import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import {ListUpdater} from "../../../../utils/list-updater";
 
-export class ReTreeListContainer<T extends Referencable> extends ReListContainer<T> implements ReTreeChildrenContainer<T> {
+export class ReTreeListContainer<T extends Referencable<any>>
+    extends ReTreeChildrenContainer<T> {
 
-    readonly defaultEClass?: string;
+    readonly _instance: T[] = [];
 
-    constructor(parent: Referencable, name: string, inverse?: string, eClass?: string) {
-        super(parent, name, inverse);
-        this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+    constructor(parent: T["ParentType"], name: string, _?: string, eClass?: string) {
+        super(parent, name, eClass);
+    }
+
+    override get(): T[] {
+        return this._instance;
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
@@ -27,6 +30,31 @@ export class ReTreeListContainer<T extends Referencable> extends ReListContainer
         return this._instance.map(
             (ref: T) => ref.toJson(ctx)
         )
+    }
+
+    //todo rewrite without using item parent explicitly?
+    override add(item: T): boolean {
+        const oldParent = item.parent;
+        if(oldParent == this) {
+            return false;
+        } else {
+            item.setParent(this);
+            oldParent?.remove(item)
+            return ListUpdater.addToListIfMissing(item, this._instance)
+        }
+    }
+
+    override remove(item: T): boolean {
+        let removed =  ListUpdater.removeFromList(item, this._instance)
+        if(removed){
+            item.setParent(undefined);
+            return true
+        }
+        return false;
+    }
+
+    override delete() {
+        ListUpdater.destructAllFromChangingList(this._instance)
     }
 
     //creates one child level plus calls next createChildren

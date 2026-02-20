@@ -1,21 +1,39 @@
 import {Referencable} from "../../referenceable";
-import {ReSingleContainer} from "../re-single-container";
-import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
-import {ReLinkContainer} from "../link/re-link-container";
+import {ReContainer} from "../re-container";
 
-export class ReTreeParentContainer<T extends Referencable> extends ReSingleContainer<T> implements ReLinkContainer<T> {
+export class ReTreeParentContainer<T extends Referencable<any>>
+    extends ReContainer<T["ParentType"],T> {
 
-    constructor(parent: Referencable, referenceName: string, inverseName?: string ) {
-        super(parent, referenceName, inverseName);
-        this._parent.$otherReferences.push(this)
+    inverseName: string;
+
+    constructor(parent: T, referenceName: string, inverseName: string ) {
+        super(parent, referenceName); // referenceName is actually unused for this container type
+        this.inverseName = inverseName;
     }
 
-    //todo always undefined (as soon as we know the parent all the time)
-    override toJson(ctx: SerializationContext): Ref | undefined {
-        if (this._instance)
-            return ctx.get(this._instance)
-        else return undefined
+    get(): T["ParentType"] | undefined {
+        return (this._parent.getParentReferencable() as T["ParentType"])
+    }
+
+    //todo rewrite without using item parent explicitly?
+    add(item: T["ParentType"]): boolean {
+        let me: T = this._parent
+        const currentParentCont = this._parent.parent
+        if(currentParentCont != undefined) {
+            currentParentCont.remove(this._parent as T["ParentType"])
+        }
+        return item.addToReferencableContainer(this.inverseName, me)
+    }
+
+    remove(item: T["ParentType"]): boolean {
+        return item.removeFromReferencableContainer(this.inverseName, this._parent)
+    }
+
+    delete(): void {}
+
+    toJson(_: SerializationContext):  undefined {
+        return undefined
     }
 
 }

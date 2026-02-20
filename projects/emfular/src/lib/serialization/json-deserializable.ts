@@ -2,10 +2,11 @@ import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
 import { ReTreeChildrenContainer } from "../referencing/referencable/container/tree/re-tree-children-container";
 import { ReLinkContainer } from "../referencing/referencable/container/link/re-link-container";
-import {ReListContainer} from "../referencing/referencable/container/re-list-container";
 import {ReContainer} from "../referencing/referencable/container/re-container";
+import {ReTreeListContainer} from "../referencing/referencable/container/tree/re-tree-list-container";
+import {ReLinkListContainer} from "../referencing/referencable/container/link/re-link-list-container";
 
-export interface JsonDeserializable<T extends Referencable> {
+export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
 }
 
@@ -15,7 +16,7 @@ type StripPrivate<K> =
 
 // Identify container fields
 type IsContainer<T> =
-    T extends ReContainer<any> ? true : false;
+    T extends ReContainer<any, any> ? true : false;
 
 type ContainerKeys<T> = {
     [K in keyof T]: IsContainer<T[K]> extends true ? K : never
@@ -44,11 +45,11 @@ type AttributeKeys<T> = {
 // Map container → JsonOf<X> or Ref, List or Single
 type JsonForContainer<T> =
     T extends ReTreeChildrenContainer<infer C>
-        ? T extends ReListContainer<any>
+        ? T extends ReTreeListContainer<any>
             ? JsonOf<C>[]
             : JsonOf<C> | null
-        : T extends ReLinkContainer<any>
-            ? T extends ReListContainer<any>
+        : T extends ReLinkContainer<any, any>
+            ? T extends ReLinkListContainer<any, any>
                 ? Ref[]
                 : Ref | null
             : never;

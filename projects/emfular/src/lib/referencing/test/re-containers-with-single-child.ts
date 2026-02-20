@@ -13,7 +13,7 @@ export enum EClassesSingleChild {
 }
 
 @eClass(EClassesSingleChild.ReContainersWithSingleChild)
-export class ReContainersWithSingleChild extends Referencable {
+export class ReContainersWithSingleChild extends Referencable<any> {
 
     static readonly $childName = "child"
     readonly _child: ReTreeSingleContainer<ReSingleChildExample>
@@ -25,7 +25,7 @@ export class ReContainersWithSingleChild extends Referencable {
     }
 
     static readonly $linkName = "link";
-    readonly _link: ReLinkSingleContainer<ReSingleChildExample>
+    readonly _link: ReLinkSingleContainer<ReSingleChildExample, this>
     get link(): ReSingleChildExample | undefined {
         return this._link.get()
     }
@@ -52,9 +52,9 @@ export class ReContainersWithSingleChild extends Referencable {
 }
 
 @eClass(EClassesSingleChild.ReSingleChildExample)
-export class ReSingleChildExample extends Referencable {
+export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
     static readonly $myParentName = "myParent";
-    readonly _myParent : ReTreeParentContainer<ReContainersWithSingleChild>
+    readonly _myParent : ReTreeParentContainer<this>
     get myParent(): ReContainersWithSingleChild | undefined {
         return this._myParent.get()
     }
@@ -63,7 +63,7 @@ export class ReSingleChildExample extends Referencable {
     }
 
     static readonly $otherLinkName = "otherLink";
-    readonly _otherLink: ReLinkSingleContainer<ReContainersWithSingleChild>
+    readonly _otherLink: ReLinkSingleContainer<ReContainersWithSingleChild, this>
     get otherLink(): ReContainersWithSingleChild | undefined {
         return this._otherLink.get()
     }
@@ -76,7 +76,7 @@ export class ReSingleChildExample extends Referencable {
 
     constructor() {
         super();
-        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName)
+        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName, ReContainersWithSingleChild.$childName)
         this._otherLink = new ReLinkSingleContainer(this, ReSingleChildExample.$otherLinkName, ReContainersWithSingleChild.$linkName,)
     }
 }
