@@ -29,6 +29,17 @@ export abstract class Referencable<
 
   protected constructor() {
     this.$gId = uuidv4();
+    this.initReferences()
+  }
+
+  private initReferences() {
+    const proto = Object.getPrototypeOf(this);
+    const inits = proto.__referenceInitializers;
+    if (inits) {
+      for (const init of inits) {
+        init.call(this);
+      }
+    }
   }
 
   setParent(parent: ReTreeChildrenContainer<this> | undefined) {
