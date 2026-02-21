@@ -10,8 +10,6 @@ export interface ReferenceMeta {
 
     // assigned by @reference
     containerKey?: symbol
-    // assigned by resolveOpposites()
-    oppositeContainerKey?: symbol
 }
 
 export interface ClassMeta {
