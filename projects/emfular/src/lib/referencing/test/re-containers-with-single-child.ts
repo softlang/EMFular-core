@@ -1,5 +1,5 @@
 import {Referencable} from "../referencable/referenceable";
-import {eClass} from "../../binding/eclass-decorator";
+import {eClass, eClass2} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
 import {ReTreeSingleContainer} from "../referencable/container/tree/re-tree-single-container";
 import {ReLinkSingleContainer} from "../referencable/container/link/re-link-single-container";
@@ -13,7 +13,7 @@ import {reference} from "../../binding/reference-decorator";
 export const ModelSingleChild: ModelDefinition = {
     name: "ModelSingleChild",
     prefix: "class",
-    uri:"class",
+    uri:"class://",
     classes: {
         ReContainersWithSingleChild: {
             references: {
@@ -65,7 +65,7 @@ export enum EClassesSingleChild {
     'ReSingleChildExample' = 'class://ReSingleChildExample'
 }
 
-@eClass(EClassesSingleChild.ReContainersWithSingleChild)
+@eClass2(ModelSingleChild)
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
@@ -90,7 +90,7 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 
 }
 
-@eClass(EClassesSingleChild.ReSingleChildExample)
+@eClass2(ModelSingleChild)
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
 
     @reference(ReSingleChildExampleRefs.myParent)

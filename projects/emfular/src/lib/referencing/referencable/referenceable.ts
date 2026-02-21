@@ -10,6 +10,7 @@ import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
+import { ClassMeta } from "../../binding/model-definition";
 
 /** base class for CORE models.
  *
@@ -21,6 +22,8 @@ export abstract class Referencable<
   $gId: string; //graphical ID
 
   declare readonly ParentType: Parent;
+
+  declare $classMeta: ClassMeta;
 
   private $parent?: ReTreeChildrenContainer<this>;
 
@@ -79,7 +82,7 @@ export abstract class Referencable<
     })
   }
 
-  private getContainer<T extends Referencable<any>>(name: string): ReContainer<T, Parent> {
+  private getContainer2<T extends Referencable<any>>(name: string): ReContainer<T, Parent> {
     let refContainers = Object.entries(this)
     let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
     if (refContainer) {
@@ -87,6 +90,25 @@ export abstract class Referencable<
     } else
       throw new Error("Container _"+name + " not found on "+refContainers)
   }
+  protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
+    const meta = this.$classMeta.references[refName];
+
+    if (!meta) {
+      throw new Error(
+          `Reference '${refName}' not found on class '${this.$classMeta}'`
+      );
+    }
+
+    const key: symbol = meta.containerKey!;
+    const container = (this as any)[key];
+
+    if (!container) {
+      throw new Error(`Container for reference '${refName}' not initialized`);
+    }
+
+    return container as ReContainer<T, Parent>;
+  }
+
 
   public addToReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
     return this.getContainer<T>(name).add(item)

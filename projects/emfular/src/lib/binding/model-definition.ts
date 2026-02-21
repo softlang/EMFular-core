@@ -7,6 +7,11 @@ export interface ReferenceMeta {
     opposite?: string;
     min?: number;
     max?: number;
+
+    // assigned by @reference
+    containerKey?: symbol
+    // assigned by resolveOpposites()
+    oppositeContainerKey?: symbol
 }
 
 export interface ClassMeta {
