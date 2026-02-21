@@ -69,10 +69,10 @@ export enum EClassesSingleChild {
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
-    child!: ReSingleChildExample | undefined;
+    declare child: ReSingleChildExample | undefined;
 
     @reference(ReContainersWithSingleChildRefs.link)
-    link!: ReSingleChildExample | undefined;
+    declare link: ReSingleChildExample | undefined;
 
     @attribute()
     name: string = "re1";
@@ -95,9 +95,9 @@ export class ReSingleChildExample extends Referencable<ReContainersWithSingleChi
 
     @reference(ReSingleChildExampleRefs.myParent)
     declare myParent: ReContainersWithSingleChild | undefined;
-    
+
     @reference(ReSingleChildExampleRefs.otherLink)
-    otherLink!: ReContainersWithSingleChild | undefined;
+    declare otherLink: ReContainersWithSingleChild | undefined;
 
     @attribute()
     myBool = true;
