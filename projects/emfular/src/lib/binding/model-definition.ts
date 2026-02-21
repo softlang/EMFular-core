@@ -2,7 +2,8 @@ export type TsEnum = Record<string, string | number>;
 
 export interface ReferenceMeta {
     target: string;        // name of target class
-    containment: boolean;
+    containment?: boolean;
+    isParent?: boolean;
     opposite?: string;
     min?: number;
     max?: number;

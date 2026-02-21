@@ -1,11 +1,10 @@
 import {Referencable} from "../referencing/referencable/referenceable";
-import {ModelDefinition, ReferenceMeta} from "./model-definition";
+import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
 import {ReContainer} from "../referencing/referencable/container/re-container";
 
 export function reference<T extends Referencable<any>>(
-    meta: ReferenceMeta,
-    model: ModelDefinition
+    meta: ReferenceMeta
 ): PropertyDecorator {
 
     return function (prototype: any, propertyKey: string | symbol) {
@@ -34,7 +33,7 @@ export function reference<T extends Referencable<any>>(
         (prototype.__referenceInitializers as Array<(this: any) => void>)
             .push(function (this: any) {
                 this[hidden] = createContainer<T, any>(
-                    this, meta, model, String(propertyKey)
+                    this, meta, String(propertyKey)
                 );
             });
     };
