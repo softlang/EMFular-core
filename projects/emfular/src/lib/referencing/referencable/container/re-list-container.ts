@@ -9,6 +9,10 @@ export abstract class ReListContainer<
 
     readonly _instance: T[] = [];
 
+    protected constructor(parent: P, referenceName: string, inverseName?: string ) {
+        super(parent, referenceName, inverseName);
+    }
+
     override get(): T[] {
         return this._instance;
     }

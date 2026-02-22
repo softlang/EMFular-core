@@ -8,6 +8,10 @@ export abstract class ReSingleContainer<
 
     protected _instance?: T ;
 
+    protected constructor(parent: P, referenceName: string, inverseName?: string ) {
+        super(parent, referenceName, inverseName);
+    }
+
     override get(): T | undefined {
         return this._instance;
     }
