@@ -2,20 +2,17 @@ import {Referencable} from "../../referenceable";
 import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
+import {ReSingleContainer} from "../re-single-container";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReLinkContainer<T,P> {
-
-    _instance?: T
+> extends ReSingleContainer<T,P>
+implements ReLinkContainer<T, P> {
 
     constructor(parent: P, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
-    }
-
-    get(): T | undefined {
-        return this._instance;
+        this._parent.$otherReferences.push(this)
     }
 
     protected set(instance: T): void {

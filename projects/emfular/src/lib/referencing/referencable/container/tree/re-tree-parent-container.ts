@@ -5,11 +5,8 @@ import {ReContainer} from "../re-container";
 export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T> {
 
-    inverseName: string;
-
     constructor(parent: T, referenceName: string, inverseName: string ) {
-        super(parent, referenceName); // referenceName is actually unused for this container type
-        this.inverseName = inverseName;
+        super(parent, referenceName, inverseName); // referenceName is actually unused for this container type
     }
 
     get(): T["ParentType"] | undefined {
