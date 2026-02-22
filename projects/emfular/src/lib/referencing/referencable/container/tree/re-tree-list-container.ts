@@ -5,18 +5,18 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
+import {ReListContainer} from "../re-list-container";
 
 export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReTreeChildrenContainer<T> {
+    extends ReListContainer<T, T["ParentType"]>
+implements ReTreeChildrenContainer<T> {
 
-    readonly _instance: T[] = [];
+    readonly defaultEClass?: string;
 
     constructor(parent: T["ParentType"], name: string, _?: string, eClass?: string) {
-        super(parent, name, eClass);
-    }
-
-    override get(): T[] {
-        return this._instance;
+        super(parent, name, undefined);
+        this.defaultEClass = eClass;
+        this._parent.$treeChildren.push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {

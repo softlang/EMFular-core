@@ -4,29 +4,29 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import {ReSingleContainer} from "../re-single-container";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReTreeChildrenContainer<T> {
+    extends ReSingleContainer<T, T["ParentType"]>
+implements ReTreeChildrenContainer<T> {
 
-    _instance?: T
+    readonly defaultEClass?: string;
 
     constructor(parent: T["ParentType"], referenceName: string, _?: string, eClass?: string) {
-        super(parent, referenceName, eClass);
-    }
-
-    override get(): T | undefined {
-        return this._instance;
+        super(parent, referenceName, undefined);
+        this.defaultEClass = eClass;
+        this._parent.$treeChildren.push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
         this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
-    override toJson(ctx: SerializationContext): JsonOf<T>|undefined {
+    toJson(ctx: SerializationContext): JsonOf<T>|undefined {
         return this._instance?.toJson(ctx)
     }
 
-    override add(item: T): boolean {
+    add(item: T): boolean {
         if(item == this._instance) {
             return false;
         } else {
@@ -36,7 +36,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         }
     }
 
-    override remove(item: T): boolean {
+    remove(item: T): boolean {
         if(this._instance == item) {
             this._instance = undefined;
             item.setParent(undefined);
@@ -45,7 +45,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         return false;
     }
 
-    override delete() {
+    delete() {
         this._instance?.destruct()
     }
 
