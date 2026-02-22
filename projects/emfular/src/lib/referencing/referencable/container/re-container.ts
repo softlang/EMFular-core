@@ -8,7 +8,7 @@ export abstract class ReContainer<
     readonly _parent: P;
     readonly referenceName: string;
 
-    constructor(parent: P, referenceName: string) {
+    protected constructor(parent: P, referenceName: string) {
         this._parent = parent;
         this.referenceName = referenceName;
     }

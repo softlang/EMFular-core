@@ -184,17 +184,17 @@ export abstract class Referencable<
 
   public deserializeLinks<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
     const json = jsonTyped as any
-    for (let elem of this.$otherReferences) {
-      let jsonElem: any = json[elem.referenceName]
-      if (Array.isArray(jsonElem)) {
-        elem.addLinks(context,...jsonElem);
-      } else {
-        if (jsonElem != undefined)
-          elem.addLinks(context, jsonElem);
+    for (let container of this.$otherReferences) {
+      let jsonElem: Ref[] |Ref | undefined = json[container.referenceName]
+      if (jsonElem != undefined) {
+        const refArray = Array.isArray(jsonElem)? jsonElem : [jsonElem]
+        refArray.map((ref: Ref) => {
+          container.add(context.get(ref.$ref));
+        })
       }
     }
-    for (let elem of this.$treeChildren) {
-      elem.createRefsOnChildren(context, json)
+    for (let container of this.$treeChildren) {
+      container.createRefsOnChildren(context, json)
     }
   }
 

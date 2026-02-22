@@ -19,13 +19,5 @@ export abstract class ReLinkContainer<
 
     abstract removeFromInverse(item: T): boolean;
 
-    //adds the real elements behind refs as received from getOrCreate to the container
-    addLinks(context: Deserializer, ...refs: Ref[]): void {
-        refs?.map((ref: Ref) => {
-            let elem: T = context.get(ref.$ref) as T
-            this.add(elem)
-        })
-    }
-
     abstract override toJson(ctx: SerializationContext): Ref[] | Ref | undefined
 }
