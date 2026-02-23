@@ -11,7 +11,7 @@ export function createSingleProxy<T extends Referencable<any>, P extends Referen
         },
         set(_, prop, value) {
             if (prop === "value") {
-                container.set(value);
+                //container.set(value);
                 return true;
             }
             return false;

@@ -1,34 +1,56 @@
 import {ReListContainer} from "../re-list-container";
 import {Referencable} from "../../referenceable";
+import {ModelList} from "./model-list";
 
 export function createListProxy<
     T extends Referencable<any>,
     P extends Referencable<any>
->(container: ReListContainer<T, P>): T[] {
+>(container: ReListContainer<T, P>): ModelList<T> {
 
     const forbidden = (name: string) => {
         throw new Error(`Operation '${name}' is not supported on model lists`);
     };
 
-    return new Proxy([] as T[], {
+    function indexOutOfBounds(operation: string, index: number, length: number): never {
+        throw new Error(
+            `Invalid ${operation}: index ${index} out of bounds (length ${length})`
+        );
+    }
+
+    function verifyIndexInBounds(operation: string, index: number, length: number): void {
+        if (index < 0 || index >= length) {
+            indexOutOfBounds(operation, index, length);
+        }
+    }
+
+    function isIndexAccess(prop: PropertyKey) {
+        return typeof prop === "string" && /^\d+$/.test(prop)
+    }
+
+    return new Proxy([] as unknown as  ModelList<T>, {
 
         // ============================================================
-        // GET — property reads and method lookups
+        // property reads and method lookups
         // ============================================================
-        get(_: T[], prop: string|symbol, receiver) {
+        get(_: ModelList<T>, prop: string|symbol, receiver) {
             const list = container.get();
 
-            // numeric index read
-            if (typeof prop === "string" && /^\d+$/.test(prop)) {
+            if (isIndexAccess(prop)) {
                 return list[Number(prop)];
             }
 
-            // length read
+            /*
+            The at() method of Array instances takes an integer value and returns the item at that index, allowing for positive and negative integers.
+             Negative integers count back from the last item in the array.
+             */
+            if(prop == "at") {
+                return forbidden(prop)
+            }
+
             if (prop === "length") {
                 return list.length;
             }
 
-            // iteration
             if (prop === Symbol.iterator) {
                 return function* () {
                     yield* list;
@@ -39,7 +61,7 @@ export function createListProxy<
             // MUTATING METHODS
             // ============================================================
 
-            // push(...items)
+            // push(...items): number =new length
             if (prop === "push") {
                 return (...items: T[]) => {
                     for (const item of items) {
@@ -49,7 +71,8 @@ export function createListProxy<
                 };
             }
 
-            // pop()
+            // The pop() method removes the last element from an array and returns that value to the caller.
+            // If you call pop() on an empty array, it returns undefined.
             if (prop === "pop") {
                 return () => {
                     const arr = container.get();
@@ -60,7 +83,8 @@ export function createListProxy<
                 };
             }
 
-            // shift()
+            // The shift() method of Array instances removes the first element from an array and returns that removed element.
+            // If you call shift() on an empty array, it returns undefined.
             if (prop === "shift") {
                 return () => {
                     const arr = container.get();
@@ -71,8 +95,8 @@ export function createListProxy<
                 };
             }
 
-            // unshift(...items)
-            if (prop === "unshift") {
+            // The unshift(..items) method of Array instances adds the specified elements to the beginning of an array and returns the new length of the array.
+            if (prop === "unshift") { //todo
                 return (...items: T[]) => {
                     // Insert at front: we need a container.insertAt(0, item)
                     // For now: remove all, re-add in new order
@@ -118,7 +142,6 @@ export function createListProxy<
                 };
             }
 
-            // move(from, to)
             if (prop === "move") {
                 return (from: number, to: number) => {
                     container.move(from, to);
@@ -185,7 +208,7 @@ export function createListProxy<
         // ============================================================
         // SET — index assignment and length assignment
         // ============================================================
-        set(target, prop, value) {
+        set(_: ModelList<T>, prop: string|symbol, value: any) {
             // numeric index assignment
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
                 const index = Number(prop);
@@ -212,12 +235,12 @@ export function createListProxy<
         // ============================================================
         // DELETE — delete arr[i]
         // ============================================================
-        deleteProperty(target, prop) {
+        deleteProperty(_, prop) {
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
                 const index = Number(prop);
                 const arr = container.get();
                 if (index < arr.length) {
-                    container.remove(arr[index]);
+                    arr[index].destruct();
                     return true;
                 }
                 return false;
