@@ -1,12 +1,12 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
-import {ModelList} from "../referencing/referencable/container/hide/model-list";
 import {ReListContainer} from "../referencing/referencable/container/re-list-container";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
+import {KindFromMeta, RefineReference} from "./reference-typing";
 
-export function reference<T extends Referencable<any>>(
-    meta: ReferenceMeta
+export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
+    meta: M
 ): PropertyDecorator {
 
     return function (prototype: any, propertyKey: string | symbol) {
@@ -14,11 +14,26 @@ export function reference<T extends Referencable<any>>(
         const symbol = Symbol(String(propertyKey));
         meta.containerKey = symbol;
 
+        // infer kind + multiplicity from meta
+        type Kind = KindFromMeta<M>;
+        type IsList = M["max"] extends 1 ? false : true;
+
+        // user-declared type (TS substitutes this automatically)
+        type UserType = any;
+
+        // final refined type
+        type FinalType = RefineReference<
+            UserType,
+            T,
+            Kind,
+            IsList
+        >;
+
         if ( meta.max !== 1) {
             Object.defineProperty(prototype, propertyKey, {
-                get(): ModelList<T> {
+                get(this: any): FinalType {
                     const c = this[symbol] as ReListContainer<T, any>;
-                    return c.proxy
+                    return c.proxy as FinalType;
                 },
                 set(_: T | null) {
                     throw new Error(
@@ -30,18 +45,16 @@ export function reference<T extends Referencable<any>>(
             });
         } else {
             Object.defineProperty(prototype, propertyKey, {
-                get(): T | undefined {
+                get(this: any): FinalType {
                     const c = this[symbol] as ReSingleInterface<T, any>;
-                    return c?.get();
+                    return c?.get() as FinalType;
                 },
-                set(value: T | null) {
+                set(this: any, value: T | null) {
                     const c = this[symbol] as ReSingleInterface<T, any>;
                     if (!c) throw new Error("Container not initialized");
                     if (value == null) {
-                        const val = c.get()
-                        if(val) {
-                            c.remove(val);
-                        }
+                        const val = c.get();
+                        if (val) c.remove(val);
                     } else {
                         c.add(value);
                     }
