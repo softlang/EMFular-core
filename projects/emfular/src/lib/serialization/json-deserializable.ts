@@ -1,10 +1,7 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import { ReTreeChildrenContainer } from "../referencing/referencable/container/tree/re-tree-children-container";
-import { ReLinkContainer } from "../referencing/referencable/container/link/re-link-container";
 import {ReContainer} from "../referencing/referencable/container/re-container";
-import {ReTreeListContainer} from "../referencing/referencable/container/tree/re-tree-list-container";
-import {ReLinkListContainer} from "../referencing/referencable/container/link/re-link-list-container";
+import {ModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
@@ -13,6 +10,21 @@ export interface JsonDeserializable<T extends Referencable<any>> {
 // Remove leading "_" from container field names
 type StripPrivate<K> =
     K extends `_${infer Rest}` ? Rest : K;
+
+type IsModelList<T> =
+    T extends ModelList<infer C, infer Kind> ? [C, Kind] : never;
+
+type IsSingleRef<T> =
+    T extends SingleRef<infer C, infer Kind> ? [C, Kind] : never;
+
+
+export type ReferenceKeys<T> = {
+    [K in keyof T]:
+    IsModelList<T[K]> extends never
+        ? (IsSingleRef<T[K]> extends never ? never : K)
+        : K
+}[keyof T];
+
 
 // Identify container fields
 type IsContainer<T> =
@@ -42,20 +54,21 @@ type AttributeKeys<T> = {
                         K
 }[keyof T];
 
-// Map container → JsonOf<X> or Ref, List or Single
-type JsonForContainer<T> =
-    T extends ReTreeChildrenContainer<infer C>
-        ? T extends ReTreeListContainer<any>
+type JsonForReference<T> =
+    T extends ModelList<infer C, infer Kind>
+        ? Kind extends "tree"
             ? JsonOf<C>[]
-            : JsonOf<C> | null
-        : T extends ReLinkContainer<any, any>
-            ? T extends ReLinkListContainer<any, any>
-                ? Ref[]
+            : Ref[]
+        : T extends SingleRef<infer C, infer Kind>
+            ? Kind extends "tree"
+                ? JsonOf<C> | null
                 : Ref | null
             : never;
+
 
 // Final JSON type
 export type JsonOf<T> =
     & { eClass?: string }
-    & { [K in ContainerKeys<T> as StripPrivate<K>]?: JsonForContainer<T[K]>; }
-    & { [K in AttributeKeys<T>]?: T[K]; };
+    & { [K in AttributeKeys<T>]?: T[K]; }
+    & { [K in ReferenceKeys<T>]?: JsonForReference<T[K]> };
+
