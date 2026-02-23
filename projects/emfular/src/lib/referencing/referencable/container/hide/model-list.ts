@@ -5,17 +5,12 @@ type ForbiddenArrayMethods =
     | "fill"
     | "sort"
     | "reverse"
-    | "splice"   // optional — if you want to force users to use move()
-    | "shift"    // optional
-    | "unshift"  // optional
-    | "pop"      // optional
-    | "push";    // optional
-
-
+    | "unshift"  // unnecessary and complicated to do
 
 export interface ModelList<T>
     extends OmitKeys<Array<T>, ForbiddenArrayMethods> {
     //additional operations
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
+    remove(...items: T[]): boolean;
 }

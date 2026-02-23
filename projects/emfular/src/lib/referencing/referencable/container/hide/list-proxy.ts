@@ -71,6 +71,13 @@ export function createListProxy<
                 };
             }
 
+            //own remove method
+            if (prop === "remove") {
+                return (...items: T[]) => {
+                    items.map((item: T) => container.remove(item)).some(t => t)
+                };
+            }
+
             // The pop() method removes the last element from an array and returns that value to the caller.
             // If you call pop() on an empty array, it returns undefined.
             if (prop === "pop") {
