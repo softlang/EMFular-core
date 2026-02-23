@@ -1,9 +1,7 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
-import {ReContainer} from "../referencing/referencable/container/re-container";
 import {ModelList} from "../referencing/referencable/container/hide/model-list";
-import {createListProxy} from "../referencing/referencable/container/hide/list-proxy";
 import {ReListContainer} from "../referencing/referencable/container/re-list-container";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
 
@@ -20,7 +18,7 @@ export function reference<T extends Referencable<any>>(
             Object.defineProperty(prototype, propertyKey, {
                 get(): ModelList<T> {
                     const c = this[symbol] as ReListContainer<T, any>;
-                    return createListProxy(c)
+                    return c.proxy
                 },
                 set(_: T | null) {
                     throw new Error(

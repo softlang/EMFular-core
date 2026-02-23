@@ -1,6 +1,8 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../../utils/list-updater";
+import {ModelList} from "./hide/model-list";
+import {createListProxy} from "./hide/list-proxy";
 
 export abstract class ReListContainer<
     T extends Referencable<any>,
@@ -8,6 +10,16 @@ export abstract class ReListContainer<
 > extends ReContainer<T, P>{
 
     readonly _instance: T[] = [];
+
+    private _proxy?: ModelList<T>;
+
+    get proxy(): ModelList<T> {
+        if (!this._proxy) {
+            this._proxy = createListProxy(this);
+        }
+        return this._proxy;
+    }
+
 
     protected constructor(parent: P, referenceName: string, inverseName?: string ) {
         super(parent, referenceName, inverseName);
