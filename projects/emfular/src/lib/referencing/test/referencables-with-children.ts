@@ -6,7 +6,7 @@ import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
 
-export const ModelWithChildren: ModelDefinition = {
+export const ModelWithChildren = {
     name: "namespace",
     prefix: "ns",
     uri: "namespace",
@@ -60,19 +60,19 @@ export const ModelWithChildren: ModelDefinition = {
             }
         }
     }
-};
+} as const satisfies ModelDefinition;
 
 export const RootWithChildrenRefs = {
     child2: ModelWithChildren.classes["RootWithChildren"].references["child2"],
-    link3: ModelWithChildren.classes["Link3"].references["link3"],
-}
+    link3: ModelWithChildren.classes["RootWithChildren"].references["link3"],
+} as const;
 export const Middle2WithChildrenRefs = {
     child3: ModelWithChildren.classes["Middle2WithChildren"].references["child3"],
-}
+} as const;
 export const ReChild3Refs = {
     link1: ModelWithChildren.classes["ReChild3"].references["link1"],
     parentPointer: ModelWithChildren.classes["ReChild3"].references["parentPointer"],
-}
+} as const;
 
 export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',

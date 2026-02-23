@@ -1,9 +1,6 @@
 import {Referencable} from "../referencable/referenceable";
-import {eClass, eClass2} from "../../binding/eclass-decorator";
+import {eClass2} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
-import {ReTreeSingleContainer} from "../referencable/container/tree/re-tree-single-container";
-import {ReLinkSingleContainer} from "../referencable/container/link/re-link-single-container";
-import {ReTreeParentContainer} from "../referencable/container/tree/re-tree-parent-container";
 import {JsonOf} from "../../serialization/json-deserializable";
 import {Deserializer} from "../../serialization/deserializer";
 import {ModelDefinition} from "../../binding/model-definition";
