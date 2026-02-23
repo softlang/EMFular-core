@@ -37,10 +37,16 @@ export function reference<T extends Referencable<any>>(
                     return c?.get();
                 },
                 set(value: T | null) {
-                    const c = this[symbol] as ReContainer<T, any>;
+                    const c = this[symbol] as ReSingleInterface<T, any>;
                     if (!c) throw new Error("Container not initialized");
-                    if (value == null) c.delete(); //todo
-                    else c.add(value);
+                    if (value == null) {
+                        const val = c.get()
+                        if(val) {
+                            c.remove(val);
+                        }
+                    } else {
+                        c.add(value);
+                    }
                 },
                 enumerable: true,
                 configurable: true
