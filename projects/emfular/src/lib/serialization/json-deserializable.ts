@@ -33,7 +33,14 @@ type IsReferenceProp<T, K> =
             : false;
 
 type ReferenceKeys<T> = {
-    [K in keyof T]: IsReferenceProp<T[K], K> extends true ? K : never
+    [K in keyof T]:
+    IsReferenceProp<T[K], K> extends true
+        ? (
+            T[K] extends SingleRef<any, infer Kind>
+                ? (Kind extends "parent" ? never : K) // exclude SingleRef<..., "parent">
+                : K                                   // include all list refs + other refs
+            )
+        : never
 }[keyof T];
 
 
