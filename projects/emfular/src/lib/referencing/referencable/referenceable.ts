@@ -27,8 +27,8 @@ export abstract class Referencable<
 
   private $parent?: ReTreeChildrenContainer<this>;
 
-  $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  $otherReferences: ReLinkContainer<any,Parent>[] = [];
+  readonly $treeChildren: ReTreeChildrenContainer<any>[] = [];
+  readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -81,7 +81,7 @@ export abstract class Referencable<
       child.delete()
     })
   }
-  
+
   protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
     const meta = this.$classMeta.references[refName];
 
