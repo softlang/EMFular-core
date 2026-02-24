@@ -7,12 +7,10 @@ export abstract class ReContainer<
 > {
     readonly _parent: P;
     readonly referenceName: string;
-    readonly isRequired: boolean;
 
     constructor(parent: P, referenceName: string, isRequired: boolean = false) {
         this._parent = parent;
         this.referenceName = referenceName;
-        this.isRequired = isRequired;
     }
 
     abstract get(): T[] | T | undefined;
