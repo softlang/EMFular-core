@@ -18,11 +18,22 @@ type IsSingleRef<T> =
     T extends SingleRef<infer C, infer Kind> ? [C, Kind] : never;
 
 
-export type ReferenceKeys<T> = {
-    [K in keyof T]:
-    IsModelList<T[K]> extends never
-        ? (IsSingleRef<T[K]> extends never ? never : K)
-        : K
+type IsReferencable<T> =
+    T extends Referencable<any> ? true : false;
+
+type IsReferenceProp<T, K> =
+    K extends "ParentType" ? false :
+        T extends object
+            ? T extends ModelList<any, any> ? true
+                : T extends SingleRef<any, any>
+                    ? true
+                    : IsReferencable<T> extends true
+                        ? true
+                        : false
+            : false;
+
+type ReferenceKeys<T> = {
+    [K in keyof T]: IsReferenceProp<T[K], K> extends true ? K : never
 }[keyof T];
 
 
@@ -45,12 +56,10 @@ type IsExactlyRef<T> =
 
 type AttributeKeys<T> = {
     [K in keyof T]:
-    IsContainer<T[K]> extends true ? never :
-        // don't treat public container accessors (get!) as attributes
-        K extends ContainerPublicNames<T> ? never :
+    K extends "ParentType" ? never :
+        StartsWithPrivate<K> extends true ? never :
             T[K] extends Function ? never :
-                StartsWithPrivate<K> extends true ? never :
-                    IsExactlyRef<T[K]> extends true ? never :
+                    IsReferenceProp<T[K], K> extends true ? never :
                         K
 }[keyof T];
 
@@ -64,7 +73,6 @@ type JsonForReference<T> =
                 ? JsonOf<C> | null
                 : Ref | null
             : never;
-
 
 // Final JSON type
 export type JsonOf<T> =
