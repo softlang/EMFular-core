@@ -24,6 +24,7 @@ export interface MetaAwareModelList<
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
     remove(...items: T[]): boolean;
+    delete(): void;
 
     // internal metadata
     readonly __item: T;
