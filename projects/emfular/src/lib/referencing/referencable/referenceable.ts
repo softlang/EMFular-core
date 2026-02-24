@@ -81,15 +81,7 @@ export abstract class Referencable<
       child.delete()
     })
   }
-
-  private getContainer2<T extends Referencable<any>>(name: string): ReContainer<T, Parent> {
-    let refContainers = Object.entries(this)
-    let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
-    if (refContainer) {
-      return (refContainer[1] as ReContainer<T, Parent>)
-    } else
-      throw new Error("Container _"+name + " not found on "+refContainers)
-  }
+  
   protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
     const meta = this.$classMeta.references[refName];
 
