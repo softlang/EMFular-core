@@ -1,5 +1,5 @@
 import {Referencable} from "../referencable/referenceable";
-import {eClass2} from "../../binding/eclass-decorator";
+import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
 import {Deserializer} from "../../serialization/deserializer";
@@ -62,7 +62,7 @@ export enum EClassesSingleChild {
     'ReSingleChildExample' = 'class://ReSingleChildExample'
 }
 
-@eClass2(ModelSingleChild)
+@eClass(ModelSingleChild)
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
@@ -87,7 +87,7 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 
 }
 
-@eClass2(ModelSingleChild)
+@eClass(ModelSingleChild)
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
 
     @reference(ReSingleChildExampleRefs.myParent)

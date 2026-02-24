@@ -5,7 +5,7 @@ import {ClassMeta, ModelDefinition} from "./model-definition";
 export const ECLASS_METADATA_KEY = "eClass";
 
 
-export function eClass2(model: ModelDefinition): ClassDecorator {
+export function eClass(model: ModelDefinition): ClassDecorator {
     return function (ctor: any) {
 
         //todo might be minified

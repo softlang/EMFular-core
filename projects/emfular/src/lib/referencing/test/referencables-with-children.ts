@@ -1,5 +1,5 @@
 import {Referencable} from "../referencable/referenceable";
-import {eClass2} from "../../binding/eclass-decorator";
+import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
 import {ModelDefinition} from "../../binding/model-definition";
@@ -80,7 +80,7 @@ export enum EClasses {
     'ReChild3' = 'namespace/ReChild3'
 }
 
-@eClass2(ModelWithChildren)
+@eClass(ModelWithChildren)
 export class RootWithChildren extends Referencable<any> {
 
     @reference(RootWithChildrenRefs.child2)
@@ -96,7 +96,7 @@ export class RootWithChildren extends Referencable<any> {
     }
 }
 
-@eClass2(ModelWithChildren)
+@eClass(ModelWithChildren)
 export class Middle2WithChildren extends Referencable<RootWithChildren> {
     
     @reference(Middle2WithChildrenRefs.child3)
@@ -110,7 +110,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
     }
 }
 
-@eClass2(ModelWithChildren)
+@eClass(ModelWithChildren)
 export class ReChild3 extends Referencable<Middle2WithChildren> {
     @reference(ReChild3Refs.link1)
     declare link1: ModelList<RootWithChildren>

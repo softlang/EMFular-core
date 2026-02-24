@@ -1,5 +1,5 @@
 import {Referencable} from "../referencable/referenceable";
-import {eClass2} from "../../binding/eclass-decorator";
+import {eClass} from "../../binding/eclass-decorator";
 import {ModelDefinition} from "../../binding/model-definition";
 
 
@@ -12,7 +12,7 @@ const modelDef= {
      }
 }  as const satisfies ModelDefinition;
 
-@eClass2(modelDef)
+@eClass(modelDef)
 export class ReferencableTester extends Referencable<any> {
     constructor() {
         super();
