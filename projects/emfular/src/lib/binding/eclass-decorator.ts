@@ -18,7 +18,7 @@ export function eClass(model: ModelDefinition): ClassDecorator {
         }
 
         ctor.prototype.$classMeta = classMeta;
-
+        ctor.prototype.$modelUri = model.uri;
         const eClass = model.uri + className;
         Reflect.defineMetadata(ECLASS_METADATA_KEY, eClass, ctor);
         ModelRegistry.register(eClass, ctor);

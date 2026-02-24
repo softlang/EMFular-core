@@ -25,10 +25,11 @@ export function createContainer<
     const isList = meta.max !== 1;
 
     if (meta.containment) {
+        const defaultEClass = parent.$modelUri + meta.target;
         if (isList) {
-            return new ReTreeListContainer<T>(parent, propertyKey, meta.opposite)
+            return new ReTreeListContainer<T>(parent, propertyKey, undefined, defaultEClass )
         } else {
-            return new ReTreeSingleContainer<T>(parent, propertyKey, meta.opposite)
+            return new ReTreeSingleContainer<T>(parent, propertyKey, undefined, defaultEClass )
         }
     }
 
