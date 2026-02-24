@@ -77,7 +77,7 @@ export const ReChild3Refs = {
 export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',
     'Middle2WithChildren' = 'namespace/Middle2WithChildren',
-    'ReChild3' = 'namespace/Referencable3WithChildren'
+    'ReChild3' = 'namespace/ReChild3'
 }
 
 @eClass2(ModelWithChildren)
