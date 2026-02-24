@@ -6,7 +6,7 @@ import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
 
-export const ModelWithChildren = {
+export const ModelWithChildren: ModelDefinition = {
     name: "namespace",
     prefix: "ns",
     uri: "namespace/",
@@ -60,7 +60,7 @@ export const ModelWithChildren = {
             }
         }
     }
-} as const satisfies ModelDefinition;
+} as const;
 
 export const RootWithChildrenRefs = {
     child2: ModelWithChildren.classes["RootWithChildren"].references["child2"],
