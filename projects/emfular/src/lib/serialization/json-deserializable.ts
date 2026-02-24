@@ -51,8 +51,8 @@ type JsonForReference<T> =
             : Ref[]
         : T extends SingleRef<infer C, infer Kind>
             ? Kind extends "tree"
-                ? JsonOf<C> | null
-                : Ref | null
+                ? JsonOf<C> | undefined
+                : Ref | undefined
             : never;
 
 // Final JSON type
