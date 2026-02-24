@@ -4,6 +4,7 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
     extends ReTreeChildrenContainer<T> {
@@ -45,8 +46,8 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         return false;
     }
 
-    override delete() {
-        this._instance?.destruct()
+    override delete(mode: DeletionMode) {
+        this._instance?.destruct(mode)
     }
 
     fromJson(formerPrefix: string, context: Deserializer, json: any) {

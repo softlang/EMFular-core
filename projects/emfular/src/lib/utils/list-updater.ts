@@ -1,4 +1,5 @@
 import {Referencable} from "../referencing/referencable/referenceable";
+import { DeletionMode } from "./deletion-mode";
 
 export class ListUpdater {
 
@@ -25,9 +26,9 @@ export class ListUpdater {
     }
   }
 
-  static destructAllFromChangingList<T extends Referencable<any>>(list: T[]) {
+  static destructAllFromChangingList<T extends Referencable<any>>(list: T[], mode: DeletionMode) {
     while(list?.length > 0){
-      list[0].destruct()
+      list[0].destruct(mode)
     }
   }
 

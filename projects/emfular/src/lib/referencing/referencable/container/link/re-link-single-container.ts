@@ -2,6 +2,7 @@ import {Referencable} from "../../referenceable";
 import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
+import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
@@ -49,8 +50,8 @@ export class ReLinkSingleContainer<
         }
     }
 
-    override delete() {
-        this._instance?.destruct()
+    override delete(mode: DeletionMode) {
+        this._instance?.destruct(mode)
     }
 
     removeFromInverse(item: T): boolean {

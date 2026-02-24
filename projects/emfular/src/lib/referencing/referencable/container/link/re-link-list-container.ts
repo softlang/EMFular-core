@@ -3,6 +3,7 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
+import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
@@ -45,8 +46,8 @@ export class ReLinkListContainer<
         return res; //todo behaviour of flag different to add??
     }
 
-    override delete() {
-        ListUpdater.destructAllFromChangingList(this._instance)
+    override delete(mode: DeletionMode) {
+        ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
     override removeFromInverse(item: T): boolean {

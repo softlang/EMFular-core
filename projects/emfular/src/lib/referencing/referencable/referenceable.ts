@@ -10,6 +10,7 @@ import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
+import { DeletionMode } from "../../utils/deletion-mode";
 
 /** base class for CORE models.
  *
@@ -58,13 +59,13 @@ export abstract class Referencable<
     }
   }
 
-  destruct() {
+  destruct(mode: DeletionMode) {
     this.$parent?.remove(this)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this)
     })
     this.$treeChildren.forEach(child => {
-      child.delete()
+      child.delete(mode)
     })
   }
 

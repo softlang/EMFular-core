@@ -5,6 +5,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
+import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReTreeChildrenContainer<T> {
@@ -53,8 +54,8 @@ export class ReTreeListContainer<T extends Referencable<any>>
         return false;
     }
 
-    override delete() {
-        ListUpdater.destructAllFromChangingList(this._instance)
+    override delete(mode: DeletionMode) {
+        ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
     //creates one child level plus calls next createChildren
