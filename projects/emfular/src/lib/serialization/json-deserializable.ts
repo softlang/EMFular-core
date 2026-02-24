@@ -1,22 +1,10 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import {ReContainer} from "../referencing/referencable/container/re-container";
 import {MetaAwareModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
 }
-
-// Remove leading "_" from container field names
-type StripPrivate<K> =
-    K extends `_${infer Rest}` ? Rest : K;
-
-type IsModelList<T> =
-    T extends MetaAwareModelList<infer C, infer Kind> ? [C, Kind] : never;
-
-type IsSingleRef<T> =
-    T extends SingleRef<infer C, infer Kind> ? [C, Kind] : never;
-
 
 type IsReferencable<T> =
     T extends Referencable<any> ? true : false;
@@ -43,23 +31,9 @@ type ReferenceKeys<T> = {
         : never
 }[keyof T];
 
-
-// Identify container fields
-type IsContainer<T> =
-    T extends ReContainer<any, any> ? true : false;
-
-type ContainerKeys<T> = {
-    [K in keyof T]: IsContainer<T[K]> extends true ? K : never
-}[keyof T];
-
-type ContainerPublicNames<T> = StripPrivate<ContainerKeys<T>>;
-
 // ignore these on attributes:
 type StartsWithPrivate<K> =
     K extends `_${string}` | `$${string}` ? true : false;
-
-type IsExactlyRef<T> =
-    [T] extends [Ref] ? ([Ref] extends [T] ? true : false) : false;
 
 type AttributeKeys<T> = {
     [K in keyof T]:
