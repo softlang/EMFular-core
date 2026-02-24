@@ -6,6 +6,7 @@ import {
 } from "./referencables-with-children";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
+import {Ref} from "../ref/ref";
 
 describe('ReContainersWithListChild tests', () => {
 
@@ -102,6 +103,8 @@ describe('ReContainersWithListChild tests', () => {
             }]
         }
         expect(r1.toJson()).toEqual(r1json)
+        const json: RootWithChildrenJson = r1.toJson()
+        let refs: Ref[] = json.link3
     })
 
     //todo deserialization test
