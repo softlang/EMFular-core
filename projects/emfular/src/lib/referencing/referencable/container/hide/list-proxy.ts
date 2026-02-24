@@ -71,11 +71,11 @@ export function createListProxy<
                 };
             }
 
-            //own remove method
+            //own convenience method:
+            // returns true if it removed at least one item
             if (prop === "remove") {
-                return (...items: T[]) => {
-                    items.map((item: T) => container.remove(item)).some(t => t)
-                };
+                return (...items: T[]) =>
+                    items.some(item => container.remove(item));
             }
 
             // The pop() method removes the last element from an array and returns that value to the caller.
