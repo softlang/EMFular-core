@@ -18,7 +18,7 @@ export abstract class ReContainer<
 
     abstract add(item: T): boolean;
 
-    abstract remove(item: T): boolean;
+    abstract remove(item: T, mode: DeletionMode): boolean;
 
     //called to destruct all elements in the container (e.g. when destroying a parent
     abstract delete(mode: DeletionMode): void

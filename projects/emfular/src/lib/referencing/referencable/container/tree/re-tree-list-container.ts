@@ -40,7 +40,7 @@ export class ReTreeListContainer<T extends Referencable<any>>
             return false;
         } else {
             item.setParent(this);
-            oldParent?.remove(item)
+            oldParent?.remove(item, DeletionMode.RELAXED)
             return ListUpdater.addToListIfMissing(item, this._instance)
         }
     }

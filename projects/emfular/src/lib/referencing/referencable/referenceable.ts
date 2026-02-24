@@ -34,7 +34,7 @@ export abstract class Referencable<
 
   setParent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this.$parent) {
-      this.$parent.remove(this)
+      this.$parent.remove(this, DeletionMode.RELAXED)
     }
     this.$parent = parent;
   }
@@ -60,9 +60,9 @@ export abstract class Referencable<
   }
 
   destruct(mode: DeletionMode) {
-    this.$parent?.remove(this)
+    this.$parent?.remove(this, mode)
     this.$otherReferences.forEach(refContainer => {
-      refContainer.removeFromInverse(this)
+      refContainer.removeFromInverse(this, mode)
     })
     this.$treeChildren.forEach(child => {
       child.delete(mode)
@@ -82,8 +82,8 @@ export abstract class Referencable<
     return this.getContainer<T>(name).add(item)
   }
 
-  public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
-    return this.getContainer<T>(name).remove(item)
+  public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode): boolean {
+    return this.getContainer<T>(name).remove(item, mode)
   }
 
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {

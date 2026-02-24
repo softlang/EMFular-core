@@ -3,6 +3,7 @@ import { ReContainer } from "../re-container";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {Ref} from "../../../ref/ref";
 import {Deserializer} from "../../../../serialization/deserializer";
+import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export abstract class ReLinkContainer<
     T extends Referencable<any>,
@@ -17,7 +18,7 @@ export abstract class ReLinkContainer<
         this._parent.$otherReferences.push(this)
     }
 
-    abstract removeFromInverse(item: T): boolean;
+    abstract removeFromInverse(item: T, mode: DeletionMode): boolean;
 
     //adds the real elements behind refs as received from getOrCreate to the container
     addLinks(context: Deserializer, ...refs: Ref[]): void {

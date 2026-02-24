@@ -21,7 +21,7 @@ export class ReLinkSingleContainer<
 
     protected set(instance: T): void {
         if(this.inverseName !== undefined) {
-            this._instance?.removeFromReferencableContainer(this.inverseName, this._parent)
+            this._instance?.removeFromReferencableContainer(this.inverseName, this._parent, DeletionMode.RELAXED)
             this._instance = instance;
             instance.addToReferencableContainer(this.inverseName, this._parent)
         } else {
@@ -38,10 +38,10 @@ export class ReLinkSingleContainer<
         }
     }
 
-    remove(item: T): boolean {
+    remove(item: T, mode: DeletionMode): boolean {
         if(this._instance == item) {
             if (this.inverseName != undefined) {
-                item.removeFromReferencableContainer(this.inverseName, this._parent)
+                item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
             }
             this._instance = undefined;
             return true;
@@ -54,9 +54,9 @@ export class ReLinkSingleContainer<
         this._instance?.destruct(mode)
     }
 
-    removeFromInverse(item: T): boolean {
+    removeFromInverse(item: T, mode: DeletionMode): boolean {
         if(this.inverseName !== undefined) {
-            this._instance?.removeFromReferencableContainer(this.inverseName, item)
+            this._instance?.removeFromReferencableContainer(this.inverseName, item, mode)
             return true; // todo refine?
         }
         return false;

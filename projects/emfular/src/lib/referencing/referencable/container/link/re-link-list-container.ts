@@ -36,11 +36,11 @@ export class ReLinkListContainer<
         return this._instance.map(i => ctx.get(i))
     }
 
-    override remove(item: T): boolean {
+    override remove(item: T, mode: DeletionMode): boolean {
         const res =  ListUpdater.removeFromList(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
-                item.removeFromReferencableContainer(this.inverseName, this._parent)
+                item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
             }
         }
         return res; //todo behaviour of flag different to add??
@@ -50,10 +50,10 @@ export class ReLinkListContainer<
         ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
-    override removeFromInverse(item: T): boolean {
+    override removeFromInverse(item: T, mode: DeletionMode): boolean {
         if(this.inverseName !== undefined) {
             for (const child of this._instance) {
-                child.removeFromReferencableContainer(this.inverseName, item)
+                child.removeFromReferencableContainer(this.inverseName, item, mode)
             }
             return true; // todo - refine?
         }
