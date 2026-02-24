@@ -13,16 +13,19 @@ export type SingleRef<
     T, Kind extends RefKind = "link"
 > = T | undefined;
 
-export interface ModelList<
-    T, Kind extends RefKind = "link"
+export type ModelList<C> = MetaAwareModelList<C, any>;
+
+
+export interface MetaAwareModelList<
+    T, Kind extends RefKind
 >
     extends OmitKeys<Array<T>, ForbiddenArrayMethods> {
     //additional operations
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
     remove(...items: T[]): boolean;
-}
 
-export type TreeList<T> = ModelList<T, "tree">;
-export type LinkList<T> = ModelList<T, "link">;
-export type ParentRef<T> = SingleRef<T, "parent">;
+    // internal metadata
+    readonly __item: T;
+    readonly __kind: Kind;
+}

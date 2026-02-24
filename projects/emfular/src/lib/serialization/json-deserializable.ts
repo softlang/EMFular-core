@@ -1,7 +1,7 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
 import {ReContainer} from "../referencing/referencable/container/re-container";
-import {ModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
+import {MetaAwareModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
@@ -12,7 +12,7 @@ type StripPrivate<K> =
     K extends `_${infer Rest}` ? Rest : K;
 
 type IsModelList<T> =
-    T extends ModelList<infer C, infer Kind> ? [C, Kind] : never;
+    T extends MetaAwareModelList<infer C, infer Kind> ? [C, Kind] : never;
 
 type IsSingleRef<T> =
     T extends SingleRef<infer C, infer Kind> ? [C, Kind] : never;
@@ -24,7 +24,7 @@ type IsReferencable<T> =
 type IsReferenceProp<T, K> =
     K extends "ParentType" ? false :
         T extends object
-            ? T extends ModelList<any, any> ? true
+            ? T extends MetaAwareModelList<any, any> ? true
                 : T extends SingleRef<any, any>
                     ? true
                     : IsReferencable<T> extends true
@@ -64,7 +64,7 @@ type AttributeKeys<T> = {
 }[keyof T];
 
 type JsonForReference<T> =
-    T extends ModelList<infer C, infer Kind>
+    T extends MetaAwareModelList<infer C, infer Kind>
         ? Kind extends "tree"
             ? JsonOf<C>[]
             : Ref[]

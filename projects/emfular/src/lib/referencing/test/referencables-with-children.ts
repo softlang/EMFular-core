@@ -84,9 +84,9 @@ export enum EClasses {
 export class RootWithChildren extends Referencable<any> {
 
     @reference(RootWithChildrenRefs.child2)
-    declare child2: ModelList<Middle2WithChildren, "tree">
+    declare child2: ModelList<Middle2WithChildren>
     @reference(RootWithChildrenRefs.link3)
-    declare link3: ModelList<ReChild3, "link">;
+    declare link3: ModelList<ReChild3>;
 
     @attribute()
     name: string = "referencable1";
@@ -100,7 +100,7 @@ export class RootWithChildren extends Referencable<any> {
 export class Middle2WithChildren extends Referencable<RootWithChildren> {
     
     @reference(Middle2WithChildrenRefs.child3)
-    declare child3: ModelList<ReChild3, "tree">
+    declare child3: ModelList<ReChild3>
 
     @attribute()
     name: string = "referencable2";
@@ -113,7 +113,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
 @eClass2(ModelWithChildren)
 export class ReChild3 extends Referencable<Middle2WithChildren> {
     @reference(ReChild3Refs.link1)
-    declare link1: ModelList<RootWithChildren, "link">
+    declare link1: ModelList<RootWithChildren>
 
     @reference(ReChild3Refs.parentPointer)
     declare parentPointer?: Middle2WithChildren;

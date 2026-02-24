@@ -1,5 +1,5 @@
 import {ReferenceMeta} from "./model-definition";
-import {ModelList, RefKind, SingleRef} from "../referencing/referencable/container/hide/model-list";
+import {MetaAwareModelList,  RefKind, SingleRef} from "../referencing/referencable/container/hide/model-list";
 
 export type KindFromMeta<M extends ReferenceMeta> =
     M["isParent"] extends true ? "parent" :
@@ -13,5 +13,5 @@ export type RefineReference<
     IsList extends boolean
 > =
     IsList extends true
-        ? ModelList<Target, Kind> & UserType
+        ? MetaAwareModelList<Target, Kind> & UserType
         : SingleRef<Target, Kind> & UserType;
