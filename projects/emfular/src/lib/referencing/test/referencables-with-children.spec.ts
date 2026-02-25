@@ -104,7 +104,8 @@ describe('ReContainersWithListChild tests', () => {
         }
         expect(r1.toJson()).toEqual(r1json)
         const json: RootWithChildrenJson = r1.toJson()
-        let refs: Ref[] = json.link3
+        let refs: Ref[] = json.link3 as Ref[]
+        expect(refs.length).toBe(1)
     })
 
     //todo deserialization test
