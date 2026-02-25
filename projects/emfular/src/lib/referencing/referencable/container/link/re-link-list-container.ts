@@ -12,8 +12,8 @@ export class ReLinkListContainer<
 
     readonly _instance: T[] = [];
 
-    constructor(parent: P, name: string, inverse?: string) {
-        super(parent, name, inverse);
+    constructor(parent: P, name: string, isRequired: boolean, inverse?: string) {
+        super(parent, name, isRequired, inverse);
     }
 
     override get(): T[] {

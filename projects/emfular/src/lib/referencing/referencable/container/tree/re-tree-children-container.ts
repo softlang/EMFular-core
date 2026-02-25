@@ -10,8 +10,8 @@ export abstract class ReTreeChildrenContainer<
 
     readonly defaultEClass?: string;
 
-    protected constructor(parent: T["ParentType"], name: string, eClass?: string) {
-        super(parent, name);
+    protected constructor(parent: T["ParentType"], name: string, isRequired: boolean, eClass?: string) {
+        super(parent, name, isRequired);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }

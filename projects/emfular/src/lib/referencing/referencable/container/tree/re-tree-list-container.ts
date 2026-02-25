@@ -12,8 +12,8 @@ export class ReTreeListContainer<T extends Referencable<any>>
 
     readonly _instance: T[] = [];
 
-    constructor(parent: T["ParentType"], name: string, _?: string, eClass?: string) {
-        super(parent, name, eClass);
+    constructor(parent: T["ParentType"], name: string, isRequired: boolean, _?: string, eClass?: string) {
+        super(parent, name, isRequired, eClass);
     }
 
     override get(): T[] {
@@ -45,7 +45,7 @@ export class ReTreeListContainer<T extends Referencable<any>>
         }
     }
 
-    override remove(item: T): boolean {
+    override remove(item: T, mode: DeletionMode): boolean {
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
             item.setParent(undefined);

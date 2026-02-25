@@ -12,8 +12,8 @@ export abstract class ReLinkContainer<
 
     readonly inverseName?: string;
 
-    protected constructor(parent: P, referenceName: string, inverseName?: string) {
-        super(parent, referenceName);
+    protected constructor(parent: P, referenceName: string, isRequired: boolean, inverseName?: string) {
+        super(parent, referenceName, isRequired);
         this.inverseName = inverseName;
         this._parent.$otherReferences.push(this)
     }

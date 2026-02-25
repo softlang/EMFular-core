@@ -11,8 +11,8 @@ export class ReLinkSingleContainer<
 
     _instance?: T
 
-    constructor(parent: P, referenceName: string, inverseName?: string ) {
-        super(parent, referenceName, inverseName);
+    constructor(parent: P, referenceName: string, isRequired: boolean = false, inverseName?: string) {
+        super(parent, referenceName, isRequired, inverseName);
     }
 
     get(): T | undefined {

@@ -11,8 +11,8 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
 
     _instance?: T
 
-    constructor(parent: T["ParentType"], referenceName: string, _?: string, eClass?: string) {
-        super(parent, referenceName, eClass);
+    constructor(parent: T["ParentType"], referenceName: string, isRequired: boolean, eClass?: string) {
+        super(parent, referenceName, isRequired, eClass);
     }
 
     override get(): T | undefined {
