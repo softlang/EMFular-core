@@ -23,7 +23,9 @@ export const ModelInheritance: ModelDefinition = {
             references: {
                 myParent: {
                     target: "InheritanceRoot",
-                    isParent: true
+                    isParent: true,
+                    max: 1,
+                    opposite: 'children',
                 }
             }
         },

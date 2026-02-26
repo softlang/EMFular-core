@@ -16,9 +16,6 @@ export interface MetaAwareModelList<T, Kind extends RefKind>
 
     /** @deprecated Direct index assignment is not supported. Use push()+move  or swap(). */
     [index: number]: T;
-    /** @deprecated Length assignment is not supported. Use remove(...items[]). */
-    length: number;
-
 
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
