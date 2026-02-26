@@ -29,6 +29,31 @@ export function createListProxy<
 
     return new Proxy([] as unknown as  ModelList<T>, {
 
+        has(_: ModelList<T>, prop: PropertyKey) {
+            const list = container.get();
+            if (isIndexAccess(prop)) {
+                const index = Number(prop);
+                return index >= 0 && index < list.length;
+            }
+            return prop in list;
+        },
+
+        ownKeys(_: ModelList<T>) {
+            const list = container.get();
+            const keys = [];
+
+            for (let i = 0; i < list.length; i++) {
+                keys.push(String(i));
+            }
+
+            // include "length" and any other properties you want to expose
+            keys.push("length");
+            keys.push(Symbol.iterator);
+
+            return keys;
+        },
+
+
         // ============================================================
         // property reads and method lookups
         // ============================================================
