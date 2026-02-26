@@ -136,4 +136,19 @@ describe('ReContainersWithListChild tests', () => {
     });
 
 
+    it('should allow flatMap on ModelList proxies (shows proxy behaves like array)', () => {
+        // Build a small containment structure
+        r1.child2.push(r2_1, r2_2);
+
+        r2_1.child3.push(r3_1);
+        r2_2.child3.push(r3_2);
+
+        // This is the critical line that used to fail:
+        const allChildren = r1.child2.flatMap(m => m.child3);
+
+        expect(allChildren.length).toBe(2);
+        expect(allChildren).toContain(r3_1);
+        expect(allChildren).toContain(r3_2);
+    });
+
 });
