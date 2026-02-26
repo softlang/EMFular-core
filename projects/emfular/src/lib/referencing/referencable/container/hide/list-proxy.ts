@@ -238,22 +238,10 @@ export function createListProxy<
         // SET — index assignment and length assignment
         // ============================================================
         set(_: ModelList<T>, prop: string|symbol, value: any) {
-            // numeric index assignment
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
-                const index = Number(prop);
-                const arr = container.get();
-
-                if (index < arr.length) {
-                    container.remove(arr[index]);
-                }
-
-                container.add(value);
-                container.move(arr.length - 1, index);
-
-                return true;
+                forbidden("index assignment");
             }
 
-            // forbid length manipulation
             if (prop === "length") {
                 forbidden("length assignment");
             }
