@@ -237,7 +237,7 @@ export function createListProxy<
         // ============================================================
         // SET — index assignment and length assignment
         // ============================================================
-        set(_: ModelList<T>, prop: string|symbol, value: any) {
+        set(_target: ModelList<T>, prop: string|symbol, _value: any) {
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
                 forbidden("index assignment");
             }
