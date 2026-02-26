@@ -10,7 +10,7 @@ import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
-import { ClassMeta } from "../../binding/model-definition";
+import {ClassMeta, ReferenceMeta} from "../../binding/model-definition";
 
 /** base class for CORE models.
  *
@@ -84,14 +84,22 @@ export abstract class Referencable<
   }
 
   protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
-    const meta = this.$classMeta.references[refName];
+    let proto: any = Object.getPrototypeOf(this);
+    let meta: ReferenceMeta | undefined;
 
-    if (!meta) {
-      throw new Error(
-          `Reference '${refName}' not found on class '${this.$classMeta}'`
-      );
+    // Walk up the prototype chain until we find the reference
+    while (proto) {
+      const classMeta = proto.$classMeta;
+      if (classMeta && classMeta.references && refName in classMeta.references) {
+        meta = classMeta.references[refName];
+        break;
+      }
+      proto = Object.getPrototypeOf(proto);
     }
 
+    if (!meta) {
+      throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
+    }
     const key: symbol = meta.containerKey!;
     const container = (this as any)[key];
 
