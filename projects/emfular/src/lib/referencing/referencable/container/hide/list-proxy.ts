@@ -161,6 +161,22 @@ export function createListProxy<
                 };
             }
 
+            if (prop === "swap") {
+                return (from: number, to: number) => {
+                    const list = container.get();
+                    verifyIndexInBounds("swap", from, list.length);
+                    verifyIndexInBounds("swap", to, list.length);
+                    if (from === to) return;
+
+                    const a = list[from];
+                    const b = list[to];
+                    container.move(from, to);
+                    // indices have changed
+                    container.move(list.indexOf(b), from)
+                };
+            }
+
+
             // sort(compareFn)
             if (prop === "sort") {
                 return (compareFn?: (a: T, b: T) => number) => {
