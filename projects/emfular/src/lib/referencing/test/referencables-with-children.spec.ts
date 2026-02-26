@@ -121,4 +121,19 @@ describe('ReContainersWithListChild tests', () => {
         expect(r1.$otherReferences.length).toBe(1)
     })
 
+    it('should allow swapping elements in a ModelList created via decorators', () => {
+        const r = new RootWithChildren();
+        const m1 = new Middle2WithChildren();
+        const m2 = new Middle2WithChildren();
+        const m3 = new Middle2WithChildren();
+
+        r.child2.push(m1, m2, m3);
+        expect(r.child2.map(x => x)).toEqual([m1, m2, m3]);
+
+        (r.child2 as any).swap(0, 2);
+
+        expect(r.child2.map(x => x)).toEqual([m3, m2, m1]);
+    });
+
+
 });
