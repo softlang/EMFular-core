@@ -40,7 +40,7 @@ export const ModelInheritance: ModelDefinition = {
     }
 } as const;
 
-@eClass(ModelInheritance)
+@eClass(ModelInheritance, "InheritanceRoot")
 export class InheritanceRoot extends Referencable<any> {
 
     constructor() {
@@ -51,7 +51,7 @@ export class InheritanceRoot extends Referencable<any> {
     declare children: ModelList<AbstractBase>;
 }
 
-@eClass(ModelInheritance)
+@eClass(ModelInheritance, "AbstractBase")
 export abstract class AbstractBase extends Referencable<InheritanceRoot> {
 
     protected constructor() {
@@ -62,14 +62,14 @@ export abstract class AbstractBase extends Referencable<InheritanceRoot> {
     declare myParent: InheritanceRoot | undefined;
 }
 
-@eClass(ModelInheritance)
+@eClass(ModelInheritance, "A")
 export class A extends AbstractBase {
     constructor() {
         super();
     }
 }
 
-@eClass(ModelInheritance)
+@eClass(ModelInheritance, "B")
 export class B extends AbstractBase {
     constructor() {
         super();

@@ -62,7 +62,7 @@ export enum EClassesSingleChild {
     'ReSingleChildExample' = 'class://ReSingleChildExample'
 }
 
-@eClass(ModelSingleChild)
+@eClass(ModelSingleChild, "ReContainersWithSingleChild")
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
@@ -87,7 +87,7 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 
 }
 
-@eClass(ModelSingleChild)
+@eClass(ModelSingleChild, "ReSingleChildExample")
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
 
     @reference(ReSingleChildExampleRefs.myParent)

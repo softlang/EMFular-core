@@ -12,7 +12,7 @@ const modelDef= {
      }
 }  as const satisfies ModelDefinition;
 
-@eClass(modelDef)
+@eClass(modelDef, "ReferencableTester")
 export class ReferencableTester extends Referencable<any> {
     constructor() {
         super();

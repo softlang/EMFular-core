@@ -80,7 +80,7 @@ export enum EClasses {
     'ReChild3' = 'namespace/ReChild3'
 }
 
-@eClass(ModelWithChildren)
+@eClass(ModelWithChildren, "RootWithChildren")
 export class RootWithChildren extends Referencable<any> {
 
     @reference(RootWithChildrenRefs.child2)
@@ -96,7 +96,7 @@ export class RootWithChildren extends Referencable<any> {
     }
 }
 
-@eClass(ModelWithChildren)
+@eClass(ModelWithChildren, "Middle2WithChildren")
 export class Middle2WithChildren extends Referencable<RootWithChildren> {
     
     @reference(Middle2WithChildrenRefs.child3)
@@ -110,7 +110,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
     }
 }
 
-@eClass(ModelWithChildren)
+@eClass(ModelWithChildren, "ReChild3")
 export class ReChild3 extends Referencable<Middle2WithChildren> {
     @reference(ReChild3Refs.link1)
     declare link1: ModelList<RootWithChildren>
