@@ -47,7 +47,11 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
     }
 
     override delete(mode: DeletionMode) {
-        this._instance?.destruct(mode)
+        if (mode === DeletionMode.CASCADE) {
+            this._instance?.destruct(mode)
+        } else if (mode === DeletionMode.RELAXED) {
+            this._instance?.parent?.remove(this._instance, mode)
+        }
     }
 
     fromJson(formerPrefix: string, context: Deserializer, json: any) {

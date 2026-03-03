@@ -84,14 +84,14 @@ export abstract class Referencable<
 
   public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode): boolean {
     let container = this.getContainer<T>(name)
-    if (mode == DeletionMode.CASCADE && container.isRequired) {
+    let result = container.remove(item, mode)
+    if (result && mode == DeletionMode.CASCADE && container.isRequired) {
         const instance = container.get()
         if (instance == undefined || (Array.isArray(instance) && instance.length == 0)) {
           container._parent.destruct(mode)
-          return true;
         }
       }
-    return container.remove(item, mode)
+    return result
   }
 
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {
