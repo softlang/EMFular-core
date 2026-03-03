@@ -38,8 +38,8 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 
     constructor() {
         super();
-        this._child = new ReTreeSingleContainer(this, ReContainersWithSingleChild.$childName)
-        this._link = new ReLinkSingleContainer(this, ReContainersWithSingleChild.$linkName, ReSingleChildExample.$otherLinkName)
+        this._child = new ReTreeSingleContainer(this, ReContainersWithSingleChild.$childName, false)
+        this._link = new ReLinkSingleContainer(this, ReContainersWithSingleChild.$linkName, false, ReSingleChildExample.$otherLinkName)
     }
 
     static fromJSON (convJson: JsonOf<ReContainersWithSingleChild>): ReContainersWithSingleChild {
@@ -76,7 +76,7 @@ export class ReSingleChildExample extends Referencable<ReContainersWithSingleChi
 
     constructor() {
         super();
-        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName, ReContainersWithSingleChild.$childName)
-        this._otherLink = new ReLinkSingleContainer(this, ReSingleChildExample.$otherLinkName, ReContainersWithSingleChild.$linkName,)
+        this._myParent = new ReTreeParentContainer(this, ReSingleChildExample.$myParentName, false, ReContainersWithSingleChild.$childName)
+        this._otherLink = new ReLinkSingleContainer(this, ReSingleChildExample.$otherLinkName, false, ReContainersWithSingleChild.$linkName,)
     }
 }

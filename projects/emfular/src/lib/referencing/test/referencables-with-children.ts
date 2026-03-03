@@ -5,6 +5,7 @@ import {eClass} from "../../binding/eclass-decorator";
 import {attribute} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
 import {ReTreeParentContainer} from "../referencable/container/tree/re-tree-parent-container";
+import { DeletionMode } from "../../utils/deletion-mode";
 
 export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',
@@ -26,8 +27,8 @@ export class RootWithChildren extends Referencable<any> {
 
     constructor() {
         super();
-        this._child2 = new ReTreeListContainer(this, RootWithChildren.$child2Name);
-        this._link3 = new ReLinkListContainer(this, RootWithChildren.$link3Name, ReChild3.$link1Name);
+        this._child2 = new ReTreeListContainer(this, RootWithChildren.$child2Name, false);
+        this._link3 = new ReLinkListContainer(this, RootWithChildren.$link3Name, false, ReChild3.$link1Name);
     }
 
     get child2(): Middle2WithChildren[] {
@@ -37,7 +38,7 @@ export class RootWithChildren extends Referencable<any> {
         c2s.map(c2 => this._child2.add(c2))
     }
     removeChild2(...c2s: Middle2WithChildren[]) {
-        c2s.map(c2 => this._child2.remove(c2))
+        c2s.map(c2 => this._child2.remove(c2, DeletionMode.RELAXED))
     }
 
     get link3() {
@@ -47,7 +48,7 @@ export class RootWithChildren extends Referencable<any> {
         c3s.map(c3 => this._link3.add(c3))
     }
     removeLink3(...c3s: ReChild3[]) {
-        c3s.map(c3 => this._link3.remove(c3))
+        c3s.map(c3 => this._link3.remove(c3, DeletionMode.RELAXED))
     }
 
 }
@@ -62,7 +63,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
 
     constructor() {
         super();
-        this._child3 = new ReTreeListContainer(this, Middle2WithChildren.$child3Name)
+        this._child3 = new ReTreeListContainer(this, Middle2WithChildren.$child3Name, false)
     }
 
     get child3(): ReChild3[] {
@@ -72,7 +73,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
         c3s.map(c3 => this._child3.add(c3))
     }
     removeChild3(...c3s: ReChild3[]) {
-        c3s.map(c3 => this._child3.remove(c3))
+        c3s.map(c3 => this._child3.remove(c3, DeletionMode.RELAXED))
     }
 }
 
@@ -89,8 +90,8 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
 
     constructor() {
         super();
-        this._link1 = new ReLinkListContainer(this, ReChild3.$link1Name, RootWithChildren.$link3Name)
-        this._parentPointer = new ReTreeParentContainer(this, ReChild3.$parentPointerName, Middle2WithChildren.$child3Name)
+        this._link1 = new ReLinkListContainer(this, ReChild3.$link1Name, false, RootWithChildren.$link3Name)
+        this._parentPointer = new ReTreeParentContainer(this, ReChild3.$parentPointerName, false, Middle2WithChildren.$child3Name)
     }
     get link1(): RootWithChildren[] {
         return this._link1.get()
@@ -99,7 +100,7 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
         c1s.map(c1 => this._link1.add(c1))
     }
     removeLink1(...c1s: RootWithChildren[]) {
-        c1s.map(c1 => this._link1.remove(c1))
+        c1s.map(c1 => this._link1.remove(c1, DeletionMode.RELAXED))
     }
 
     get parentPointer(): Middle2WithChildren | undefined {
