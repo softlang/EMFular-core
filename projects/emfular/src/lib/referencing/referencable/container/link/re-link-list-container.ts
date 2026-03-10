@@ -52,7 +52,7 @@ export class ReLinkListContainer<
 
     override removeFromInverse(item: T, mode: DeletionMode): boolean {
         if(this.inverseName !== undefined) {
-            for (const child of this._instance) {
+            for (const child of [...this._instance]) {
                 child.removeFromReferencableContainer(this.inverseName, item, mode)
             }
             return true; // todo - refine?
