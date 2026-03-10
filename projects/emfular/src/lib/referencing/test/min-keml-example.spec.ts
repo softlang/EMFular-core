@@ -227,7 +227,7 @@ describe('MinKemlExample', () => {
     expect(infoLinkCA.target).toBeUndefined();
   });
 
-  it('cascaded deletion of NewInformation should delete reference to targetedBy but not delete children', () => {
+  it('cascaded deletion of NewInformation should delete reference to targetedBy and delete children', () => {
     let partner: ConversationPartner = new ConversationPartner();
     let recMess: ReceiveMessage = ReceiveMessage.create(partner, 0, 'Received message');
     let newInfoA: NewInformation = NewInformation.create(recMess, 'Info A');
