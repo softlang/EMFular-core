@@ -4,6 +4,7 @@ export interface ReferenceMeta {
     target: string;        // name of target class
     containment?: true;
     isParent?: true;
+    derivingMethod?: symbol;
     opposite?: string;
     min?: number;
     max?: number;

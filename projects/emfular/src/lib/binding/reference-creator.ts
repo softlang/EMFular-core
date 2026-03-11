@@ -24,6 +24,11 @@ export function createContainer<
 
     const isList = meta.max !== 1;
 
+    if(meta.derivingMethod) {
+
+
+    }
+
     if (meta.containment) {
         const defaultEClass = parent.$modelUri + meta.target;
         if (isList) {

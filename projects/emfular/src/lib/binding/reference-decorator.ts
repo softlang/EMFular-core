@@ -1,9 +1,9 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
-import {ReListContainer} from "../referencing/referencable/container/re-list-container";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
 import {KindFromMeta, RefineReference} from "./reference-typing";
+import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
     meta: M
@@ -32,7 +32,7 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
         if ( meta.max !== 1) {
             Object.defineProperty(prototype, propertyKey, {
                 get(this: any): FinalType {
-                    const c = this[symbol] as ReListContainer<T, any>;
+                    const c = this[symbol] as ReListInterface<T, any>;
                     return c.proxy as FinalType;
                 },
                 set(_: T | null) {
