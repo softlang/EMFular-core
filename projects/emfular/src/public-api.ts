@@ -12,7 +12,7 @@ export * from './lib/referencing/referencable/container/link/re-link-single-cont
 export * from './lib/referencing/referencable/container/tree/re-tree-children-container';
 export * from './lib/referencing/referencable/container/tree/re-tree-list-container';
 export * from './lib/referencing/referencable/container/tree/re-tree-single-container';
-export * from './lib/referencing/referencable/container/tree/re-tree-parent-container';
+export * from './lib/referencing/referencable/container/shallow/re-tree-parent-container';
 export * from './lib/referencing/referencable/container/hide/model-list'
 
 export * from './lib/serialization/deserializer';
