@@ -6,6 +6,8 @@ import {ReTreeListContainer} from "../referencing/referencable/container/tree/re
 import {ReTreeSingleContainer} from "../referencing/referencable/container/tree/re-tree-single-container";
 import {ReLinkListContainer} from "../referencing/referencable/container/link/re-link-list-container";
 import {ReLinkSingleContainer} from "../referencing/referencable/container/link/re-link-single-container";
+import {ReDerivedListContainer} from "../referencing/referencable/container/shallow/re-derived-list-container";
+import {ReDerivedSingleContainer} from "../referencing/referencable/container/shallow/re-derived-single-container";
 
 
 export function createContainer<
@@ -25,8 +27,11 @@ export function createContainer<
     const isList = meta.max !== 1;
 
     if(meta.derivingMethod) {
-
-
+        if (isList) {
+            return new ReDerivedListContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta.opposite)
+        } else {
+            return new ReDerivedSingleContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta.opposite)
+        }
     }
 
     if (meta.containment) {
