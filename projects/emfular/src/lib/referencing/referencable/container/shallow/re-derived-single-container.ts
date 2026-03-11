@@ -1,6 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {ReContainer} from "../re-container";
 import {ReSingleInterface} from "../re-single-interface";
+import {ReDerivationResolver} from "./re-derivation-resolver";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 
 export class ReDerivedSingleContainer<
@@ -9,32 +10,24 @@ export class ReDerivedSingleContainer<
 > extends ReContainer<T,P>
     implements ReSingleInterface<T,P> {
 
-    compute: (owner: P) => T|undefined
+    private resolver: ReDerivationResolver<P, T | undefined>;
 
-    constructor(parent: P,
-                compute: (owner: P) => T|undefined,
-                referenceName: string,
-                inverseName?: string     //todo not really used
+    constructor(
+        parent: P,
+        computeOrSymbol: ((owner: P) => T | undefined) | symbol,
+        referenceName: string,
+        inverseName?: string
     ) {
         super(parent, referenceName, inverseName);
-        this.compute = compute;
+        this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 
-    get(): T|undefined {
-        return this.compute(this._parent)
+    get(): T | undefined {
+        return this.resolver.resolve(this._parent);
     }
 
-    override toJson(_: SerializationContext): any {
-        return undefined
-    }
-
-    override add(_: T): boolean {
-        return false;
-    }
-
-    override remove(_: T): boolean {
-        return false;
-    }
-
+    override toJson(_: SerializationContext) { return undefined; }
+    override add(_:T) { return false; }
+    override remove(_:T) { return false; }
     override delete() {}
 }

@@ -5,6 +5,7 @@ import {ReListInterface} from "../re-list-interface";
 import {ModelList} from "../hide/model-list";
 import {createListProxy} from "../hide/list-proxy";
 import {ReShallowInterface} from "./re-shallow-interface";
+import {ReDerivationResolver} from "./re-derivation-resolver";
 
 export class ReDerivedListContainer<
     T extends Referencable<any>,
@@ -13,17 +14,17 @@ export class ReDerivedListContainer<
     implements ReListInterface<T, P>,
         ReShallowInterface<T, P> {
 
-    _proxy?: ModelList<T>;
+    private _proxy?: ModelList<T>;
+    private resolver: ReDerivationResolver<P, T[]>;
 
-    compute: (owner: P) => T[]
-
-    constructor(parent: P,
-                compute: (owner: P) => T[],
-                referenceName: string,
-                inverseName?: string  //todo not really used
+    constructor(
+        parent: P,
+        computeOrSymbol: ((owner: P) => T[]) | symbol,
+        referenceName: string,
+        inverseName?: string
     ) {
         super(parent, referenceName, inverseName);
-        this.compute = compute;
+        this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 
     get proxy(): ModelList<T> {
@@ -35,12 +36,12 @@ export class ReDerivedListContainer<
 
     override get(): T[] {
         // Defensive copy so callers cannot mutate the underlying result
-        const result = this.compute(this._parent);
+        const result = this.resolver.resolve(this._parent);
         return result.slice();
     }
 
     override toJson(_: SerializationContext): any {
-        return []
+        return [];
     }
 
     override add(_: T): boolean {
