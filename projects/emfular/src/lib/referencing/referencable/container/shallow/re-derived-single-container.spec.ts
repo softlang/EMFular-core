@@ -1,7 +1,9 @@
 import { ReDerivedSingleContainer } from './re-derived-single-container';
+import {ReferencableTester} from "../../../test/referencable-tester";
 
 describe('ReDerivedSingleContainer', () => {
   it('should create an instance', () => {
-    expect(new ReDerivedSingleContainer()).toBeTruthy();
+    let tester = new ReferencableTester()
+    expect(new ReDerivedSingleContainer<any, any>(tester, () => {},'refName', 'opposite')).toBeTruthy();
   });
 });

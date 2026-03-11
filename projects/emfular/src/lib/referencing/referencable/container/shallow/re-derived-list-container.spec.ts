@@ -1,7 +1,9 @@
 import { ReDerivedListContainer } from './re-derived-list-container';
+import {ReferencableTester} from "../../../test/referencable-tester";
 
 describe('ReDerivedListContainer', () => {
   it('should create an instance', () => {
-    expect(new ReDerivedListContainer()).toBeTruthy();
+    let tester = new ReferencableTester()
+    expect(new ReDerivedListContainer<any, any>(tester, () => [],'refName', 'opposite')).toBeTruthy();
   });
 });
