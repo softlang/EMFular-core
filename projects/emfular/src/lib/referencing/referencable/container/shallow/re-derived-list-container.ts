@@ -1,12 +1,19 @@
 import {Referencable} from "../../referenceable";
-import {ReListContainer} from "../re-list-container";
 import {SerializationContext} from "../../../../serialization/serialization-context";
+import {ReContainer} from "../re-container";
+import {ReListInterface} from "../re-list-interface";
+import {ModelList} from "../hide/model-list";
+import {createListProxy} from "../hide/list-proxy";
+import {ReShallowInterface} from "./re-shallow-interface";
 
 export class ReDerivedListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReListContainer<T,P> {
-    //todo we could just use an interface so that no empty instance exists
+> extends ReContainer<T,P>
+    implements ReListInterface<T, P>,
+        ReShallowInterface<T, P> {
+
+    _proxy?: ModelList<T>;
 
     compute: (owner: P) => T[]
 
@@ -17,6 +24,13 @@ export class ReDerivedListContainer<
     ) {
         super(parent, referenceName, inverseName);
         this.compute = compute;
+    }
+
+    get proxy(): ModelList<T> {
+        if (!this._proxy) {
+            this._proxy = createListProxy(this);
+        }
+        return this._proxy;
     }
 
     override get(): T[] {
@@ -39,4 +53,6 @@ export class ReDerivedListContainer<
 
     override delete() {}
 
+    move(from: number, to: number) {}
+    swap(from: number, to: number) {}
 }

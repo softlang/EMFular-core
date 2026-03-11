@@ -3,11 +3,13 @@ import {ReContainer} from "./re-container";
 import {ListUpdater} from "../../../utils/list-updater";
 import {ModelList} from "./hide/model-list";
 import {createListProxy} from "./hide/list-proxy";
+import {ReListInterface} from "./re-list-interface";
 
 export abstract class ReListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReContainer<T, P>{
+> extends ReContainer<T, P>
+implements ReListInterface<T, P>{
 
     readonly _instance: T[] = [];
 

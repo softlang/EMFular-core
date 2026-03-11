@@ -2,10 +2,12 @@ import {Referencable} from "../../referenceable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReContainer} from "../re-container";
 import {ReSingleInterface} from "../re-single-interface";
+import {ReShallowInterface} from "./re-shallow-interface";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T>
-implements ReSingleInterface<T["ParentType"], T>{
+implements ReSingleInterface<T["ParentType"], T>,
+    ReShallowInterface<T["ParentType"], T>{
 
     constructor(parent: T, referenceName: string, inverseName: string ) {
         super(parent, referenceName, inverseName); // referenceName is actually unused for this container type

@@ -1,11 +1,11 @@
-import {ReListContainer} from "../re-list-container";
 import {Referencable} from "../../referenceable";
 import {ModelList} from "./model-list";
+import {ReListInterface} from "../re-list-interface";
 
 export function createListProxy<
     T extends Referencable<any>,
     P extends Referencable<any>
->(container: ReListContainer<T, P>): ModelList<T> {
+>(container: ReListInterface<T, P>): ModelList<T> {
 
     const forbidden = (name: string) => {
         throw new Error(`Operation '${name}' is not supported on model lists`);
@@ -192,8 +192,6 @@ export function createListProxy<
                     verifyIndexInBounds("swap", from, list.length);
                     verifyIndexInBounds("swap", to, list.length);
                     if (from === to) return;
-
-                    const a = list[from];
                     const b = list[to];
                     container.move(from, to);
                     // indices have changed
