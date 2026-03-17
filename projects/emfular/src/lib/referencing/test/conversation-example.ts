@@ -1,4 +1,4 @@
-import { DeletionMode } from "../../utils/deletion-mode";
+import { DeletionAdditionMode } from "../../utils/deletion-addition-mode";
 import { ReLinkListContainer } from "../referencable/container/link/re-link-list-container";
 import { ReLinkSingleContainer } from "../referencable/container/link/re-link-single-container";
 import { ReTreeListContainer } from "../referencable/container/tree/re-tree-list-container";
@@ -181,7 +181,7 @@ export class SendMessage extends Message {
   addUsage(info: Information) {
     this._uses.add(info)
   }
-  removeUsage(info: Information, mode: DeletionMode = DeletionMode.RELAXED): boolean {
+  removeUsage(info: Information, mode: DeletionAdditionMode = DeletionAdditionMode.RELAXED): boolean {
     return this._uses.remove(info, mode)
   }
 
@@ -222,7 +222,7 @@ export class ReceiveMessage extends Message {
   addRepetition(info: Information) {
     this._repeats.add(info);
   }
-  removeRepetition(info: Information, mode: DeletionMode = DeletionMode.RELAXED): boolean {
+  removeRepetition(info: Information, mode: DeletionAdditionMode = DeletionAdditionMode.RELAXED): boolean {
     return this._repeats.remove(info, mode);
   }
 
@@ -286,7 +286,7 @@ export abstract class Information<
   addIsUsedOn(...send: SendMessage[]){
     send.map(s => this._isUsedOn.add(s))
   }
-  removeIsUsedOn(send: SendMessage, mode: DeletionMode = DeletionMode.RELAXED){
+  removeIsUsedOn(send: SendMessage, mode: DeletionAdditionMode = DeletionAdditionMode.RELAXED){
     this._isUsedOn.remove(send, mode)
   }
 
@@ -298,7 +298,7 @@ export abstract class Information<
   addRepeatedBy(msg: ReceiveMessage) {
     this._repeatedBy.add(msg)
   }
-  removeRepeatedBy(msg: ReceiveMessage, mode: DeletionMode = DeletionMode.RELAXED) {
+  removeRepeatedBy(msg: ReceiveMessage, mode: DeletionAdditionMode = DeletionAdditionMode.RELAXED) {
     this._repeatedBy.remove(msg, mode)
   }
 

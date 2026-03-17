@@ -1,4 +1,4 @@
-import {DeletionMode} from "../../utils/deletion-mode";
+import {DeletionAdditionMode} from "../../utils/deletion-addition-mode";
 import {
   Author,
   ConversationPartner,
@@ -7,7 +7,7 @@ import {
   NewInformation,
   ReceiveMessage,
   SendMessage
-} from "./min-keml-example";
+} from "./conversation-example";
 
 describe('MinKemlExample', () => {
   it('relaxed deletion of NewInformation should delete reference to source', () => {
@@ -18,7 +18,7 @@ describe('MinKemlExample', () => {
     expect(newInfoA.source).toBeDefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(2);
-    newInfoA.destruct(DeletionMode.RELAXED);
+    newInfoA.destruct(DeletionAdditionMode.RELAXED);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(1);
@@ -32,7 +32,7 @@ describe('MinKemlExample', () => {
     expect(newInfoA.source).toBeDefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(2);
-    newInfoA.destruct(DeletionMode.CASCADE);
+    newInfoA.destruct(DeletionAdditionMode.STRICT);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(1);
@@ -59,7 +59,7 @@ describe('MinKemlExample', () => {
     expect(newInfoB.isUsedOn.length).toBe(2);
     expect(sendMessA.uses.length).toBe(2);
     expect(sendMessB.uses.length).toBe(2);
-    newInfoA.destruct(DeletionMode.RELAXED);
+    newInfoA.destruct(DeletionAdditionMode.RELAXED);
     expect(author.messages.length).toBe(2);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
@@ -91,7 +91,7 @@ describe('MinKemlExample', () => {
     expect(newInfoB.isUsedOn.length).toBe(2);
     expect(sendMessA.uses.length).toBe(2);
     expect(sendMessB.uses.length).toBe(2);
-    newInfoA.destruct(DeletionMode.CASCADE);
+    newInfoA.destruct(DeletionAdditionMode.STRICT);
     expect(author.messages.length).toBe(2);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
@@ -120,7 +120,7 @@ describe('MinKemlExample', () => {
     expect(recMessRepB.repeats.length).toBe(2);
     expect(newInfoA.repeatedBy.length).toBe(2);
     expect(newInfoB.repeatedBy.length).toBe(2);
-    newInfoA.destruct(DeletionMode.RELAXED);
+    newInfoA.destruct(DeletionAdditionMode.RELAXED);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(1);
@@ -148,7 +148,7 @@ describe('MinKemlExample', () => {
     expect(recMessRepB.repeats.length).toBe(2);
     expect(newInfoA.repeatedBy.length).toBe(2);
     expect(newInfoB.repeatedBy.length).toBe(2);
-    newInfoA.destruct(DeletionMode.CASCADE);
+    newInfoA.destruct(DeletionAdditionMode.STRICT);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoB.source).toBeDefined();
     expect(recMess.generates.length).toBe(1);
@@ -172,7 +172,7 @@ describe('MinKemlExample', () => {
     expect(infoLinkAC.source).toBeDefined();
     expect(infoLinkAB.target).toBeDefined();
     expect(infoLinkAC.target).toBeDefined();
-    newInfoA.destruct(DeletionMode.RELAXED);
+    newInfoA.destruct(DeletionAdditionMode.RELAXED);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoA.causes.length).toBe(0);
     expect(infoLinkAB.source).toBeUndefined();
@@ -195,7 +195,7 @@ describe('MinKemlExample', () => {
     expect(infoLinkAC.source).toBeDefined();
     expect(infoLinkAB.target).toBeDefined();
     expect(infoLinkAC.target).toBeDefined();
-    newInfoA.destruct(DeletionMode.CASCADE);
+    newInfoA.destruct(DeletionAdditionMode.STRICT);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoA.causes.length).toBe(0);
     expect(infoLinkAB.source).toBeUndefined();
@@ -218,7 +218,7 @@ describe('MinKemlExample', () => {
     expect(infoLinkCA.source).toBeDefined();
     expect(infoLinkBA.target).toBeDefined();
     expect(infoLinkCA.target).toBeDefined();
-    newInfoA.destruct(DeletionMode.RELAXED);
+    newInfoA.destruct(DeletionAdditionMode.RELAXED);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoA.targetedBy.length).toBe(0);
     expect(infoLinkBA.source).toBeDefined();
@@ -241,12 +241,29 @@ describe('MinKemlExample', () => {
     expect(infoLinkCA.source).toBeDefined();
     expect(infoLinkBA.target).toBeDefined();
     expect(infoLinkCA.target).toBeDefined();
-    newInfoA.destruct(DeletionMode.CASCADE);
+    newInfoA.destruct(DeletionAdditionMode.STRICT);
     expect(newInfoA.source).toBeUndefined();
     expect(newInfoA.targetedBy.length).toBe(0);
     expect(infoLinkBA.source).toBeUndefined();
     expect(infoLinkCA.source).toBeUndefined();
     expect(infoLinkBA.target).toBeUndefined();
     expect(infoLinkCA.target).toBeUndefined();
+  });
+
+  it('should consistently remove and add referencable objects', () => {
+    let partner: ConversationPartner = new ConversationPartner();
+    let recMess: ReceiveMessage = ReceiveMessage.create(partner, 0, 'Received message');
+    let newInfoA: NewInformation = NewInformation.create(recMess, 'Info A');
+    let newInfoB: NewInformation = NewInformation.create(recMess, 'Info B');
+    let sendMessA: SendMessage = SendMessage.create(partner, 0, 'Sent message A');
+    sendMessA.addUsage(newInfoA);
+    sendMessA.addUsage(newInfoB);
+    expect(sendMessA.uses.length).toBe(2)
+    expect(newInfoA.isUsedOn.length).toBe(1);
+    expect(newInfoB.isUsedOn.length).toBe(1);
+    newInfoA.removeIsUsedOn(sendMessA);
+    expect(sendMessA.uses.length).toBe(1);
+    expect(newInfoA.isUsedOn.length).toBe(0);
+    expect(newInfoB.isUsedOn.length).toBe(1);
   });
 });
