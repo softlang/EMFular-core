@@ -34,7 +34,7 @@ implements ReTreeChildrenContainer<T> {
     }
 
     //todo rewrite without using item parent explicitly?
-    override add(item: T): boolean {
+    addSafely(item: T): boolean {
         const oldParent = item.parent;
         if(oldParent == this) {
             return false;

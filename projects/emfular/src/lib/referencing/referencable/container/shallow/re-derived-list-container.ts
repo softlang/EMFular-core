@@ -45,7 +45,7 @@ export class ReDerivedListContainer<
         return [];
     }
 
-    override add(_: T): boolean {
+    override addSafely(_: T): boolean {
         return false;
     }
 

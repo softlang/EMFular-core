@@ -10,7 +10,7 @@ import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
-import {ClassMeta, ReferenceMeta} from "../../binding/model-definition";
+import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 
 /** base class for CORE models.
  *
@@ -24,7 +24,8 @@ export abstract class Referencable<
   declare readonly ParentType: Parent;
 
   declare $classMeta: ClassMeta;
-  declare $modelUri: string;
+  declare $modelUri: string; //now inside modelMeta
+  declare $modelMeta: ModelDefinition;
 
   private $parent?: ReTreeChildrenContainer<this>;
 

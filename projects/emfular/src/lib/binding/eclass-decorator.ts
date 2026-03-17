@@ -15,6 +15,7 @@ export function eClass(model: ModelDefinition, className: keyof typeof model.cla
 
         ctor.prototype.$classMeta = classMeta;
         ctor.prototype.$modelUri = model.uri;
+        ctor.prototype.$modelMeta = model
 
         const eClass = model.uri + className;
         Reflect.defineMetadata(ECLASS_METADATA_KEY, eClass, ctor);
