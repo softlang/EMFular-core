@@ -1,18 +1,21 @@
 import {Referencable} from "../referenceable";
 import {SerializationContext} from "../../../serialization/serialization-context";
+import {ReferenceMeta} from "../../../binding/model-definition";
 
 export abstract class ReContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
 > {
     readonly _parent: P;
+    readonly meta: ReferenceMeta;
     readonly referenceName: string;
     readonly inverseName?: string;
 
-    protected constructor(parent: P, referenceName: string, inverseName?: string) {
+    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
         this._parent = parent;
+        this.meta = refMeta;
         this.referenceName = referenceName;
-        this.inverseName = inverseName;
+        this.inverseName = refMeta.opposite;
     }
 
     abstract get(): T[] | T | undefined;

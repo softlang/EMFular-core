@@ -6,6 +6,7 @@ import {ModelList} from "../hide/model-list";
 import {createListProxy} from "../hide/list-proxy";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReDerivedListContainer<
     T extends Referencable<any>,
@@ -21,9 +22,9 @@ export class ReDerivedListContainer<
         parent: P,
         computeOrSymbol: ((owner: P) => T[]) | symbol,
         referenceName: string,
-        inverseName?: string
+        refMeta: ReferenceMeta,
     ) {
-        super(parent, referenceName, inverseName);
+        super(parent, referenceName, refMeta);
         this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 

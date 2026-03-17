@@ -3,6 +3,7 @@ import {ReContainer} from "../re-container";
 import {ReSingleInterface} from "../re-single-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
 import {SerializationContext} from "../../../../serialization/serialization-context";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReDerivedSingleContainer<
     T extends Referencable<any>,
@@ -16,9 +17,9 @@ export class ReDerivedSingleContainer<
         parent: P,
         computeOrSymbol: ((owner: P) => T | undefined) | symbol,
         referenceName: string,
-        inverseName?: string
+        refMeta: ReferenceMeta
     ) {
-        super(parent, referenceName, inverseName);
+        super(parent, referenceName, refMeta);
         this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 

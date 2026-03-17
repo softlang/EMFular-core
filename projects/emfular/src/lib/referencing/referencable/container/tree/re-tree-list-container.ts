@@ -6,6 +6,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
 import {ReListContainer} from "../re-list-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReListContainer<T, T["ParentType"]>
@@ -13,8 +14,8 @@ implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], name: string, _?: string, eClass?: string) {
-        super(parent, name, undefined);
+    constructor(parent: T["ParentType"], name: string,  refMeta: ReferenceMeta, eClass?: string) {
+        super(parent, name, refMeta);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }

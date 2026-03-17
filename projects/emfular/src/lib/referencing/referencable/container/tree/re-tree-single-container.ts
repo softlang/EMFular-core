@@ -5,6 +5,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ReSingleContainer} from "../re-single-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
     extends ReSingleContainer<T, T["ParentType"]>
@@ -12,8 +13,8 @@ implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], referenceName: string, _?: string, eClass?: string) {
-        super(parent, referenceName, undefined);
+    constructor(parent: T["ParentType"], referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
+        super(parent, referenceName, refMeta);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }

@@ -3,6 +3,7 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
 import {ReSingleContainer} from "../re-single-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
@@ -10,8 +11,8 @@ export class ReLinkSingleContainer<
 > extends ReSingleContainer<T,P>
 implements ReLinkContainer<T, P> {
 
-    constructor(parent: P, referenceName: string, inverseName?: string ) {
-        super(parent, referenceName, inverseName);
+    constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
+        super(parent, referenceName, refMeta);
         this._parent.$otherReferences.push(this)
     }
 

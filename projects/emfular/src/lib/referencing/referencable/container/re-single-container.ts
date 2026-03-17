@@ -1,6 +1,7 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ReSingleInterface} from "./re-single-interface";
+import {ReferenceMeta} from "../../../binding/model-definition";
 
 export abstract class ReSingleContainer<
     T extends Referencable<any>,
@@ -10,8 +11,8 @@ implements ReSingleInterface<T, P>{
 
     protected _instance?: T ;
 
-    protected constructor(parent: P, referenceName: string, inverseName?: string ) {
-        super(parent, referenceName, inverseName);
+    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta ) {
+        super(parent, referenceName, refMeta);
     }
 
     override get(): T | undefined {

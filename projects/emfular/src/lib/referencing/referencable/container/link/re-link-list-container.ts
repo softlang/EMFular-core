@@ -4,6 +4,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
 import {ReListContainer} from "../re-list-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
@@ -11,8 +12,8 @@ export class ReLinkListContainer<
 > extends ReListContainer<T,P>
 implements ReLinkContainer<T, P> {
 
-    constructor(parent: P, name: string, inverse?: string) {
-        super(parent, name, inverse);
+    constructor(parent: P, name: string, refMeta: ReferenceMeta) {
+        super(parent, name, refMeta);
         this._parent.$otherReferences.push(this)
     }
 

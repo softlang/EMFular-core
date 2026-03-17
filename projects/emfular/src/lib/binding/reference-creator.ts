@@ -21,31 +21,31 @@ export function createContainer<
 
 
     if (meta.isParent) {
-        return new ReTreeParentContainer<P>(parent, propertyKey, meta.opposite!)
+        return new ReTreeParentContainer<P>(parent, propertyKey, meta)
     }
 
     const isList = meta.max !== 1;
 
     if(meta.derivingMethod) {
         if (isList) {
-            return new ReDerivedListContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta.opposite)
+            return new ReDerivedListContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta)
         } else {
-            return new ReDerivedSingleContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta.opposite)
+            return new ReDerivedSingleContainer<T,P>(parent, meta.derivingMethod, propertyKey, meta)
         }
     }
 
     if (meta.containment) {
         const defaultEClass = parent.$modelUri + meta.target;
         if (isList) {
-            return new ReTreeListContainer<T>(parent, propertyKey, undefined, defaultEClass )
+            return new ReTreeListContainer<T>(parent, propertyKey, meta, defaultEClass )
         } else {
-            return new ReTreeSingleContainer<T>(parent, propertyKey, undefined, defaultEClass )
+            return new ReTreeSingleContainer<T>(parent, propertyKey, meta, defaultEClass )
         }
     }
 
     if (isList) {
-        return new ReLinkListContainer<T, P>(parent, propertyKey, meta.opposite);
+        return new ReLinkListContainer<T, P>(parent, propertyKey, meta);
     } else {
-        return new ReLinkSingleContainer<T, P>(parent, propertyKey, meta.opposite);
+        return new ReLinkSingleContainer<T, P>(parent, propertyKey, meta);
     }
 }
