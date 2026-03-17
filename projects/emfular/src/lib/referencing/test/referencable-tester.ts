@@ -1,14 +1,20 @@
 import {Referencable} from "../referencable/referenceable";
 import {eClass} from "../../binding/eclass-decorator";
-import {ModelDefinition} from "../../binding/model-definition";
+import {ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 
+export const refTesterRef = {
+    references: {
+        test: {
+            target: "ReferencableTester",
+            max: -1,
+        } satisfies ReferenceMeta
+    }
+}
 
-const modelDef= {
+export const modelDef= {
      name: "", prefix: "", uri: "",
     classes: {
-         ReferencableTester: {
-            references: {}
-         }
+         ReferencableTester: refTesterRef
      }
 }  as const satisfies ModelDefinition;
 
