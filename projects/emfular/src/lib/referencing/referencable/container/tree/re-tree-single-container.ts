@@ -27,7 +27,7 @@ implements ReTreeChildrenContainer<T> {
         return this._instance?.toJson(ctx)
     }
 
-    addSafely(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         if(item == this._instance) {
             return false;
         } else {

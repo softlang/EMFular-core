@@ -17,7 +17,7 @@ implements ReLinkContainer<T, P> {
         this._parent.$otherReferences.push(this)
     }
 
-    addSafely(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         let res = ListUpdater.addToListIfMissing(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {

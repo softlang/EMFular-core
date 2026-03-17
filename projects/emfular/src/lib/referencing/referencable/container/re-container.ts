@@ -21,10 +21,10 @@ export abstract class ReContainer<
 
     abstract get(): T[] | T | undefined;
 
-    abstract addSafely(item: T): boolean;
+    protected abstract addWithoutTypeCheck(item: T): boolean;
     add(item: T): boolean {
         if (this.isAcceptableItem(item)) {
-            return this.addSafely(item);
+            return this.addWithoutTypeCheck(item);
         } else {
             console.log("Forbidden")
             return false;

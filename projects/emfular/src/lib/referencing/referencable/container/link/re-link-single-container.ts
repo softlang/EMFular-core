@@ -26,7 +26,7 @@ implements ReLinkContainer<T, P> {
         }
     }
 
-    addSafely(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         if (this._instance == item) {
             return false;
         } else {

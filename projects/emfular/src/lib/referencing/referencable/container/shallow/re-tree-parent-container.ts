@@ -19,7 +19,7 @@ implements ReSingleInterface<T["ParentType"], T>,
     }
 
     //todo rewrite without using item parent explicitly?
-    addSafely(item: T["ParentType"]): boolean {
+    addWithoutTypeCheck(item: T["ParentType"]): boolean {
         let me: T = this._parent
         const currentParentCont = this._parent.parent
         if(currentParentCont != undefined) {

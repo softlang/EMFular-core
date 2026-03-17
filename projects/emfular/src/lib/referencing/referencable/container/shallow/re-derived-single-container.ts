@@ -28,7 +28,7 @@ export class ReDerivedSingleContainer<
     }
 
     override toJson(_: SerializationContext) { return undefined; }
-    override addSafely(_:T) { return false; }
+    override addWithoutTypeCheck(_:T) { return false; }
     override remove(_:T) { return false; }
     override delete() {}
 }

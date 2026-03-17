@@ -45,7 +45,7 @@ export class ReDerivedListContainer<
         return [];
     }
 
-    override addSafely(_: T): boolean {
+    override addWithoutTypeCheck(_: T): boolean {
         return false;
     }
 
