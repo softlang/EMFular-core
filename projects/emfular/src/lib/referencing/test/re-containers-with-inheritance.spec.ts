@@ -1,4 +1,5 @@
 import {A, B, InheritanceRoot, ModelInheritance} from "./re-containers-with-inheritance";
+import {ReContainer} from "../referencable/container/re-container";
 
 describe("ReferencablesWithInheritance", () => {
 
@@ -23,5 +24,19 @@ describe("ReferencablesWithInheritance", () => {
       // even inverse chain is correctly triggered, resulting in add to children
       expect(r.children.length).toBe(1);
   })
+
+    it("should forbid adding a wrong element to a container", ()=> {
+        const root = new InheritanceRoot();
+        const root2 = new InheritanceRoot();
+        const a = new A();
+        let ref = root.$treeChildren[0] as ReContainer<any, any>;
+        expect(root.children.length).toBe(0);
+        const res = ref.add(root2)
+        expect(res).toBeFalse()
+        expect(root.children.length).toBe(0);
+        const res2 = ref.add(a)
+        expect(res2).toBeTrue()
+        expect(root.children.length).toBe(1);
+    })
 
 });
