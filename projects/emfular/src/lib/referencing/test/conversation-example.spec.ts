@@ -6,7 +6,7 @@ import {
   NewInformation,
   ReceiveMessage,
   SendMessage
-} from "./min-keml-example";
+} from "./conversation-example";
 
 describe('MinKemlExample', () => {
   it('deletion of NewInformation should delete reference to source', () => {
