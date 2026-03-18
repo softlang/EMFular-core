@@ -14,7 +14,7 @@ export class ReLinkListContainer<
 implements ReLinkContainer<T, P> {
 
     constructor(parent: P, name: string, refMeta: ReferenceMeta, isRequired: boolean) {
-        super(parent, name, refMeta);
+        super(parent, name, refMeta, isRequired);
         this._parent.$otherReferences.push(this)
     }
 

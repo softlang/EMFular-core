@@ -14,7 +14,7 @@ export abstract class ReContainer<
     readonly inverseName?: string;
     readonly isRequired: boolean;
 
-    protected constructor(parent: P, referenceName: string, isRequired: boolean, refMeta: ReferenceMeta) {
+    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta, isRequired: boolean) {
         this._parent = parent;
         this.meta = refMeta;
         this.referenceName = referenceName;

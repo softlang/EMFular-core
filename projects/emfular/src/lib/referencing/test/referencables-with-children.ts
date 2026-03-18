@@ -5,7 +5,6 @@ import {JsonOf} from "../../serialization/json-deserializable";
 import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
-import { DeletionMode } from "../../utils/deletion-mode";
 
 export const ModelWithChildren: ModelDefinition = {
     name: "namespace",

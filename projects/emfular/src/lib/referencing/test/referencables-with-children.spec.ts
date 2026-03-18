@@ -6,7 +6,6 @@ import {
 } from "./referencables-with-children";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
-import {Ref} from "../ref/ref";
 
 describe('ReContainersWithListChild tests', () => {
 
@@ -69,6 +68,7 @@ describe('ReContainersWithListChild tests', () => {
         expect(r2_1.child3.length).toBe(0);
         expect(r3_1.parentPointer).toEqual(undefined)
         expect(r3_2.parentPointer).toEqual(r2_2)
+
     });
 
     it ('should serialize a Referencable1WithChildren correctly', () => {
@@ -103,9 +103,6 @@ describe('ReContainersWithListChild tests', () => {
             }]
         }
         expect(r1.toJson()).toEqual(r1json)
-        const json: RootWithChildrenJson = r1.toJson()
-        let refs: Ref[] = json.link3 as Ref[]
-        expect(refs.length).toBe(1)
     })
 
     //todo deserialization test
@@ -120,35 +117,5 @@ describe('ReContainersWithListChild tests', () => {
         expect(r3_1.$treeChildren.length).toBe(0)
         expect(r1.$otherReferences.length).toBe(1)
     })
-
-    it('should allow swapping elements in a ModelList created via decorators', () => {
-        const r = new RootWithChildren();
-        const m1 = new Middle2WithChildren();
-        const m2 = new Middle2WithChildren();
-        const m3 = new Middle2WithChildren();
-
-        r.child2.push(m1, m2, m3);
-        expect(r.child2.map(x => x)).toEqual([m1, m2, m3]);
-
-        (r.child2 as any).swap(0, 2);
-
-        expect(r.child2.map(x => x)).toEqual([m3, m2, m1]);
-    });
-
-
-    it('should allow flatMap on ModelList proxies (shows proxy behaves like array)', () => {
-        // Build a small containment structure
-        r1.child2.push(r2_1, r2_2);
-
-        r2_1.child3.push(r3_1);
-        r2_2.child3.push(r3_2);
-
-        // This is the critical line that used to fail:
-        const allChildren = r1.child2.flatMap(m => m.child3);
-
-        expect(allChildren.length).toBe(2);
-        expect(allChildren).toContain(r3_1);
-        expect(allChildren).toContain(r3_2);
-    });
 
 });

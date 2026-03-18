@@ -4,6 +4,6 @@ import {ReferencableTester, refTesterRef} from "../../../test/referencable-teste
 describe('ReDerivedListContainer', () => {
   it('should create an instance', () => {
     let tester = new ReferencableTester()
-    expect(new ReDerivedListContainer<any, any>(tester, () => [],'refName', refTesterRef.references.test)).toBeTruthy();
+    expect(new ReDerivedListContainer<any, any>(tester, () => [],'refName', refTesterRef.references.test, false)).toBeTruthy();
   });
 });

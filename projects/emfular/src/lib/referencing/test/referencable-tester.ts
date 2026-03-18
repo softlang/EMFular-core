@@ -12,10 +12,10 @@ export const refTesterRef = {
 }
 
 export const modelDef= {
-     name: "", prefix: "", uri: "",
+    name: "", prefix: "", uri: "",
     classes: {
-         ReferencableTester: refTesterRef
-     }
+        ReferencableTester: refTesterRef
+    }
 }  as const satisfies ModelDefinition;
 
 @eClass(modelDef, "ReferencableTester")

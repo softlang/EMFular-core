@@ -11,8 +11,8 @@ implements ReSingleInterface<T, P>{
 
     protected _instance?: T ;
 
-    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta ) {
-        super(parent, referenceName, refMeta);
+    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta, isRequired: boolean) {
+        super(parent, referenceName, refMeta, isRequired);
     }
 
     override get(): T | undefined {

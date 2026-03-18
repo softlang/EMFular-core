@@ -17,9 +17,10 @@ export class ReDerivedSingleContainer<
         parent: P,
         computeOrSymbol: ((owner: P) => T | undefined) | symbol,
         referenceName: string,
-        refMeta: ReferenceMeta
+        refMeta: ReferenceMeta,
+        isRequired: boolean
     ) {
-        super(parent, referenceName, refMeta);
+        super(parent, referenceName, refMeta, isRequired);
         this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 
