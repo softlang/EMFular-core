@@ -1,16 +1,18 @@
 import {Referencable} from "../../referenceable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReContainer} from "../re-container";
+import {ReSingleInterface} from "../re-single-interface";
+import {ReShallowInterface} from "./re-shallow-interface";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
-    extends ReContainer<T["ParentType"],T> {
+    extends ReContainer<T["ParentType"],T>
+implements ReSingleInterface<T["ParentType"], T>,
+    ReShallowInterface<T["ParentType"], T>{
 
-    inverseName: string;
-
-    constructor(parent: T, referenceName: string, isRequired: boolean, inverseName: string) {
-        super(parent, referenceName, isRequired); // referenceName is actually unused for this container type
-        this.inverseName = inverseName;
+    constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta, isRequired: boolean) {
+        super(parent, referenceName, refMeta, isRequired); // referenceName is actually unused for this container type
     }
 
     get(): T["ParentType"] | undefined {
@@ -18,7 +20,7 @@ export class ReTreeParentContainer<T extends Referencable<any>>
     }
 
     //todo rewrite without using item parent explicitly?
-    add(item: T["ParentType"]): boolean {
+    addWithoutTypeCheck(item: T["ParentType"]): boolean {
         let me: T = this._parent
         const currentParentCont = this._parent.parent
         if(currentParentCont != undefined) {

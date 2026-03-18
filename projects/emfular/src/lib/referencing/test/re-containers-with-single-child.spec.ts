@@ -3,6 +3,8 @@ import {
     ReContainersWithSingleChild,
     ReSingleChildExample
 } from "./re-containers-with-single-child";
+import {Ref} from "../ref/ref";
+import {JsonOf} from "../../serialization/json-deserializable";
 
 describe('ReContainersWithSingleChild tests', () => {
 
@@ -75,10 +77,13 @@ describe('ReContainersWithSingleChild tests', () => {
         //add other links:
         root.link = child;
         expect(child.otherLink).toEqual(root)
-        const completeJson = root.toJson()
+        const completeJson: JsonOf<ReContainersWithSingleChild> = root.toJson()
         expect(completeJson.name).toEqual(root.name)
         expect(completeJson.link).toBeDefined()
-
+        //todo: must compile withoutcast for correct jsonOf:
+        let ref: Ref|undefined = completeJson?.link as unknown as Ref
+        expect(ref.eClass).toEqual(EClassesSingleChild.ReSingleChildExample)
+        const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child;
         const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
         expect(completeFromJson.name).toEqual(root.name)
         expect(completeFromJson.link).toEqual(completeFromJson.child)

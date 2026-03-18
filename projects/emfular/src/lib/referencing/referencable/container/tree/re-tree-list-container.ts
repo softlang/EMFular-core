@@ -6,18 +6,19 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
 import { DeletionMode } from "../../../../utils/deletion-mode";
+import {ReListContainer} from "../re-list-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReTreeChildrenContainer<T> {
+    extends ReListContainer<T, T["ParentType"]>
+implements ReTreeChildrenContainer<T> {
 
-    readonly _instance: T[] = [];
+    readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], name: string, isRequired: boolean, _?: string, eClass?: string) {
-        super(parent, name, isRequired, eClass);
-    }
-
-    override get(): T[] {
-        return this._instance;
+    constructor(parent: T["ParentType"], name: string,  refMeta: ReferenceMeta, isRequired: boolean, eClass?: string) {
+        super(parent, name, refMeta, isRequired);
+        this.defaultEClass = eClass;
+        this._parent.$treeChildren.push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
@@ -34,7 +35,7 @@ export class ReTreeListContainer<T extends Referencable<any>>
     }
 
     //todo rewrite without using item parent explicitly?
-    override add(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         const oldParent = item.parent;
         if(oldParent == this) {
             return false;

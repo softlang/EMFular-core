@@ -3,24 +3,22 @@ import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
+import {ReListContainer} from "../re-list-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReLinkContainer<T,P> {
+> extends ReListContainer<T,P>
+implements ReLinkContainer<T, P> {
 
-    readonly _instance: T[] = [];
-
-    constructor(parent: P, name: string, isRequired: boolean, inverse?: string) {
-        super(parent, name, isRequired, inverse);
+    constructor(parent: P, name: string, refMeta: ReferenceMeta, isRequired: boolean) {
+        super(parent, name, refMeta);
+        this._parent.$otherReferences.push(this)
     }
 
-    override get(): T[] {
-        return this._instance;
-    }
-
-    add(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         let res = ListUpdater.addToListIfMissing(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
@@ -50,7 +48,7 @@ export class ReLinkListContainer<
         ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
-    override removeFromInverse(item: T, mode: DeletionMode): boolean {
+    removeFromInverse(item: T, mode: DeletionMode): boolean {
         if(this.inverseName !== undefined) {
             for (const child of [...this._instance]) {
                 child.removeFromReferencableContainer(this.inverseName, item, mode)

@@ -1,61 +1,63 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import { ReTreeChildrenContainer } from "../referencing/referencable/container/tree/re-tree-children-container";
-import { ReLinkContainer } from "../referencing/referencable/container/link/re-link-container";
-import {ReContainer} from "../referencing/referencable/container/re-container";
-import {ReTreeListContainer} from "../referencing/referencable/container/tree/re-tree-list-container";
-import {ReLinkListContainer} from "../referencing/referencable/container/link/re-link-list-container";
+import {MetaAwareModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
 }
 
-// Remove leading "_" from container field names
-type StripPrivate<K> =
-    K extends `_${infer Rest}` ? Rest : K;
+type IsReferencable<T> =
+    T extends Referencable<any> ? true : false;
 
-// Identify container fields
-type IsContainer<T> =
-    T extends ReContainer<any, any> ? true : false;
+type IsReferenceProp<T, K> =
+    K extends "ParentType" ? false :
+        T extends object
+            ? T extends MetaAwareModelList<any, any> ? true
+                : T extends SingleRef<any, any>
+                    ? true
+                    : IsReferencable<T> extends true
+                        ? true
+                        : false
+            : false;
 
-type ContainerKeys<T> = {
-    [K in keyof T]: IsContainer<T[K]> extends true ? K : never
+type ReferenceKeys<T> = {
+    [K in keyof T]:
+    IsReferenceProp<T[K], K> extends true
+        ? (
+            T[K] extends SingleRef<any, infer Kind>
+                ? (Kind extends "parent" ? never : K) // exclude SingleRef<..., "parent">
+                : K                                   // include all list refs + other refs
+            )
+        : never
 }[keyof T];
-
-type ContainerPublicNames<T> = StripPrivate<ContainerKeys<T>>;
 
 // ignore these on attributes:
 type StartsWithPrivate<K> =
     K extends `_${string}` | `$${string}` ? true : false;
 
-type IsExactlyRef<T> =
-    [T] extends [Ref] ? ([Ref] extends [T] ? true : false) : false;
-
 type AttributeKeys<T> = {
     [K in keyof T]:
-    IsContainer<T[K]> extends true ? never :
-        // don't treat public container accessors (get!) as attributes
-        K extends ContainerPublicNames<T> ? never :
+    K extends "ParentType" ? never :
+        StartsWithPrivate<K> extends true ? never :
             T[K] extends Function ? never :
-                StartsWithPrivate<K> extends true ? never :
-                    IsExactlyRef<T[K]> extends true ? never :
+                    IsReferenceProp<T[K], K> extends true ? never :
                         K
 }[keyof T];
 
-// Map container → JsonOf<X> or Ref, List or Single
-type JsonForContainer<T> =
-    T extends ReTreeChildrenContainer<infer C>
-        ? T extends ReTreeListContainer<any>
+type JsonForReference<T> =
+    T extends MetaAwareModelList<infer C, infer Kind>
+        ? Kind extends "tree"
             ? JsonOf<C>[]
-            : JsonOf<C> | null
-        : T extends ReLinkContainer<any, any>
-            ? T extends ReLinkListContainer<any, any>
-                ? Ref[]
-                : Ref | null
+            : Ref[]
+        : T extends SingleRef<infer C, infer Kind>
+            ? Kind extends "tree"
+                ? JsonOf<C> | undefined
+                : Ref | undefined
             : never;
 
 // Final JSON type
 export type JsonOf<T> =
     & { eClass?: string }
-    & { [K in ContainerKeys<T> as StripPrivate<K>]?: JsonForContainer<T[K]>; }
-    & { [K in AttributeKeys<T>]?: T[K]; };
+    & { [K in AttributeKeys<T>]?: T[K]; }
+    & { [K in ReferenceKeys<T>]?: JsonForReference<T[K]> };
+

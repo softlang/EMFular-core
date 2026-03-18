@@ -4,30 +4,31 @@ import {Deserializer} from "../../../../serialization/deserializer";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
+import {ReSingleContainer} from "../re-single-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReTreeChildrenContainer<T> {
+    extends ReSingleContainer<T, T["ParentType"]>
+implements ReTreeChildrenContainer<T> {
 
-    _instance?: T
+    readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], referenceName: string, isRequired: boolean, eClass?: string) {
-        super(parent, referenceName, isRequired, eClass);
-    }
-
-    override get(): T | undefined {
-        return this._instance;
+    constructor(parent: T["ParentType"], referenceName: string,  refMeta: ReferenceMeta, isRequired: boolean, eClass?: string) {
+        super(parent, referenceName, refMeta, isRequired);
+        this.defaultEClass = eClass;
+        this._parent.$treeChildren.push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
         this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
-    override toJson(ctx: SerializationContext): JsonOf<T>|undefined {
+    toJson(ctx: SerializationContext): JsonOf<T>|undefined {
         return this._instance?.toJson(ctx)
     }
 
-    override add(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         if(item == this._instance) {
             return false;
         } else {
@@ -37,7 +38,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         }
     }
 
-    override remove(item: T): boolean {
+    remove(item: T): boolean {
         if(this._instance == item) {
             this._instance = undefined;
             item.setParent(undefined);
@@ -46,7 +47,7 @@ export class ReTreeSingleContainer<T extends Referencable<any>>
         return false;
     }
 
-    override delete(mode: DeletionMode) {
+    delete(mode: DeletionMode) {
         if (mode === DeletionMode.CASCADE) {
             this._instance?.destruct(mode)
         } else if (mode === DeletionMode.RELAXED) {

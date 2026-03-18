@@ -10,6 +10,7 @@ import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
+import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import { DeletionMode } from "../../utils/deletion-mode";
 
 /** base class for CORE models.
@@ -23,13 +24,28 @@ export abstract class Referencable<
 
   declare readonly ParentType: Parent;
 
+  declare $classMeta: ClassMeta;
+  declare $modelUri: string; //now inside modelMeta
+  declare $modelMeta: ModelDefinition;
+
   private $parent?: ReTreeChildrenContainer<this>;
 
-  $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  $otherReferences: ReLinkContainer<any,Parent>[] = [];
+  readonly $treeChildren: ReTreeChildrenContainer<any>[] = [];
+  readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
+    this.initReferences()
+  }
+
+  private initReferences() {
+    const proto = Object.getPrototypeOf(this);
+    const inits = proto.__referenceInitializers;
+    if (inits) {
+      for (const init of inits) {
+        init.call(this);
+      }
+    }
   }
 
   setParent(parent: ReTreeChildrenContainer<this> | undefined) {
@@ -69,13 +85,31 @@ export abstract class Referencable<
     })
   }
 
-  private getContainer<T extends Referencable<any>>(name: string): ReContainer<T, Parent> {
-    let refContainers = Object.entries(this)
-    let refContainer = refContainers.find((v: [string, any]) => v[0] == '_'+name )
-    if (refContainer) {
-      return (refContainer[1] as ReContainer<T, Parent>)
-    } else
-      throw new Error("Container _"+name + " not found on "+refContainers)
+  protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
+    let proto: any = Object.getPrototypeOf(this);
+    let meta: ReferenceMeta | undefined;
+
+    // Walk up the prototype chain until we find the reference
+    while (proto) {
+      const classMeta = proto.$classMeta;
+      if (classMeta && classMeta.references && refName in classMeta.references) {
+        meta = classMeta.references[refName];
+        break;
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    if (!meta) {
+      throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
+    }
+    const key: symbol = meta.containerKey!;
+    const container = (this as any)[key];
+
+    if (!container) {
+      throw new Error(`Container for reference '${refName}' not initialized`);
+    }
+
+    return container as ReContainer<T, Parent>;
   }
 
   public addToReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
@@ -160,17 +194,17 @@ export abstract class Referencable<
 
   public deserializeLinks<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
     const json = jsonTyped as any
-    for (let elem of this.$otherReferences) {
-      let jsonElem: any = json[elem.referenceName]
-      if (Array.isArray(jsonElem)) {
-        elem.addLinks(context,...jsonElem);
-      } else {
-        if (jsonElem != undefined)
-          elem.addLinks(context, jsonElem);
+    for (let container of this.$otherReferences) {
+      let jsonElem: Ref[] |Ref | undefined = json[container.referenceName]
+      if (jsonElem != undefined) {
+        const refArray = Array.isArray(jsonElem)? jsonElem : [jsonElem]
+        refArray.map((ref: Ref) => {
+          container.add(context.get(ref.$ref));
+        })
       }
     }
-    for (let elem of this.$treeChildren) {
-      elem.createRefsOnChildren(context, json)
+    for (let container of this.$treeChildren) {
+      container.createRefsOnChildren(context, json)
     }
   }
 

@@ -2,21 +2,19 @@ import {Referencable} from "../../referenceable";
 import {Ref} from "../../../ref/ref";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReLinkContainer} from "./re-link-container";
+import {ReSingleContainer} from "../re-single-container";
+import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReLinkContainer<T,P> {
+> extends ReSingleContainer<T,P>
+implements ReLinkContainer<T, P> {
 
-    _instance?: T
-
-    constructor(parent: P, referenceName: string, isRequired: boolean = false, inverseName?: string) {
-        super(parent, referenceName, isRequired, inverseName);
-    }
-
-    get(): T | undefined {
-        return this._instance;
+    constructor(parent: P, referenceName: string, refMeta: ReferenceMeta, isRequired: boolean) {
+        super(parent, referenceName, refMeta, isRequired);
+        this._parent.$otherReferences.push(this)
     }
 
     protected set(instance: T): void {
@@ -29,7 +27,7 @@ export class ReLinkSingleContainer<
         }
     }
 
-    add(item: T): boolean {
+    addWithoutTypeCheck(item: T): boolean {
         if (this._instance == item) {
             return false;
         } else {
