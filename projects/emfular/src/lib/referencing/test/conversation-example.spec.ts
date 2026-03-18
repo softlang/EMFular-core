@@ -8,7 +8,7 @@ import {
   SendMessage
 } from "./conversation-example";
 
-describe('MinKemlExample', () => {
+describe('Conversation Example', () => {
   it('deletion of NewInformation should delete reference to source', () => {
     let partner: ConversationPartner = new ConversationPartner();
     let recMess: ReceiveMessage = ReceiveMessage.create(partner, 0, 'Received message');
