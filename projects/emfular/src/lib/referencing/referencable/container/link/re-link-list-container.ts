@@ -49,7 +49,7 @@ implements ReLinkContainer<T, P> {
 
     removeFromInverse(item: T): boolean {
         if(this.inverseName !== undefined) {
-            for (const child of this._instance) {
+            for (const child of [...this._instance]) {
                 child.removeFromReferencableContainer(this.inverseName, item)
             }
             return true; // todo - refine?
