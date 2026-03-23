@@ -14,8 +14,8 @@ implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], referenceName: string,  refMeta: ReferenceMeta, isRequired: boolean, eClass?: string) {
-        super(parent, referenceName, refMeta, isRequired);
+    constructor(parent: T["ParentType"], referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
+        super(parent, referenceName, refMeta);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
@@ -47,7 +47,7 @@ implements ReTreeChildrenContainer<T> {
         return false;
     }
 
-    delete(mode: DeletionMode) {
+    delete(mode: DeletionMode = DeletionMode.RELAXED) {
         if (mode === DeletionMode.CASCADE) {
             this._instance?.destruct(mode)
         } else if (mode === DeletionMode.RELAXED) {

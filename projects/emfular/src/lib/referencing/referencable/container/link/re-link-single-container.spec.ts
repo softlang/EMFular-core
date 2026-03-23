@@ -4,6 +4,6 @@ import {ReferencableTester, refTesterRef} from "../../../test/referencable-teste
 describe('ReLinkSingleContainer', () => {
   it('should create an instance', () => {
     let tester = new ReferencableTester()
-    expect(new ReLinkSingleContainer(tester, 'refName', refTesterRef.references.test, false)).toBeTruthy();
+    expect(new ReLinkSingleContainer(tester, 'refName', refTesterRef.references.test)).toBeTruthy();
   });
 });

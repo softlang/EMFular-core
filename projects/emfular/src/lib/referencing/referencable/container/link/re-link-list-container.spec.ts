@@ -5,7 +5,7 @@ import {RootWithChildren, ReChild3} from "../../../test/referencables-with-child
 describe('ReLinkListContainer', () => {
   it('should create an instance', () => {
     let tester = new ReferencableTester()
-    expect(new ReLinkListContainer(tester, 'refName',  refTesterRef.references.test, false)).toBeTruthy();
+    expect(new ReLinkListContainer(tester, 'refName',  refTesterRef.references.test)).toBeTruthy();
   });
 
   it("should give true if the remove and remove inverse chain triggered an element removal", () => {

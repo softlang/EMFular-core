@@ -14,7 +14,7 @@ export interface ReLinkContainer<
         this._parent.$otherReferences.push(this)
     }*/
 
-    removeFromInverse(item: T, mode: DeletionMode): boolean;
+    removeFromInverse(item: T, mode?: DeletionMode): boolean;
 
     toJson(ctx: SerializationContext): Ref[] | Ref | undefined
 }

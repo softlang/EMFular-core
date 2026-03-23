@@ -22,10 +22,9 @@ export class ReDerivedListContainer<
         parent: P,
         computeOrSymbol: ((owner: P) => T[]) | symbol,
         referenceName: string,
-        refMeta: ReferenceMeta,
-        isRequired: boolean
+        refMeta: ReferenceMeta
     ) {
-        super(parent, referenceName, refMeta, isRequired);
+        super(parent, referenceName, refMeta);
         this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 

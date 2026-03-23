@@ -50,7 +50,7 @@ export abstract class Referencable<
 
   setParent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this.$parent) {
-      this.$parent.remove(this, DeletionMode.RELAXED)
+      this.$parent.remove(this)
     }
     this.$parent = parent;
   }
@@ -75,7 +75,7 @@ export abstract class Referencable<
     }
   }
 
-  destruct(mode: DeletionMode) {
+  destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     this.$parent?.remove(this, mode)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
@@ -116,7 +116,7 @@ export abstract class Referencable<
     return this.getContainer<T>(name).add(item)
   }
 
-  public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode): boolean {
+  public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
     let container = this.getContainer<T>(name)
     let result = container.remove(item, mode)
     if (result && mode == DeletionMode.CASCADE && container.isRequired) {

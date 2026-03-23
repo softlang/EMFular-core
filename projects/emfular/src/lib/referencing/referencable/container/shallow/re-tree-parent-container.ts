@@ -11,8 +11,8 @@ export class ReTreeParentContainer<T extends Referencable<any>>
 implements ReSingleInterface<T["ParentType"], T>,
     ReShallowInterface<T["ParentType"], T>{
 
-    constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta, isRequired: boolean) {
-        super(parent, referenceName, refMeta, isRequired); // referenceName is actually unused for this container type
+    constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta) {
+        super(parent, referenceName, refMeta); // referenceName is actually unused for this container type
     }
 
     get(): T["ParentType"] | undefined {
@@ -29,7 +29,7 @@ implements ReSingleInterface<T["ParentType"], T>,
         return item.addToReferencableContainer(this.inverseName, me)
     }
 
-    remove(item: T["ParentType"], mode: DeletionMode): boolean {
+    remove(item: T["ParentType"], mode: DeletionMode = DeletionMode.RELAXED): boolean {
         return item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
     }
 

@@ -12,8 +12,8 @@ export class ReLinkSingleContainer<
 > extends ReSingleContainer<T,P>
 implements ReLinkContainer<T, P> {
 
-    constructor(parent: P, referenceName: string, refMeta: ReferenceMeta, isRequired: boolean) {
-        super(parent, referenceName, refMeta, isRequired);
+    constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
+        super(parent, referenceName, refMeta);
         this._parent.$otherReferences.push(this)
     }
 
@@ -36,7 +36,7 @@ implements ReLinkContainer<T, P> {
         }
     }
 
-    remove(item: T, mode: DeletionMode): boolean {
+    remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this._instance == item) {
             if (this.inverseName != undefined) {
                 item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
@@ -48,11 +48,11 @@ implements ReLinkContainer<T, P> {
         }
     }
 
-    override delete(mode: DeletionMode) {
+    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
         this._instance?.destruct(mode)
     }
 
-    removeFromInverse(item: T, mode: DeletionMode): boolean {
+    removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
             this._instance?.removeFromReferencableContainer(this.inverseName, item, mode)
             return true; // todo refine?

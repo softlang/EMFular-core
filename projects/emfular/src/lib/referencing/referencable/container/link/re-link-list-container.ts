@@ -5,7 +5,7 @@ import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../../../utils/deletion-mode";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
@@ -13,8 +13,8 @@ export class ReLinkListContainer<
 > extends ReListContainer<T,P>
 implements ReLinkContainer<T, P> {
 
-    constructor(parent: P, name: string, refMeta: ReferenceMeta, isRequired: boolean) {
-        super(parent, name, refMeta, isRequired);
+    constructor(parent: P, name: string, refMeta: ReferenceMeta) {
+        super(parent, name, refMeta);
         this._parent.$otherReferences.push(this)
     }
 
@@ -34,7 +34,7 @@ implements ReLinkContainer<T, P> {
         return this._instance.map(i => ctx.get(i))
     }
 
-    override remove(item: T, mode: DeletionMode): boolean {
+    override remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         const res =  ListUpdater.removeFromList(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
@@ -44,11 +44,11 @@ implements ReLinkContainer<T, P> {
         return res; //todo behaviour of flag different to add??
     }
 
-    override delete(mode: DeletionMode) {
+    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
         ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
-    removeFromInverse(item: T, mode: DeletionMode): boolean {
+    removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
             for (const child of [...this._instance]) {
                 child.removeFromReferencableContainer(this.inverseName, item, mode)

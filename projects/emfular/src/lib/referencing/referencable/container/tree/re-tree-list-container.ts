@@ -15,8 +15,8 @@ implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], name: string,  refMeta: ReferenceMeta, isRequired: boolean, eClass?: string) {
-        super(parent, name, refMeta, isRequired);
+    constructor(parent: T["ParentType"], name: string,  refMeta: ReferenceMeta, eClass?: string) {
+        super(parent, name, refMeta);
         this.defaultEClass = eClass;
         this._parent.$treeChildren.push(this)
     }
@@ -41,12 +41,12 @@ implements ReTreeChildrenContainer<T> {
             return false;
         } else {
             item.setParent(this);
-            oldParent?.remove(item, DeletionMode.RELAXED)
+            oldParent?.remove(item)
             return ListUpdater.addToListIfMissing(item, this._instance)
         }
     }
 
-    override remove(item: T, mode: DeletionMode): boolean {
+    override remove(item: T): boolean {
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
             item.setParent(undefined);
@@ -55,7 +55,7 @@ implements ReTreeChildrenContainer<T> {
         return false;
     }
 
-    override delete(mode: DeletionMode) {
+    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
         ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 

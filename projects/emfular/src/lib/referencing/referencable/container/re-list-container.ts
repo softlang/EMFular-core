@@ -18,8 +18,8 @@ implements ReListInterface<T, P>{
 
     private _proxy?: ModelList<T>;
 
-    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta, isRequired: boolean) {
-        super(parent, referenceName, refMeta, isRequired);
+    protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
+        super(parent, referenceName, refMeta);
     }
 
     override get(): T[] {
@@ -33,7 +33,7 @@ implements ReListInterface<T, P>{
         return this._proxy;
     }
 
-    override delete(mode: DeletionMode) {
+    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
         ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
