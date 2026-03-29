@@ -1,6 +1,7 @@
 import {Referencable} from "../../referenceable";
 import {ModelList} from "./model-list";
 import {ReListInterface} from "../re-list-interface";
+import {DeletionMode} from "../../../../utils/deletion-mode";
 
 export function createListProxy<
     T extends Referencable<any>,
@@ -103,20 +104,25 @@ export function createListProxy<
                     items.some(item => container.remove(item));
             }
 
+            if (prop === "removeCascade") {
+                return (...items: T[]) =>
+                    items.some(item => container.remove(item, DeletionMode.CASCADE))
+            }
+
             if(prop === "delete") {
-                return () => {
-                    container.delete();
+                return (mode?: DeletionMode) => {
+                    container.delete(mode);
                 }
             }
 
             // The pop() method removes the last element from an array and returns that value to the caller.
             // If you call pop() on an empty array, it returns undefined.
             if (prop === "pop") {
-                return () => {
+                return (mode?: DeletionMode) => {
                     const arr = container.get();
                     if (arr.length === 0) return undefined;
                     const last = arr[arr.length - 1];
-                    container.remove(last);
+                    container.remove(last, mode);
                     return last;
                 };
             }
@@ -124,11 +130,11 @@ export function createListProxy<
             // The shift() method of Array instances removes the first element from an array and returns that removed element.
             // If you call shift() on an empty array, it returns undefined.
             if (prop === "shift") {
-                return () => {
+                return (mode?: DeletionMode) => {
                     const arr = container.get();
                     if (arr.length === 0) return undefined;
                     const first = arr[0];
-                    container.remove(first);
+                    container.remove(first, mode);
                     return first;
                 };
             }
