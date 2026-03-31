@@ -20,6 +20,7 @@ export interface MetaAwareModelList<T, Kind extends RefKind>
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
     remove(...items: T[]): boolean;
+    removeCascade(...items: T[]): boolean;
     delete(): void;
 
     readonly __item: T;

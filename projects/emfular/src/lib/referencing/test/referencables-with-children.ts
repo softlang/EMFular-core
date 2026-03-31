@@ -25,6 +25,12 @@ export const ModelWithChildren: ModelDefinition = {
                     opposite: "link1",
                     min: 0,
                     max: -1
+                },
+                link4: {
+                    target: "ReChild4",
+                    opposite: "link1",
+                    min: 0,
+                    max: -1
                 }
             }
         },
@@ -33,6 +39,13 @@ export const ModelWithChildren: ModelDefinition = {
             references: {
                 child3: {
                     target: "ReChild3",
+                    containment: true,
+                    opposite: "parentPointer",
+                    min: 0,
+                    max: -1
+                },
+                child4: {
+                    target: "ReChild4",
                     containment: true,
                     opposite: "parentPointer",
                     min: 0,
@@ -58,6 +71,24 @@ export const ModelWithChildren: ModelDefinition = {
                     max: 1
                 }
             }
+        },
+        ReChild4: {
+            references: {
+                link1: {
+                    target: "RootWithChildren",
+                    opposite: "link4",
+                    min: 1,
+                    max: -1
+                },
+                parentPointer: {
+                    target: "Middle2WithChildren",
+                    containment: true,
+                    isParent: true,
+                    opposite: "child4",
+                    min: 0,
+                    max: 1
+                }
+            }
         }
     }
 } as const;
@@ -65,19 +96,26 @@ export const ModelWithChildren: ModelDefinition = {
 export const RootWithChildrenRefs = {
     child2: ModelWithChildren.classes["RootWithChildren"].references["child2"],
     link3: ModelWithChildren.classes["RootWithChildren"].references["link3"],
+    link4: ModelWithChildren.classes["RootWithChildren"].references["link4"]
 } as const;
 export const Middle2WithChildrenRefs = {
     child3: ModelWithChildren.classes["Middle2WithChildren"].references["child3"],
+    child4: ModelWithChildren.classes["Middle2WithChildren"].references["child4"]
 } as const;
 export const ReChild3Refs = {
     link1: ModelWithChildren.classes["ReChild3"].references["link1"],
     parentPointer: ModelWithChildren.classes["ReChild3"].references["parentPointer"],
 } as const;
+export const ReChild4Refs = {
+    link1: ModelWithChildren.classes["ReChild4"].references["link1"],
+    parentPointer: ModelWithChildren.classes["ReChild4"].references["parentPointer"],
+} as const;
 
 export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',
     'Middle2WithChildren' = 'namespace/Middle2WithChildren',
-    'ReChild3' = 'namespace/ReChild3'
+    'ReChild3' = 'namespace/ReChild3',
+    'ReChild4' = 'namespace/ReChild4'
 }
 
 @eClass(ModelWithChildren, "RootWithChildren")
@@ -87,6 +125,8 @@ export class RootWithChildren extends Referencable<any> {
     declare child2: ModelList<Middle2WithChildren>
     @reference(RootWithChildrenRefs.link3)
     declare link3: ModelList<ReChild3>;
+    @reference(RootWithChildrenRefs.link4)
+    declare link4: ModelList<ReChild4>;
 
     @attribute()
     name: string = "referencable1";
@@ -101,6 +141,8 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
 
     @reference(Middle2WithChildrenRefs.child3)
     declare child3: ModelList<ReChild3>
+    @reference(Middle2WithChildrenRefs.child4)
+    declare child4: ModelList<ReChild4>
 
     @attribute()
     name: string = "referencable2";
@@ -126,8 +168,25 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
     }
 }
 
+@eClass(ModelWithChildren, "ReChild4")
+export class ReChild4 extends Referencable<Middle2WithChildren> {
+    @reference(ReChild4Refs.link1)
+    declare link1: ModelList<RootWithChildren>
+
+    @reference(ReChild4Refs.parentPointer)
+    declare parentPointer?: Middle2WithChildren;
+
+    @attribute()
+    name: string = "referencable4";
+
+    constructor() {
+        super();
+    }
+}
+
 
 export type RootWithChildrenJson = JsonOf<RootWithChildren>
 export type Middle2WithChildrenJson = JsonOf<Middle2WithChildren>
 export type ReChild3Json = JsonOf<ReChild3>
+export type ReChild4Json = JsonOf<ReChild4>
 

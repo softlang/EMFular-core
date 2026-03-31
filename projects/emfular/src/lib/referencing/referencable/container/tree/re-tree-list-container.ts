@@ -5,7 +5,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../../../utils/deletion-mode";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 
@@ -46,7 +46,14 @@ implements ReTreeChildrenContainer<T> {
         }
     }
 
-    override remove(item: T): boolean {
+    override remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
+        if (mode == DeletionMode.CASCADE) {
+            if (this._instance.indexOf(item) > -1) {
+                item.destruct(DeletionMode.CASCADE);
+                return true;
+            }
+            return false;
+        }
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
             item.setParent(undefined);

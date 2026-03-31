@@ -76,7 +76,7 @@ export abstract class Referencable<
   }
 
   destruct(mode: DeletionMode = DeletionMode.RELAXED) {
-    this.$parent?.remove(this, mode)
+    this.$parent?.remove(this)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
     })
