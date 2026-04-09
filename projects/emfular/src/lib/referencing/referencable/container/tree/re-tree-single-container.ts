@@ -6,7 +6,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../../../utils/deletion-mode";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
     extends ReSingleContainer<T, T["ParentType"]>
@@ -38,10 +38,14 @@ implements ReTreeChildrenContainer<T> {
         }
     }
 
-    remove(item: T): boolean {
+    remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this._instance == item) {
-            this._instance = undefined;
-            item.setParent(undefined);
+            if (mode === DeletionMode.RELAXED) {
+                this._instance = undefined;
+                item.setParent(undefined);
+                return true;
+            }
+            this._instance?.destruct(mode);
             return true;
         }
         return false;

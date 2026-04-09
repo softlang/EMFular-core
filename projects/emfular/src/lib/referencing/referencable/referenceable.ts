@@ -1,5 +1,5 @@
 import {Ref} from "../ref/ref";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../serialization/deserializer";
 import {getAllAttributes} from "../../binding/attribute-collector";
@@ -11,7 +11,7 @@ import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-contain
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
-import { DeletionMode } from "../../utils/deletion-mode";
+import {DeletionMode} from "../../utils/deletion-mode";
 
 /** base class for CORE models.
  *
@@ -76,6 +76,7 @@ export abstract class Referencable<
   }
 
   destruct(mode: DeletionMode = DeletionMode.RELAXED) {
+    // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur
     this.$parent?.remove(this)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
@@ -119,9 +120,9 @@ export abstract class Referencable<
   public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
     let container = this.getContainer<T>(name)
     let result = container.remove(item, mode)
-    if (result && mode == DeletionMode.CASCADE && container.isRequired) {
+    if (result && mode === DeletionMode.CASCADE && container.isRequired) {
         const instance = container.get()
-        if (instance == undefined || (Array.isArray(instance) && instance.length == 0)) {
+        if (instance === undefined || (Array.isArray(instance) && instance.length === 0)) {
           container._parent.destruct(mode)
         }
       }

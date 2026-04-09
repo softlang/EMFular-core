@@ -38,10 +38,10 @@ implements ReLinkContainer<T, P> {
 
     remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this._instance == item) {
+            this._instance = undefined;
             if (this.inverseName != undefined) {
                 item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
             }
-            this._instance = undefined;
             return true;
         } else {
             return false;

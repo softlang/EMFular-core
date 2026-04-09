@@ -47,9 +47,9 @@ implements ReTreeChildrenContainer<T> {
     }
 
     override remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
-        if (mode == DeletionMode.CASCADE) {
+        if (mode === DeletionMode.CASCADE) {
             if (this._instance.indexOf(item) > -1) {
-                item.destruct(DeletionMode.CASCADE);
+                item.destruct(mode);
                 return true;
             }
             return false;
