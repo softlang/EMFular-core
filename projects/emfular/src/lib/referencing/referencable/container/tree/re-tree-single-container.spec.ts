@@ -9,7 +9,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(new ReTreeSingleContainer(tester, 'test', refTesterRef.references.test)).toBeTruthy();
   });
 
-  it('should be working', () => {
+  it('should remove child from specified container without it being deleted from any other references', () => {
     let tester = new ReContainersWithSingleChild();
     let middle = new ReSingleChildExample();
     let elem1 = new ReContainersWithSingleChild();
@@ -32,7 +32,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(elem1.link).toEqual(middle);
   });
 
-  it('should be working 2', () => {
+  it('should remove child from specified container and delete its references from all other containers', () => {
     let tester = new ReContainersWithSingleChild();
     let middle = new ReSingleChildExample();
     let elem1 = new ReContainersWithSingleChild();
