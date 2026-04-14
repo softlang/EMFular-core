@@ -94,4 +94,12 @@ implements ReTreeChildrenContainer<T> {
         }
     }
 
+    private checkConstraints(): boolean {
+        if (this.meta.min !== undefined && this._instance.length < this.meta.min) {
+            return false;
+        } else if (this.meta.max !== undefined && this._instance.length > this.meta.max) {
+            return false;
+        }
+        return true;
+    }
 }

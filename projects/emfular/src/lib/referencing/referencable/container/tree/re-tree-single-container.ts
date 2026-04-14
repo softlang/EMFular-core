@@ -81,4 +81,8 @@ implements ReTreeChildrenContainer<T> {
             this._instance.deserializeLinks(context, myJson)
         }
     }
+
+    private checkConstraints(): boolean {
+        return !(this.meta.min !== undefined && this.meta.min > 0 && this._instance === undefined);
+    }
 }
