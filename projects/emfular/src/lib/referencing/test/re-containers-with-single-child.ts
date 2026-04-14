@@ -51,19 +51,9 @@ export const ReContainersWithSingleChildRefs = {
     link: ModelSingleChild.classes["ReContainersWithSingleChild"].references["link"]
 };
 
-export const ReContainersWithSingleChild2Refs = {
-    child: ModelSingleChild.classes["ReContainersWithSingleChild2"].references["child"],
-    link: ModelSingleChild.classes["ReContainersWithSingleChild2"].references["link"]
-};
-
 export const ReSingleChildExampleRefs = {
     myParent: ModelSingleChild.classes["ReSingleChildExample"].references["myParent"],
     otherLink: ModelSingleChild.classes["ReSingleChildExample"].references["otherLink"]
-};
-
-export const ReSingleChildExample2Refs = {
-    myParent: ModelSingleChild.classes["ReSingleChildExample2"].references["myParent"],
-    otherLink: ModelSingleChild.classes["ReSingleChildExample2"].references["otherLink"]
 };
 
 export enum EClassesSingleChild {
