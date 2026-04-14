@@ -82,7 +82,7 @@ implements ReTreeChildrenContainer<T> {
         }
     }
 
-    private checkConstraints(): boolean {
-        return !(this.meta.min !== undefined && this.meta.min > 0 && this._instance === undefined);
+    private checkConstraints() {
+        console.warn(`${this.meta.containerKey?.description ?? 'Unknown container'}: Minimum cardinality violation: current length 0 is below the required minimum of ${this.meta.min}.`, this);
     }
 }

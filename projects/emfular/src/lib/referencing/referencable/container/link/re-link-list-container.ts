@@ -58,13 +58,12 @@ implements ReLinkContainer<T, P> {
         return false;
     }
 
-    private checkConstraints(): boolean {
+    private checkConstraints() {
         if (this.meta.min !== undefined && this._instance.length < this.meta.min) {
-            return false;
+            console.warn(`${this.meta.containerKey?.description ?? 'Unknown container'}: Minimum cardinality violation: current length ${this._instance.length} is below the required minimum of ${this.meta.min}.`, this);
         } else if (this.meta.max !== undefined && this._instance.length > this.meta.max) {
-            return false;
+            console.warn(`${this.meta.containerKey?.description ?? 'Unknown container'}: Maximum cardinality violation: current length ${this._instance.length} exceeds the allowed maximum of ${this.meta.max}.`, this);
         }
-        return true;
     }
 
 }
