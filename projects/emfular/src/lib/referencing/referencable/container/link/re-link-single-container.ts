@@ -66,7 +66,7 @@ implements ReLinkContainer<T, P> {
         else return undefined
     }
 
-    private checkConstraints(): string | undefined {
+    checkConstraints(): string | undefined {
         if (this.meta.min !== undefined && this.meta.min > 0 && this._instance === undefined) {
             return `Minimum cardinality violation: current length 0 is below the required minimum of ${this.meta.min}.`;
         }
