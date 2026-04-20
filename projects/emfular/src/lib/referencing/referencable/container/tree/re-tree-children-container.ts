@@ -14,4 +14,5 @@ export interface ReTreeChildrenContainer<
     //deserialization
     fromJson(formerPrefix: string, context: Deserializer, json: any): void
     createRefsOnChildren(context: Deserializer, json: any): void
+    checkConstraints(): string | undefined
 }

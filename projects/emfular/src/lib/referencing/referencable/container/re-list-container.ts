@@ -50,8 +50,8 @@ implements ReListInterface<T, P>{
 
     swap(from: number, to: number) {
         const le = this._instance.length;
-        if(from<0 || to<0 || from>=le || to>=le ) {
-            throw new Error("Swap called with index out of bounds: length "+le+" and indices from "+from+" and to "+to+".");
+        if (from < 0 || to < 0 || from >= le || to >= le) {
+            throw new Error("Swap called with index out of bounds: length " + le + " and indices from " + from + " and to " + to + ".");
         } else {
             const fromElem = this._instance[from];
             this._instance[from] = this._instance[to];

@@ -17,4 +17,6 @@ export interface ReLinkContainer<
     removeFromInverse(item: T, mode?: DeletionMode): boolean;
 
     toJson(ctx: SerializationContext): Ref[] | Ref | undefined
+
+    checkConstraints(): string | undefined;
 }

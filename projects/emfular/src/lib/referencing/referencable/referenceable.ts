@@ -33,6 +33,8 @@ export abstract class Referencable<
   readonly $treeChildren: ReTreeChildrenContainer<any>[] = [];
   readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
+  private $violations = new Map<string, string>;
+
   protected constructor() {
     this.$gId = uuidv4();
     this.initReferences()
@@ -207,6 +209,21 @@ export abstract class Referencable<
     for (let container of this.$treeChildren) {
       container.createRefsOnChildren(context, json)
     }
+  }
+
+  public collectConstraintViolations() {
+    this.$otherReferences.forEach(refContainer => {
+      let violation = refContainer.checkConstraints();
+      if (violation !== undefined) {
+        this.$violations.set(refContainer.referenceName, violation);
+      }
+    });
+    this.$treeChildren.forEach(child => {
+      let violation = child.checkConstraints();
+      if (violation !== undefined) {
+        this.$violations.set(child.referenceName, violation);
+      }
+    });
   }
 
 }
