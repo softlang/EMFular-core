@@ -52,4 +52,6 @@ export abstract class ReContainer<
     abstract delete(mode?: DeletionMode): void
 
     abstract toJson(ctx: SerializationContext): any
+
+    abstract checkCardinalityConstraints(): string | undefined
 }

@@ -85,7 +85,7 @@ export const ModelWithChildren: ModelDefinition = {
                     containment: true,
                     isParent: true,
                     opposite: "child4",
-                    min: 0,
+                    min: 1,
                     max: 1
                 }
             }

@@ -39,4 +39,8 @@ implements ReSingleInterface<T["ParentType"], T>,
         return undefined
     }
 
+    override checkCardinalityConstraints(): string {
+        return `Minimum cardinality violation: current length 0 is below the required minimum of ${this.meta.min}.`;
+    }
+
 }

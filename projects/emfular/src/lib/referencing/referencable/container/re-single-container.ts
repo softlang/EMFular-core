@@ -18,4 +18,11 @@ implements ReSingleInterface<T, P>{
     override get(): T | undefined {
         return this._instance;
     }
+
+    checkCardinalityConstraints() {
+        if (this.meta.min !== undefined && this.meta.min === 1 && this._instance === undefined) {
+            return `Minimum cardinality violation: current length 0 is below the required minimum of ${this.meta.min}.`;
+        }
+        return
+    }
 }

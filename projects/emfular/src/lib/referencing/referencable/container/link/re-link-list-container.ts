@@ -58,13 +58,4 @@ implements ReLinkContainer<T, P> {
         return false;
     }
 
-    checkConstraints(): string | undefined {
-        if (this.meta.min !== undefined && this._instance.length < this.meta.min) {
-            return `Minimum cardinality violation: current length ${this._instance.length} is below the required minimum of ${this.meta.min}.`;
-        } else if (this.meta.max !== undefined && this._instance.length > this.meta.max) {
-            return `Maximum cardinality violation: current length ${this._instance.length} exceeds the allowed maximum of ${this.meta.max}.`;
-        }
-        return
-    }
-
 }

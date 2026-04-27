@@ -57,4 +57,8 @@ export class ReDerivedListContainer<
 
     move(from: number, to: number) {}
     swap(from: number, to: number) {}
+
+    override checkCardinalityConstraints(): string | undefined {
+        return undefined;
+    }
 }

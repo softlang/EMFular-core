@@ -31,4 +31,7 @@ export class ReDerivedSingleContainer<
     override addWithoutTypeCheck(_:T) { return false; }
     override remove(_:T) { return false; }
     override delete() {}
+    override checkCardinalityConstraints(): string | undefined {
+        return undefined;
+    }
 }
