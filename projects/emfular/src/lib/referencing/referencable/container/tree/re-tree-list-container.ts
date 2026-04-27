@@ -49,6 +49,8 @@ implements ReTreeChildrenContainer<T> {
     override remove(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if (mode === DeletionMode.CASCADE) {
             if (this._instance.indexOf(item) > -1) {
+                // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
+                // however this can be easily avoided since parent removal does not require any kind of following cascading deletes
                 item.destruct(mode);
                 return true;
             }

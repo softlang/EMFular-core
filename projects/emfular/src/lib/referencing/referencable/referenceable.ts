@@ -77,6 +77,7 @@ export abstract class Referencable<
 
   destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
+    // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
     this.$parent?.remove(this, DeletionMode.RELAXED)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
