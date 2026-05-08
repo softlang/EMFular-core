@@ -217,25 +217,40 @@ export abstract class Referencable<
   }
 
   public collectConstraintViolations() {
-    for (const [key, value] of Object.entries(this.$classMeta.references)) {
-      if ('isParent' in value && value.isParent === true) {
-        const symbolKey = Object.getOwnPropertySymbols(this).find(s => s.description === key);
-        if (symbolKey) {
-          const parentPointerValue = (this as unknown as Record<symbol, ReTreeParentContainer<any>>)[symbolKey];
-          if (parentPointerValue.meta.min !== undefined && parentPointerValue.meta.min === 1 && this.$parent === undefined) {
-            this.$violations.set(parentPointerValue.referenceName, parentPointerValue.checkCardinalityConstraints());
-          }
+    this.$violations = new Map<string, string>;
+    for (const symbol of Object.getOwnPropertySymbols(this)) {
+      if (symbol.description === undefined) {
+        continue
+      }
+      const ref = this.$classMeta.references[symbol.description];
+      if (!ref) {
+        continue
+      }
+      const container = (this as any)[symbol];
+      if (ref.derivingMethod !== undefined) {
+        const derivedContainer = container as ReContainer<any, any> & {
+          checkDerivationConstraints(): string | undefined;
+        }
+        const derivationViolation = derivedContainer.checkDerivationConstraints();
+        if (derivationViolation !== undefined) {
+          this.$violations.set(derivedContainer.referenceName, derivationViolation);
+        }
+      }
+      if (ref.isParent === true) {
+        const parentContainer = (this as any)[symbol] as ReTreeParentContainer<any>;
+        if (parentContainer.meta.min === 1 && this.$parent === undefined) {
+          this.$violations.set(parentContainer.referenceName, parentContainer.checkCardinalityConstraints());
         }
       }
     }
     this.$otherReferences.forEach(refContainer => {
-      let cardinalityViolation = refContainer.checkCardinalityConstraints();
+      const cardinalityViolation = refContainer.checkCardinalityConstraints();
       if (cardinalityViolation !== undefined) {
         this.$violations.set(refContainer.referenceName, cardinalityViolation);
       }
     });
     this.$treeChildren.forEach(child => {
-      let cardinalityViolation = child.checkCardinalityConstraints();
+      const cardinalityViolation = child.checkCardinalityConstraints();
       if (cardinalityViolation !== undefined) {
         this.$violations.set(child.referenceName, cardinalityViolation);
       }

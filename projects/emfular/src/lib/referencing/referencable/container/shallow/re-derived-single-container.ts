@@ -31,7 +31,18 @@ export class ReDerivedSingleContainer<
     override addWithoutTypeCheck(_:T) { return false; }
     override remove(_:T) { return false; }
     override delete() {}
-    override checkCardinalityConstraints(): string | undefined {
+
+    checkDerivationConstraints(): string | undefined {
+        if (!this.resolver.canResolve(this._parent)) {
+            return `Derivation violation: no derivation function found for reference '${this.referenceName}'.`;
+        }
         return undefined;
+    }
+
+    override checkCardinalityConstraints(): string | undefined {
+        if (this.meta.min !== undefined && this.meta.min === 1 && this.get() === undefined) {
+            return `Minimum cardinality violation: current length 0 is below the required minimum of ${this.meta.min}.`;
+        }
+        return
     }
 }

@@ -65,6 +65,7 @@ export const ModelSingleChild: ModelDefinition = {
                     target: "ReContainersWithSingleChild2",
                     isParent: true,
                     opposite: "child",
+                    min: 1,
                     max: 1
                 },
                 otherLink: {

@@ -58,7 +58,19 @@ export class ReDerivedListContainer<
     move(from: number, to: number) {}
     swap(from: number, to: number) {}
 
-    override checkCardinalityConstraints(): string | undefined {
+    checkDerivationConstraints(): string | undefined {
+        if (!this.resolver.canResolve(this._parent)) {
+            return `Derivation violation: no derivation function found for reference '${this.referenceName}'.`;
+        }
         return undefined;
+    }
+
+    override checkCardinalityConstraints(): string | undefined {
+        if (this.meta.min !== undefined && this.get().length < this.meta.min) {
+            return `Minimum cardinality violation: current length ${this.get().length} is below the required minimum of ${this.meta.min}.`;
+        } else if (this.meta.max !== undefined && this.meta.max !== -1 && this.get().length > this.meta.max) {
+            return `Maximum cardinality violation: current length ${this.get().length} exceeds the allowed maximum of ${this.meta.max}.`;
+        }
+        return
     }
 }

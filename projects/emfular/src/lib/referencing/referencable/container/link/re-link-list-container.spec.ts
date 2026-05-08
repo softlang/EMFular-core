@@ -103,5 +103,8 @@ describe('ReLinkListContainer', () => {
     middle.child4.remove(elem1)
     elem1.collectConstraintViolations()
     expect(elem1.violations.size).toBe(2)
+    tester.link4.push(elem1)
+    elem1.collectConstraintViolations()
+    expect(elem1.violations.size).toBe(1)
   })
 });

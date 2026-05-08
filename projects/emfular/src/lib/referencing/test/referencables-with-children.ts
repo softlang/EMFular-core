@@ -6,6 +6,9 @@ import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
 
+export const ReChild3DerivingMethod = Symbol("ReChild3.link1.derivingMethod");
+export const ReChild4DerivingMethod = Symbol("ReChild4.link1.derivingMethod");
+
 export const ModelWithChildren: ModelDefinition = {
     name: "namespace",
     prefix: "ns",
@@ -62,6 +65,12 @@ export const ModelWithChildren: ModelDefinition = {
                     min: 0,
                     max: -1
                 },
+                link1Derived: {
+                    target: "RootWithChildren",
+                    derivingMethod: ReChild3DerivingMethod,
+                    min: 0,
+                    max: -1
+                },
                 parentPointer: {
                     target: "Middle2WithChildren",
                     containment: true,
@@ -78,6 +87,12 @@ export const ModelWithChildren: ModelDefinition = {
                     target: "RootWithChildren",
                     opposite: "link4",
                     min: 1,
+                    max: -1
+                },
+                link1Derived: {
+                    target: "RootWithChildren",
+                    derivingMethod: ReChild4DerivingMethod,
+                    min: 0,
                     max: -1
                 },
                 parentPointer: {
@@ -178,6 +193,10 @@ export class ReChild4 extends Referencable<Middle2WithChildren> {
 
     @attribute()
     name: string = "referencable4";
+
+    [ReChild4DerivingMethod](): RootWithChildren[] {
+        return [];
+    }
 
     constructor() {
         super();
