@@ -6,8 +6,8 @@ import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
 
-export const ReChild3DerivingMethod = Symbol("ReChild3.link1.derivingMethod");
-export const ReChild4DerivingMethod = Symbol("ReChild4.link1.derivingMethod");
+export const ReChild3DerivingMethod = Symbol("ReChild3.link1Derived.derivingMethod");
+export const ReChild4DerivingMethod = Symbol("ReChild4.link1Derived.derivingMethod");
 
 export const ModelWithChildren: ModelDefinition = {
     name: "namespace",
@@ -120,10 +120,12 @@ export const Middle2WithChildrenRefs = {
 export const ReChild3Refs = {
     link1: ModelWithChildren.classes["ReChild3"].references["link1"],
     parentPointer: ModelWithChildren.classes["ReChild3"].references["parentPointer"],
+    link1Derived: ModelWithChildren.classes["ReChild3"].references["link1Derived"]
 } as const;
 export const ReChild4Refs = {
     link1: ModelWithChildren.classes["ReChild4"].references["link1"],
     parentPointer: ModelWithChildren.classes["ReChild4"].references["parentPointer"],
+    link1Derived: ModelWithChildren.classes["ReChild4"].references["link1Derived"]
 } as const;
 
 export enum EClasses {
@@ -175,6 +177,9 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
     @reference(ReChild3Refs.parentPointer)
     declare parentPointer?: Middle2WithChildren;
 
+    @reference(ReChild3Refs.link1Derived)
+    declare link1Derived: ModelList<RootWithChildren>
+
     @attribute()
     name: string = "referencable3";
 
@@ -190,6 +195,9 @@ export class ReChild4 extends Referencable<Middle2WithChildren> {
 
     @reference(ReChild4Refs.parentPointer)
     declare parentPointer?: Middle2WithChildren;
+
+    @reference(ReChild4Refs.link1Derived)
+    declare link1Derived: ModelList<RootWithChildren>
 
     @attribute()
     name: string = "referencable4";
