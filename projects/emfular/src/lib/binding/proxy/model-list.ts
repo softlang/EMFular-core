@@ -1,13 +1,12 @@
+import {RefKind} from "./reference-typing";
+import {DeletionMode} from "../../utils/deletion-mode";
+
 export type ForbiddenArrayMethods =
     | "copyWithin"
     | "fill"
     | "sort"
     | "reverse"
     | "unshift";
-
-export type RefKind = "tree" | "link" | "parent";
-
-export type SingleRef<T, Kind extends RefKind> = T | undefined;
 
 export type ModelList<T> = MetaAwareModelList<T, any>;
 
@@ -21,8 +20,5 @@ export interface MetaAwareModelList<T, Kind extends RefKind>
     swap(from: number, to: number): void;
     remove(...items: T[]): boolean;
     removeCascade(...items: T[]): boolean;
-    delete(): void;
-
-    readonly __item: T;
-    readonly __kind: Kind;
+    delete(mode?: DeletionMode): void;
 }
