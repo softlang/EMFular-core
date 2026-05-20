@@ -25,7 +25,7 @@ export * from './lib/referencing/referencable/container/shallow/re-tree-parent-c
 export * from './lib/referencing/referencable/container/shallow/re-derived-single-container';
 export * from './lib/referencing/referencable/container/shallow/re-derived-list-container';
 
-export * from './lib/referencing/referencable/container/hide/model-list'
+export * from './lib/binding/proxy/model-list'
 
 export * from './lib/serialization/deserializer';
 export * from './lib/serialization/json-deserializable';

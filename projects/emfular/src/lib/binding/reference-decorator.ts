@@ -2,7 +2,7 @@ import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
-import {KindFromMeta, RefineReference} from "./reference-typing";
+import {KindFromMeta, RefineReference} from "./proxy/reference-typing";
 import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(

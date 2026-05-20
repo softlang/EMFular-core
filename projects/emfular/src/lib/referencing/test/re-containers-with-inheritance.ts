@@ -2,7 +2,7 @@ import { ModelDefinition } from "../../binding/model-definition";
 import { Referencable } from "../referencable/referenceable";
 import { eClass } from "../../binding/eclass-decorator";
 import { reference } from "../../binding/reference-decorator";
-import {ModelList} from "../referencable/container/hide/model-list";
+import {ModelList} from "../../binding/proxy/model-list";
 
 export const ModelInheritance: ModelDefinition = {
     name: "ModelInheritance",

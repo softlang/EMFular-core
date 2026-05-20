@@ -1,6 +1,6 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import {MetaAwareModelList, SingleRef} from "../referencing/referencable/container/hide/model-list";
+import {MetaAwareModelList, SingleRef} from "../binding/proxy/model-list";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;

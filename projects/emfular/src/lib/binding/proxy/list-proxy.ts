@@ -1,7 +1,7 @@
-import {Referencable} from "../../referenceable";
+import {Referencable} from "../../referencing/referencable/referenceable";
 import {ModelList} from "./model-list";
-import {ReListInterface} from "../re-list-interface";
-import {DeletionMode} from "../../../../utils/deletion-mode";
+import {ReListInterface} from "../../referencing/referencable/container/re-list-interface";
+import {DeletionMode} from "../../utils/deletion-mode";
 
 export function createListProxy<
     T extends Referencable<any>,

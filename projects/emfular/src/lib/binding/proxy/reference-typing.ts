@@ -1,5 +1,5 @@
-import {ReferenceMeta} from "./model-definition";
-import {MetaAwareModelList,  RefKind, SingleRef} from "../referencing/referencable/container/hide/model-list";
+import {ReferenceMeta} from "../model-definition";
+import {MetaAwareModelList,  RefKind, SingleRef} from "./model-list";
 
 export type KindFromMeta<M extends ReferenceMeta> =
     M["isParent"] extends true ? "parent" :
