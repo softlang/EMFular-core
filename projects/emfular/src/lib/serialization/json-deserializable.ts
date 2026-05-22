@@ -1,8 +1,7 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import {ModelList} from "../binding/proxy/model-list";
+import {ModelList, ModelListFromMeta, ModelListWithKind} from "../binding/proxy/model-list";
 import {SingleRef} from "../binding/proxy/single-ref";
-import {ModelDefinition} from "../binding/model-definition";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
@@ -47,78 +46,31 @@ type AttributeKeys<T> = {
 }[keyof T];
 
 
-// --- Registry types (you already conceptually have these) ---
-interface TypeRegistry {
-    // e.g. "http://www.example.org/basicfamily#//Person": Person;
-}
+export type JsonForReference<T, K extends keyof T> =
+    JsonForListReference<T, K>
 
-interface ModelRegistryMeta {
-    // e.g. basicfamily: typeof FamilyMeta;
-}
+export type JsonForListReference<T, K extends keyof T> =
 
-// Class name from TS type (URI#//EClassName)
-type ClassName<T> = {
-    [K in keyof TypeRegistry]:
-    T extends TypeRegistry[K] ? K : never
-}[keyof TypeRegistry];
-
-// ModelDefinition lookup from URI
-type LookupMeta<CName extends string> =
-    {
-        [K in keyof ModelRegistryMeta]:
-        CName extends `${ModelRegistryMeta[K]["uri"]}${infer _}`
-            ? ModelRegistryMeta[K]
-            : never
-    }[keyof ModelRegistryMeta];
-
-
-type JsonForReference<
-    T,
-    K extends keyof T,
-    CName extends string = ClassName<T>,
-    M extends ModelDefinition | never = LookupMeta<CName>
-> =
-    T[K] extends ModelList<infer C>
-        ? [M] extends [never]
-            // no meta → either tree or ref
-            ? (JsonOf<C> | Ref)[]
-            // meta → precise
-            : M["classes"][CName]["references"][Extract<K, string>] extends { containment: true }
+// 1. Precise: Kind is explicitly known
+    T[K] extends ModelListWithKind<infer C, "tree"> ? JsonOf<C>[] :
+        T[K] extends ModelListWithKind<any, "link"> ? Ref[] :
+            T[K] extends ModelListWithKind<any, "none"> ? undefined | []
+    :
+    // 2. Meta-driven: Kind derived from ReferenceMeta
+     T[K] extends ModelListFromMeta<infer C, infer M, infer L>
+        ? M["classes"][L]["references"][Extract<K, string>] extends infer R
+             ? R extends { isParent: true }
+                ? undefined | []
+             : R extends { derivingMethod: symbol }
+                ? undefined | []
+             : R extends { containment: true }
                 ? JsonOf<C>[]
                 : Ref[]
-        : T[K] extends SingleRef<infer C, any>
-            ? [M] extends [never]
-                // no meta → either tree or ref
-                ? JsonOf<C> | Ref | undefined
-                // meta → precise
-                : M["classes"][CName]["references"][Extract<K, string>] extends { containment: true }
-                    ? JsonOf<C> | undefined
-                    : Ref | undefined
-            : never;
-
-/*
-type JsonForReference<T,
-    CName extends string = ClassName<T>,
-    M extends ModelDefinition | never = LookupMeta<CName>
-> =
-    T extends ModelList<infer C>
-        ? [M] extends [never]
-            // no meta → either tree or ref
-            ? (JsonOf<C> | Ref)[]
-            // meta → precise
-            : M["classes"][CName]["references"][Extract<K, string>] extends { containment: true }
-                ? JsonOf<C>[]
-                : Ref[]
-        : T extends SingleRef<infer C>
-            ? [M] extends [never]
-                // no meta → either tree or ref
-                ? JsonOf<C> | Ref | undefined
-                // meta → precise
-                : M["classes"][CName]["references"][Extract<K, string>] extends { containment: true }
-                    ? JsonOf<C> | undefined
-                    : Ref | undefined
-            : never;
-*/
+                   : never
+     :
+     // 3. Agnostic: user didn’t specify anything
+     T[K] extends ModelList<infer C> ? (JsonOf<C> | Ref)[]|[]|undefined :
+         never;
 
 
 export type JsonOf<T> =

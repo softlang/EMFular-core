@@ -1,4 +1,19 @@
 import {DeletionMode} from "../../utils/deletion-mode";
+import {ModelDefinition} from "../model-definition";
+
+export type Kind = "tree" | "link" | "none";
+
+export interface ModelListWithKind<
+    T,
+    K extends Kind
+> extends ModelList<T> {}
+
+export interface ModelListFromMeta<
+    T,
+    M extends ModelDefinition,
+    L extends keyof M["classes"]
+> extends ModelList<T> {}
+
 
 export interface ModelList<T>
     extends Array<T> {
