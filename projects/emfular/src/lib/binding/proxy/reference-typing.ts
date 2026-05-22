@@ -1,5 +1,5 @@
 import {ReferenceMeta} from "../model-definition";
-import {MetaAwareModelList} from "./model-list";
+import {ModelList} from "./model-list";
 import {SingleRef} from "./single-ref";
 
 export type RefKind = "tree" | "link" | "parent";
@@ -16,5 +16,5 @@ export type RefineReference<
     IsList extends boolean
 > =
     IsList extends true
-        ? MetaAwareModelList<Target, Kind> & UserType
+        ? ModelList<Target> & UserType
         : SingleRef<Target, Kind> & UserType;
