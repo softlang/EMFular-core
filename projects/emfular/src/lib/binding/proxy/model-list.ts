@@ -1,7 +1,7 @@
 import {DeletionMode} from "../../utils/deletion-mode";
 import {ReferenceMeta} from "../model-definition";
+import {Kind} from "./reference-typing";
 
-export type Kind = "tree" | "link" | "none";
 
 export interface ModelListWithKind<
     T,
@@ -13,11 +13,6 @@ export interface ModelListFromMeta<
     R extends ReferenceMeta
 > extends ModelList<T> {}
 
-export type KindFromMeta<R> =
-    R extends { isParent: true } ? "none" :
-        R extends { derivingMethod: symbol } ? "none" :
-            R extends { containment: true } ? "tree" :
-                "link";
 
 export interface ModelList<T>
     extends Array<T> {

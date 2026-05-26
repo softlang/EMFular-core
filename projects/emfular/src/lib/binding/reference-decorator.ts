@@ -3,8 +3,9 @@ import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
 import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
-import {KindFromMeta, ModelListWithKind} from "./proxy/model-list";
+import {ModelListWithKind} from "./proxy/model-list";
 import {SingleRef, SingleRef2WithKind} from "./proxy/single-ref";
+import {KindFromMeta} from "./proxy/reference-typing";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
     meta: M
