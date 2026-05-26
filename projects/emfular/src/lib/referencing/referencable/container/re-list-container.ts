@@ -6,6 +6,7 @@ import {createListProxy} from "../../../binding/proxy/list-proxy";
 import {ReListInterface} from "./re-list-interface";
 import {ReferenceMeta} from "../../../binding/model-definition";
 import {DeletionMode} from "../../../utils/deletion-mode";
+import {Kind} from "../../../binding/proxy/reference-typing";
 
 
 export abstract class ReListContainer<
@@ -16,7 +17,7 @@ implements ReListInterface<T, P>{
 
     readonly _instance: T[] = [];
 
-    private _proxy?: ModelList<T>;
+    private _proxy?: ModelList<T, Kind>;
 
     protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta);
@@ -26,7 +27,7 @@ implements ReListInterface<T, P>{
         return this._instance;
     }
 
-    get proxy(): ModelList<T> {
+    get proxy(): ModelList<T, Kind> {
         if (!this._proxy) {
             this._proxy = createListProxy(this);
         }

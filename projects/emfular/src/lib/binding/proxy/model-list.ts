@@ -1,20 +1,12 @@
 import {DeletionMode} from "../../utils/deletion-mode";
 import {ReferenceMeta} from "../model-definition";
-import {Kind} from "./reference-typing";
+import {Kind, KindFromMeta} from "./reference-typing";
 
 
-export interface ModelListWithKind<
-    T,
-    K extends Kind
-> extends ModelList<T> {}
+export type ModelListFromMeta<T, R extends ReferenceMeta> =
+    ModelList<T, KindFromMeta<R>>;
 
-export interface ModelListFromMeta<
-    T,
-    R extends ReferenceMeta
-> extends ModelList<T> {}
-
-
-export interface ModelList<T>
+export interface ModelList<T, K extends Kind>
     extends Array<T> {
 
     move(from: number, to: number): void;

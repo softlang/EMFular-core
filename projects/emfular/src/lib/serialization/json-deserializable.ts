@@ -1,6 +1,6 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import {ModelList, ModelListFromMeta, ModelListWithKind} from "../binding/proxy/model-list";
+import {ModelList, ModelListFromMeta} from "../binding/proxy/model-list";
 import {SingleRef, SingleRef2, SingleRef2FromMeta, SingleRef2WithKind} from "../binding/proxy/single-ref";
 import {KindFromMeta} from "../binding/proxy/reference-typing";
 
@@ -13,7 +13,7 @@ type IsReferencable<T> =
 
 type IsReferenceProp2<T> =
     T extends object
-        ? T extends ModelList<any> ? true
+        ? T extends ModelList<any, any> ? true
         : T extends SingleRef2<any> ? true
         : T extends SingleRef<any, any> ? true
         : IsReferencable<T> extends true ? true : false
@@ -62,9 +62,9 @@ export type JsonForSingleReference<T, K extends keyof T> =
 export type JsonForListReference<T, K extends keyof T> =
 
 // 1. Precise: Kind is explicitly known
-    T[K] extends ModelListWithKind<infer C, "tree"> ? JsonOf<C>[] :
-        T[K] extends ModelListWithKind<any, "link"> ? Ref[] :
-            T[K] extends ModelListWithKind<any, "none"> ? undefined | []
+    T[K] extends ModelList<infer C, "tree"> ? JsonOf<C>[] :
+        T[K] extends ModelList<any, "link"> ? Ref[] :
+            T[K] extends ModelList<any, "none"> ? undefined | []
     :
     // 2. Meta-driven
      T[K] extends ModelListFromMeta<infer C, infer RMeta>
@@ -72,13 +72,11 @@ export type JsonForListReference<T, K extends keyof T> =
            KindFromMeta<RMeta> extends "link" ? Ref[] :
               undefined | [] // none
      :
-     // 3. Agnostic: user didn’t specify anything
-     T[K] extends ModelList<infer C> ? undefined | [] | Ref[] | JsonOf<C>[] :
-         never;
+     never;
 
 export type JsonForReference<T, K extends keyof T> =
 // LIST reference?
-    T[K] extends ModelList<any>
+    T[K] extends ModelList<any, infer C>
         ? JsonForListReference<T, K>
 
         // SINGLE reference?

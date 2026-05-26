@@ -7,6 +7,7 @@ import {createListProxy} from "../../../../binding/proxy/list-proxy";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
 import {ReferenceMeta} from "../../../../binding/model-definition";
+import {Kind} from "../../../../binding/proxy/reference-typing";
 
 export class ReDerivedListContainer<
     T extends Referencable<any>,
@@ -15,7 +16,7 @@ export class ReDerivedListContainer<
     implements ReListInterface<T, P>,
         ReShallowInterface<T, P> {
 
-    private _proxy?: ModelList<T>;
+    private _proxy?: ModelList<T, "none">;
     private resolver: ReDerivationResolver<P, T[]>;
 
     constructor(
@@ -28,7 +29,7 @@ export class ReDerivedListContainer<
         this.resolver = new ReDerivationResolver(computeOrSymbol);
     }
 
-    get proxy(): ModelList<T> {
+    get proxy(): ModelList<T, "none"> {
         if (!this._proxy) {
             this._proxy = createListProxy(this);
         }
