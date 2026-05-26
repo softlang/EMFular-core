@@ -16,12 +16,25 @@ type IsReferenceProp<T> =
         : false
     : false;
 
+type KindOfRef<T> =
+    T extends ModelList<any, infer Ki> ? Ki :
+        T extends SingleRef2<any, infer Ki> ? Ki :
+            T extends SingleRef<any, infer Ki> ? Ki :
+                never;
+
+
 type ReferenceKeys<T> = {
     [K in keyof T]:
-    IsReferenceProp<T[K]> extends true
-        ? K
-        : never
+    StartsWithPrivate<K> extends true ? never :
+        K extends "ParentType" ? never :
+            IsReferenceProp<T[K]> extends true
+                ? (
+                    // but only if its kind is not "none"
+                    KindOfRef<T[K]> extends "none" ? never : K
+                    )
+                : never
 }[keyof T];
+
 
 // ignore these on attributes:
 type StartsWithPrivate<K> =
