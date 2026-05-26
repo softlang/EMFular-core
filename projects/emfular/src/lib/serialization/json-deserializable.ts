@@ -1,8 +1,8 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
-import {ModelList, ModelListFromMeta} from "../binding/proxy/model-list";
+import {ModelList} from "../binding/proxy/model-list";
 import {SingleRef, SingleRef2, SingleRef2FromMeta, SingleRef2WithKind} from "../binding/proxy/single-ref";
-import {KindFromMeta} from "../binding/proxy/reference-typing";
+import {Kind, KindFromMeta} from "../binding/proxy/reference-typing";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
@@ -59,28 +59,19 @@ export type JsonForSingleReference<T, K extends keyof T> =
                         : T[K] extends SingleRef<infer C, any>
     ? JsonOf<C> | Ref| undefined: never;
 
-export type JsonForListReference<T, K extends keyof T> =
-// 1. Explicit kind on the property type
-    T[K] extends ModelList<infer C, "tree"> ? JsonOf<C>[] :
-        T[K] extends ModelList<any, "link">    ? Ref[] :
-            T[K] extends ModelList<any, "none">    ? undefined | [] :
 
-                // 2. Meta-driven: user used ModelListFromMeta<..., RMeta>
-                T[K] extends ModelListFromMeta<infer C, infer RMeta>
-                    ? KindFromMeta<RMeta> extends "tree" ? JsonOf<C>[] :
-                        KindFromMeta<RMeta> extends "link" ? Ref[] :
-                            undefined | [] // "none"
-                    :
+export type JsonForListReference<
+    T,
+    Ki extends Kind
+> =
+    Ki extends "tree" ? JsonOf<T>[] :
+        Ki extends "link" ? Ref[] :
+            undefined | [];
 
-                    // 3. Fallback
-                    never;
 export type JsonForReference<T, K extends keyof T> =
-// LIST reference?
-    T[K] extends ModelList<any, any>
-        ? JsonForListReference<T, K>
-        // SINGLE reference?
-        :  JsonForSingleReference<T, K>
-
+    T[K] extends ModelList<infer Ty, infer Ki>
+        ? JsonForListReference<Ty, Ki>
+        : JsonForSingleReference<T, K>;
 
 export type JsonOf<T> =
     & { eClass?: string }
