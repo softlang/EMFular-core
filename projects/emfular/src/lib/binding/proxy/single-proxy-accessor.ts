@@ -1,19 +1,24 @@
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {SingleRef2} from "./single-ref";
 import {ReSingleInterface} from "../../referencing/referencable/container/re-single-interface";
+import {ReferenceMeta} from "../model-definition";
+import {KindFromMeta} from "./reference-typing";
 
 //todo old behaviour: now needs extra annotation
 export function plainSingleProxyAccessor<
-    T extends Referencable<any>
+    T extends Referencable<any>,
+    R extends ReferenceMeta
 >(symbol: symbol) {
+
+    type Ki = KindFromMeta<R>
 
     return {
         get(this: any): T|undefined {
-            const c = this[symbol] as ReSingleInterface<T, any>;
+            const c = this[symbol] as ReSingleInterface<T, any, Ki>;
             return c?.get();
         },
         set(this: any, value: T | null) {
-            const c = this[symbol] as ReSingleInterface<T, any>;
+            const c = this[symbol] as ReSingleInterface<T, any, Ki>;
             if (!c) throw new Error("Container not initialized");
             if (value == null) {
                 const val = c.get();
@@ -28,12 +33,15 @@ export function plainSingleProxyAccessor<
 }
 
 export function singleProxyAccessor<
-    T extends Referencable<any>
+    T extends Referencable<any>,
+    M extends ReferenceMeta
 >(symbol: symbol) {
 
+    type Ki = KindFromMeta<M>
+
     return {
-        get(this: any): SingleRef2<T> {
-            const c = this[symbol] as ReSingleInterface<T, any>;
+        get(this: any): SingleRef2<T, Ki> {
+            const c = this[symbol] as ReSingleInterface<T, any, Ki>;
             return c.proxy;
         },
         set() {

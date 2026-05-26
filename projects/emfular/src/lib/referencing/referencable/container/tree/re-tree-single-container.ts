@@ -9,7 +9,7 @@ import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReSingleContainer<T, T["ParentType"]>
+    extends ReSingleContainer<T, T["ParentType"], "tree">
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;

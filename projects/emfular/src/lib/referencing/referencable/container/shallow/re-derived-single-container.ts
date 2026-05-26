@@ -11,9 +11,9 @@ export class ReDerivedSingleContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
 > extends ReContainer<T,P>
-    implements ReSingleInterface<T,P> {
+    implements ReSingleInterface<T,P, "none"> {
 
-    private _proxy?: SingleRef2<T>;
+    private _proxy?: SingleRef2<T, "none">;
 
     private resolver: ReDerivationResolver<P, T | undefined>;
 
@@ -31,7 +31,7 @@ export class ReDerivedSingleContainer<
         return this.resolver.resolve(this._parent);
     }
 
-    get proxy(): SingleRef2<T> {
+    get proxy(): SingleRef2<T, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy(this);
         }

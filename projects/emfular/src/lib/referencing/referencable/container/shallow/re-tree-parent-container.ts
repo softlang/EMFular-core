@@ -7,13 +7,14 @@ import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 import {SingleRef2} from "../../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
+import {Kind} from "../../../../binding/proxy/reference-typing";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T>
-implements ReSingleInterface<T["ParentType"], T>,
+implements ReSingleInterface<T["ParentType"], T, "none">,
     ReShallowInterface<T["ParentType"], T>{
 
-    private _proxy?: SingleRef2<T>;
+    private _proxy?: SingleRef2<T, "none">;
 
     constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta); // referenceName is actually unused for this container type
@@ -23,7 +24,7 @@ implements ReSingleInterface<T["ParentType"], T>,
         return (this._parent.getParentReferencable() as T["ParentType"])
     }
 
-    get proxy(): SingleRef2<T> {
+    get proxy(): SingleRef2<T, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy(this);
         }

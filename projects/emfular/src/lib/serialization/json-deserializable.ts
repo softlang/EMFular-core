@@ -1,8 +1,8 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
 import {ModelList} from "../binding/proxy/model-list";
-import {SingleRef, SingleRef2, SingleRef2FromMeta, SingleRef2WithKind} from "../binding/proxy/single-ref";
-import {Kind, KindFromMeta} from "../binding/proxy/reference-typing";
+import {SingleRef, SingleRef2} from "../binding/proxy/single-ref";
+import {Kind} from "../binding/proxy/reference-typing";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
@@ -14,7 +14,7 @@ type IsReferencable<T> =
 type IsReferenceProp2<T> =
     T extends object
         ? T extends ModelList<any, any> ? true
-        : T extends SingleRef2<any> ? true
+        : T extends SingleRef2<any, any> ? true
         : T extends SingleRef<any, any> ? true
         : IsReferencable<T> extends true ? true : false
         : false;
@@ -41,23 +41,16 @@ type AttributeKeys<T> = {
 
 export type JsonForSingleReference<T, K extends keyof T> =
 
-// 1. Precise: Kind explicitly known
-    T[K] extends SingleRef2WithKind<infer C, "tree"> ? JsonOf<C> | undefined :
-        T[K] extends SingleRef2WithKind<any, "link"> ? Ref | undefined :
-            T[K] extends SingleRef2WithKind<any, "none"> ? undefined :
+    T[K] extends SingleRef2<infer C, "tree"> ? JsonOf<C> | undefined :
+        T[K] extends SingleRef2<any, "link"> ? Ref | undefined :
+            T[K] extends SingleRef2<any, "none"> ? never :
 
-                // 2. Meta-driven
-                T[K] extends SingleRef2FromMeta<infer C, infer RMeta>
-                    ? KindFromMeta<RMeta> extends "tree" ? JsonOf<C> | undefined :
-                        KindFromMeta<RMeta> extends "link" ? Ref | undefined :
-                            undefined
-                    :
 
-                    // 3. Agnostic: user didn’t specify anything
-                    T[K] extends SingleRef2<infer C>
-                        ? JsonOf<C> | Ref | undefined
-                        : T[K] extends SingleRef<infer C, any>
-    ? JsonOf<C> | Ref| undefined: never;
+                    // 2. simple case
+                T[K] extends SingleRef<infer C, "tree"> ? JsonOf<C> | undefined :
+                    T[K] extends SingleRef<any, "link"> ? Ref | undefined :
+                        T[K] extends SingleRef<any, "none"> ? never :
+     never;
 
 
 export type JsonForListReference<
@@ -66,7 +59,7 @@ export type JsonForListReference<
 > =
     Ki extends "tree" ? JsonOf<T>[] :
         Ki extends "link" ? Ref[] :
-            undefined | [];
+            never;
 
 export type JsonForReference<T, K extends keyof T> =
     T[K] extends ModelList<infer Ty, infer Ki>

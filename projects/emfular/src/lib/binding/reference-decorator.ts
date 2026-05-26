@@ -23,7 +23,7 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
             Object.defineProperty(
                 prototype,
                 propertyKey,
-                plainSingleProxyAccessor<T>(symbol) //todo change
+                plainSingleProxyAccessor<T,M>(symbol) //todo change
             );
         }
 
