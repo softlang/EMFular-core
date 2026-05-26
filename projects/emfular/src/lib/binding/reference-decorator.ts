@@ -2,8 +2,9 @@ import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./reference-creator";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
-import {KindFromMeta, RefineReference} from "./proxy/reference-typing";
 import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
+import {KindFromMeta, ModelListWithKind} from "./proxy/model-list";
+import {SingleRef, SingleRef2WithKind} from "./proxy/single-ref";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
     meta: M
@@ -17,17 +18,13 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
         // infer kind + multiplicity from meta
         type Kind = KindFromMeta<M>;
         type IsList = M["max"] extends 1 ? false : true;
-
-        // user-declared type (TS substitutes this automatically)
-        type UserType = any;
-
-        // final refined type
-        type FinalType = RefineReference<
-            UserType,
-            T,
-            Kind,
-            IsList
-        >;
+        type UserType = (typeof prototype)[typeof propertyKey];
+        type FinalType =
+            IsList extends true
+                ? ModelListWithKind<T, Kind>
+                : UserType extends Referencable<any> ?
+                SingleRef<T, Kind> :
+                SingleRef2WithKind<T, Kind>;
 
         if ( meta.max !== 1) {
             Object.defineProperty(prototype, propertyKey, {
