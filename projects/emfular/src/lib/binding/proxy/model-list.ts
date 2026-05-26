@@ -13,6 +13,12 @@ export interface ModelListFromMeta<
     R extends ReferenceMeta
 > extends ModelList<T> {}
 
+export type KindFromMeta<R> =
+    R extends { isParent: true } ? "none" :
+        R extends { derivingMethod: symbol } ? "none" :
+            R extends { containment: true } ? "tree" :
+                "link";
+
 export interface ModelList<T>
     extends Array<T> {
 
