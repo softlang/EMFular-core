@@ -8,20 +8,17 @@ export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;
 }
 
-type IsReferencable<T> =
-    T extends Referencable<any> ? true : false;
-
-type IsReferenceProp2<T> =
+type IsReferenceProp<T> =
     T extends object
         ? T extends ModelList<any, any> ? true
         : T extends SingleRef2<any, any> ? true
         : T extends SingleRef<any, any> ? true
-        : IsReferencable<T> extends true ? true : false
-        : false;
+        : false
+    : false;
 
 type ReferenceKeys<T> = {
     [K in keyof T]:
-    IsReferenceProp2<T[K]> extends true
+    IsReferenceProp<T[K]> extends true
         ? K
         : never
 }[keyof T];
@@ -35,22 +32,21 @@ type AttributeKeys<T> = {
     K extends "ParentType" ? never :
         StartsWithPrivate<K> extends true ? never :
             T[K] extends Function ? never :
-                    IsReferenceProp2<T[K]> extends true ? never :
+                    IsReferenceProp<T[K]> extends true ? never :
                         K
 }[keyof T];
 
+type JsonForSingleByKind<C, Ki extends Kind> =
+    Ki extends "tree" ? JsonOf<C> | undefined :
+        Ki extends "link" ? Ref | undefined :
+            never; // "none"
+
 export type JsonForSingleReference<T, K extends keyof T> =
-
-    T[K] extends SingleRef2<infer C, "tree"> ? JsonOf<C> | undefined :
-        T[K] extends SingleRef2<any, "link"> ? Ref | undefined :
-            T[K] extends SingleRef2<any, "none"> ? never :
-
-
-                    // 2. simple case
-                T[K] extends SingleRef<infer C, "tree"> ? JsonOf<C> | undefined :
-                    T[K] extends SingleRef<any, "link"> ? Ref | undefined :
-                        T[K] extends SingleRef<any, "none"> ? never :
-     never;
+    T[K] extends SingleRef2<infer C, infer Ki>
+        ? JsonForSingleByKind<C, Ki>
+        : T[K] extends SingleRef<infer C, infer Ki>
+            ? JsonForSingleByKind<C, Ki>
+            : never;
 
 
 export type JsonForListReference<
