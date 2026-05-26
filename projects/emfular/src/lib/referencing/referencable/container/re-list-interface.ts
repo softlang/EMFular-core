@@ -5,10 +5,11 @@ import {Kind} from "../../../binding/proxy/reference-typing";
 
 export interface ReListInterface<
     T extends Referencable<any>,
-    P extends Referencable<any>
+    P extends Referencable<any>,
+    K extends Kind
 > extends ReContainer<T, P> {
 
-    get proxy(): ModelList<T, Kind>
+    get proxy(): ModelList<T, K>
 
     get(): T[]
 

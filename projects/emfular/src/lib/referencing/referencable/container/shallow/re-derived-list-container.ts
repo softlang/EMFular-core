@@ -7,13 +7,12 @@ import {createListProxy} from "../../../../binding/proxy/list-proxy";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {Kind} from "../../../../binding/proxy/reference-typing";
 
 export class ReDerivedListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
 > extends ReContainer<T,P>
-    implements ReListInterface<T, P>,
+    implements ReListInterface<T, P, "none">,
         ReShallowInterface<T, P> {
 
     private _proxy?: ModelList<T, "none">;

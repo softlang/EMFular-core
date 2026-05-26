@@ -11,13 +11,14 @@ import {Kind} from "../../../binding/proxy/reference-typing";
 
 export abstract class ReListContainer<
     T extends Referencable<any>,
-    P extends Referencable<any>
+    P extends Referencable<any>,
+    K extends Kind
 > extends ReContainer<T, P>
-implements ReListInterface<T, P>{
+implements ReListInterface<T, P, K>{
 
     readonly _instance: T[] = [];
 
-    private _proxy?: ModelList<T, Kind>;
+    private _proxy?: ModelList<T, K>;
 
     protected constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta);
@@ -27,7 +28,7 @@ implements ReListInterface<T, P>{
         return this._instance;
     }
 
-    get proxy(): ModelList<T, Kind> {
+    get proxy(): ModelList<T, K> {
         if (!this._proxy) {
             this._proxy = createListProxy(this);
         }

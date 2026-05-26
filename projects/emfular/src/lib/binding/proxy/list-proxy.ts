@@ -8,7 +8,7 @@ export function createListProxy<
     T extends Referencable<any>,
     P extends Referencable<any>,
     K extends Kind
->(container: ReListInterface<T, P>): ModelList<T, K> {
+>(container: ReListInterface<T, P, K>): ModelList<T, K> {
 
     const forbidden = (name: string) => {
         throw new Error(`Operation '${name}' is not supported on model lists`);

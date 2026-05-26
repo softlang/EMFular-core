@@ -10,7 +10,7 @@ import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 
 export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReListContainer<T, T["ParentType"]>
+    extends ReListContainer<T, T["ParentType"], "tree">
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;

@@ -10,7 +10,7 @@ import {DeletionMode} from "../../../../utils/deletion-mode";
 export class ReLinkListContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
-> extends ReListContainer<T,P>
+> extends ReListContainer<T,P, "link">
 implements ReLinkContainer<T, P> {
 
     constructor(parent: P, name: string, refMeta: ReferenceMeta) {

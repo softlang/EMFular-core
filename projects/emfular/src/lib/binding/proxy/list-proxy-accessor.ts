@@ -8,9 +8,11 @@ export function listProxyAccessor<
     T extends Referencable<any>,
     M extends ReferenceMeta
 >(propertyKey: string | symbol, symbol: symbol) {
+
+    type Ki = KindFromMeta<M>
     return {
-        get(this: any): ModelList<T, KindFromMeta<M>> {
-            const c = this[symbol] as ReListInterface<T, any>;
+        get(this: any): ModelList<T, Ki> {
+            const c = this[symbol] as ReListInterface<T, any, Ki>;
             return c.proxy as ModelList<T, KindFromMeta<M>>;
         },
         set(_: T | null) {
