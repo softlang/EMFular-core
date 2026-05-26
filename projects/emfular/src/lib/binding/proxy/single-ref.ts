@@ -1,11 +1,22 @@
 import {RefKind} from "./reference-typing";
 import {DeletionMode} from "../../utils/deletion-mode";
+import {ModelDefinition} from "../model-definition";
+import {Kind} from "./model-list";
 
 export type SingleRef<T, Kind extends RefKind> = T | undefined;
 
-export type ContainerAwareSingleRef<T> = MetaAndContainerAwareSingleRef<T, any>;
+export interface SingleRef2WithKind<
+    T,
+    K extends Kind
+> extends SingleRef2<T>{}
 
-export interface MetaAndContainerAwareSingleRef<T, Kind extends RefKind> {
+export interface SingleRef2FromMeta<
+    T,
+    M extends ModelDefinition,
+    L extends keyof M["classes"]
+> extends SingleRef2<T> {}
+
+export interface SingleRef2<T> {
     readonly value: T | undefined;
     remove(item: T): boolean;
     removeCascade(item: T): boolean;
