@@ -2,7 +2,7 @@ import {ReSingleInterface} from "../../referencing/referencable/container/re-sin
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {DeletionMode} from "../../utils/deletion-mode";
 import {SingleRef2} from "./single-ref";
-import {Kind} from "./reference-typing";
+import {Kind} from "./reference-kind";
 
 export function createSingleRefProxy<
     T extends Referencable<any>,

@@ -2,7 +2,7 @@ import {Referencable} from "../../referencing/referencable/referenceable";
 import {SingleRef2} from "./single-ref";
 import {ReSingleInterface} from "../../referencing/referencable/container/re-single-interface";
 import {ReferenceMeta} from "../model-definition";
-import {KindFromMeta} from "./reference-typing";
+import {KindFromMeta} from "./reference-kind";
 
 //todo old behaviour: now needs extra annotation
 export function plainSingleProxyAccessor<

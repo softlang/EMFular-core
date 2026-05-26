@@ -6,7 +6,7 @@ import {createListProxy} from "../../../binding/proxy/list-proxy";
 import {ReListInterface} from "./re-list-interface";
 import {ReferenceMeta} from "../../../binding/model-definition";
 import {DeletionMode} from "../../../utils/deletion-mode";
-import {Kind} from "../../../binding/proxy/reference-typing";
+import {Kind} from "../../../binding/proxy/reference-kind";
 
 
 export abstract class ReListContainer<

@@ -1,6 +1,6 @@
 import {DeletionMode} from "../../utils/deletion-mode";
 import {ReferenceMeta} from "../model-definition";
-import {Kind, KindFromMeta} from "./reference-typing";
+import {Kind, KindFromMeta} from "./reference-kind";
 
 
 export type ModelListFromMeta<T, R extends ReferenceMeta> =

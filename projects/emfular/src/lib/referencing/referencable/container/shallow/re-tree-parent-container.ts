@@ -7,7 +7,7 @@ import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
 import {SingleRef2} from "../../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
-import {Kind} from "../../../../binding/proxy/reference-typing";
+import {Kind} from "../../../../binding/proxy/reference-kind";
 
 export class ReTreeParentContainer<T extends Referencable<any>>
     extends ReContainer<T["ParentType"],T>

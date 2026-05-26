@@ -2,7 +2,7 @@ import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
 import {ModelList} from "../binding/proxy/model-list";
 import {SingleRef, SingleRef2} from "../binding/proxy/single-ref";
-import {Kind} from "../binding/proxy/reference-typing";
+import {Kind} from "../binding/proxy/reference-kind";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
     new(): T;

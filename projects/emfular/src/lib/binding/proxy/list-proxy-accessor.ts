@@ -2,7 +2,7 @@ import {ModelList} from "./model-list";
 import {ReListInterface} from "../../referencing/referencable/container/re-list-interface";
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {ReferenceMeta} from "../model-definition";
-import {KindFromMeta} from "./reference-typing";
+import {KindFromMeta} from "./reference-kind";
 
 export function listProxyAccessor<
     T extends Referencable<any>,

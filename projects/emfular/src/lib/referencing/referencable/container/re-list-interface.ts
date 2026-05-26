@@ -1,7 +1,7 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
 import {ModelList} from "../../../binding/proxy/model-list";
-import {Kind} from "../../../binding/proxy/reference-typing";
+import {Kind} from "../../../binding/proxy/reference-kind";
 
 export interface ReListInterface<
     T extends Referencable<any>,

@@ -4,7 +4,7 @@ import {ReSingleInterface} from "./re-single-interface";
 import {ReferenceMeta} from "../../../binding/model-definition";
 import {SingleRef2} from "../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../binding/proxy/single-proxy";
-import {Kind} from "../../../binding/proxy/reference-typing";
+import {Kind} from "../../../binding/proxy/reference-kind";
 
 export abstract class ReSingleContainer<
     T extends Referencable<any>,
