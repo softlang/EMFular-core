@@ -13,7 +13,7 @@ export function listProxyAccessor<
     return {
         get(this: any): ModelList<T, Ki> {
             const c = this[symbol] as ReListInterface<T, any, Ki>;
-            return c.proxy as ModelList<T, KindFromMeta<M>>;
+            return c.proxy;
         },
         set(_: T | null) {
             throw new Error(
