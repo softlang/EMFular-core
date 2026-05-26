@@ -6,8 +6,9 @@ import {Kind} from "./reference-typing";
 
 export function createListProxy<
     T extends Referencable<any>,
-    P extends Referencable<any>
->(container: ReListInterface<T, P>): ModelList<T, Kind> {
+    P extends Referencable<any>,
+    K extends Kind
+>(container: ReListInterface<T, P>): ModelList<T, K> {
 
     const forbidden = (name: string) => {
         throw new Error(`Operation '${name}' is not supported on model lists`);
@@ -29,9 +30,9 @@ export function createListProxy<
         return typeof prop === "string" && /^\d+$/.test(prop)
     }
 
-    return new Proxy([] as unknown as  ModelList<T, Kind>, {
+    return new Proxy([] as unknown as ModelList<T, K>, {
 
-        has(_: ModelList<T, Kind>, prop: PropertyKey) {
+        has(_: ModelList<T, K>, prop: PropertyKey) {
             const list = container.get();
             if (isIndexAccess(prop)) {
                 const index = Number(prop);
@@ -40,7 +41,7 @@ export function createListProxy<
             return prop in list;
         },
 
-        ownKeys(_: ModelList<T, Kind>) {
+        ownKeys(_: ModelList<T, K>) {
             const list = container.get();
             const keys = [];
 
@@ -59,7 +60,7 @@ export function createListProxy<
         // ============================================================
         // property reads and method lookups
         // ============================================================
-        get(_: ModelList<T, Kind>, prop: string|symbol, receiver) {
+        get(_: ModelList<T, K>, prop: string|symbol, receiver) {
             const list = container.get();
 
             if (isIndexAccess(prop)) {
@@ -267,7 +268,7 @@ export function createListProxy<
         // ============================================================
         // SET — index assignment and length assignment
         // ============================================================
-        set(_target: ModelList<T, Kind>, prop: string|symbol, _value: any) {
+        set(_target: ModelList<T, K>, prop: string|symbol, _value: any) {
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
                 forbidden("index assignment");
             }
@@ -282,7 +283,7 @@ export function createListProxy<
         // ============================================================
         // DELETE — delete arr[i]
         // ============================================================
-        deleteProperty(_, prop) {
+        deleteProperty(_: ModelList<T, K>, prop) {
             if (typeof prop === "string" && /^\d+$/.test(prop)) {
                 const index = Number(prop);
                 const arr = container.get();

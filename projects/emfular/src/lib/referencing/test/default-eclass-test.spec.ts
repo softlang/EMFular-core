@@ -4,6 +4,7 @@ import {
     ReContainersWithSingleChildRefs
 } from "./re-containers-with-single-child";
 import {EClasses, RootWithChildren, RootWithChildrenRefs} from "./referencables-with-children";
+import {ReferenceMeta} from "../../binding/model-definition";
 
 
 describe('defaultEClass initialization for containment references', () => {
@@ -27,7 +28,7 @@ describe('defaultEClass initialization for containment references', () => {
         const root = new RootWithChildren();
 
         // Symbol under which the container is stored
-        const child2Key = RootWithChildrenRefs.child2.containerKey;
+        const child2Key = (RootWithChildrenRefs.child2 as ReferenceMeta).containerKey;
         expect(child2Key).toBeDefined();
 
         // Access the actual container instance

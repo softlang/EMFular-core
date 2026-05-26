@@ -60,25 +60,24 @@ export type JsonForSingleReference<T, K extends keyof T> =
     ? JsonOf<C> | Ref| undefined: never;
 
 export type JsonForListReference<T, K extends keyof T> =
-
-// 1. Precise: Kind is explicitly known
+// 1. Explicit kind on the property type
     T[K] extends ModelList<infer C, "tree"> ? JsonOf<C>[] :
-        T[K] extends ModelList<any, "link"> ? Ref[] :
-            T[K] extends ModelList<any, "none"> ? undefined | []
-    :
-    // 2. Meta-driven
-     T[K] extends ModelListFromMeta<infer C, infer RMeta>
-        ? KindFromMeta<RMeta> extends "tree" ? JsonOf<C>[] :
-           KindFromMeta<RMeta> extends "link" ? Ref[] :
-              undefined | [] // none
-     :
-     never;
+        T[K] extends ModelList<any, "link">    ? Ref[] :
+            T[K] extends ModelList<any, "none">    ? undefined | [] :
 
+                // 2. Meta-driven: user used ModelListFromMeta<..., RMeta>
+                T[K] extends ModelListFromMeta<infer C, infer RMeta>
+                    ? KindFromMeta<RMeta> extends "tree" ? JsonOf<C>[] :
+                        KindFromMeta<RMeta> extends "link" ? Ref[] :
+                            undefined | [] // "none"
+                    :
+
+                    // 3. Fallback
+                    never;
 export type JsonForReference<T, K extends keyof T> =
 // LIST reference?
-    T[K] extends ModelList<any, infer C>
+    T[K] extends ModelList<any, any>
         ? JsonForListReference<T, K>
-
         // SINGLE reference?
         :  JsonForSingleReference<T, K>
 

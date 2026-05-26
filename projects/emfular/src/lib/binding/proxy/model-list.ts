@@ -9,6 +9,8 @@ export type ModelListFromMeta<T, R extends ReferenceMeta> =
 export interface ModelList<T, K extends Kind>
     extends Array<T> {
 
+    readonly __kind?: K;   // phantom field
+
     move(from: number, to: number): void;
     swap(from: number, to: number): void;
     remove(...items: T[]): boolean;

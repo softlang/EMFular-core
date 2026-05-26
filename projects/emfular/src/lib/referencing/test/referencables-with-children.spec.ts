@@ -84,7 +84,7 @@ describe('ReContainersWithListChild tests', () => {
         const r3json: ReChild3Json = {
             name: 'referencable3',
             eClass: EClasses.ReChild3,
-            link1: [<Ref>{
+            link1: [{
                 $ref: RefHandler.rootPath,
                 eClass: EClasses.RootWithChildren}]
         }
@@ -101,7 +101,7 @@ describe('ReContainersWithListChild tests', () => {
             name: 'referencable1',
             eClass: EClasses.RootWithChildren,
             child2: [r21json, r22json],
-            link3: [<Ref>{
+            link3: [{
                 $ref: "//@child2.0/@child3.0",
                 eClass: EClasses.ReChild3
             }]
@@ -134,8 +134,7 @@ describe('ReContainersWithListChild tests', () => {
         r.child2.push(m1, m2, m3);
         expect(r.child2.map(x => x)).toEqual([m1, m2, m3]);
 
-        (r.child2 as any).swap(0, 2);
-
+        r.child2.swap(0, 2);
         expect(r.child2.map(x => x)).toEqual([m3, m2, m1]);
     });
 

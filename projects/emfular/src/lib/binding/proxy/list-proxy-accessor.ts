@@ -1,16 +1,17 @@
-import {ModelListFromMeta} from "./model-list";
+import {ModelList} from "./model-list";
 import {ReListInterface} from "../../referencing/referencable/container/re-list-interface";
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {ReferenceMeta} from "../model-definition";
+import {KindFromMeta} from "./reference-typing";
 
 export function listProxyAccessor<
     T extends Referencable<any>,
     M extends ReferenceMeta
 >(propertyKey: string | symbol, symbol: symbol) {
     return {
-        get(this: any): ModelListFromMeta<T, M> {
+        get(this: any): ModelList<T, KindFromMeta<M>> {
             const c = this[symbol] as ReListInterface<T, any>;
-            return c.proxy;
+            return c.proxy as ModelList<T, KindFromMeta<M>>;
         },
         set(_: T | null) {
             throw new Error(
