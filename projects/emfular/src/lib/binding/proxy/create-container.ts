@@ -1,13 +1,13 @@
-import {Referencable} from "../referencing/referencable/referenceable";
-import {ReferenceMeta} from "./model-definition";
-import {ReContainer} from "../referencing/referencable/container/re-container";
-import {ReTreeParentContainer} from "../referencing/referencable/container/shallow/re-tree-parent-container";
-import {ReTreeListContainer} from "../referencing/referencable/container/tree/re-tree-list-container";
-import {ReTreeSingleContainer} from "../referencing/referencable/container/tree/re-tree-single-container";
-import {ReLinkListContainer} from "../referencing/referencable/container/link/re-link-list-container";
-import {ReLinkSingleContainer} from "../referencing/referencable/container/link/re-link-single-container";
-import {ReDerivedListContainer} from "../referencing/referencable/container/shallow/re-derived-list-container";
-import {ReDerivedSingleContainer} from "../referencing/referencable/container/shallow/re-derived-single-container";
+import {Referencable} from "../../referencing/referencable/referenceable";
+import {ReferenceMeta} from "../model-definition";
+import {ReContainer} from "../../referencing/referencable/container/re-container";
+import {ReTreeParentContainer} from "../../referencing/referencable/container/shallow/re-tree-parent-container";
+import {ReTreeListContainer} from "../../referencing/referencable/container/tree/re-tree-list-container";
+import {ReTreeSingleContainer} from "../../referencing/referencable/container/tree/re-tree-single-container";
+import {ReLinkListContainer} from "../../referencing/referencable/container/link/re-link-list-container";
+import {ReLinkSingleContainer} from "../../referencing/referencable/container/link/re-link-single-container";
+import {ReDerivedListContainer} from "../../referencing/referencable/container/shallow/re-derived-list-container";
+import {ReDerivedSingleContainer} from "../../referencing/referencable/container/shallow/re-derived-single-container";
 
 
 export function createContainer<

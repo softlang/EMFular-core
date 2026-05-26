@@ -1,6 +1,6 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
-import {createContainer} from "./reference-creator";
+import {createContainer} from "./proxy/create-container";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
 import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
 import {ModelListWithKind} from "./proxy/model-list";
