@@ -4,12 +4,16 @@ import {ReSingleInterface} from "../re-single-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReferenceMeta} from "../../../../binding/model-definition";
+import {SingleRef2} from "../../../../binding/proxy/single-ref";
+import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
 
 export class ReDerivedSingleContainer<
     T extends Referencable<any>,
     P extends Referencable<any>
 > extends ReContainer<T,P>
     implements ReSingleInterface<T,P> {
+
+    private _proxy?: SingleRef2<T>;
 
     private resolver: ReDerivationResolver<P, T | undefined>;
 
@@ -25,6 +29,13 @@ export class ReDerivedSingleContainer<
 
     get(): T | undefined {
         return this.resolver.resolve(this._parent);
+    }
+
+    get proxy(): SingleRef2<T> {
+        if (!this._proxy) {
+            this._proxy = createSingleRefProxy(this);
+        }
+        return this._proxy;
     }
 
     override toJson(_: SerializationContext) { return undefined; }
