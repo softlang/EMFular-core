@@ -1,6 +1,6 @@
 import {RefKind} from "./reference-typing";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {ModelDefinition} from "../model-definition";
+import {ModelDefinition, ReferenceMeta} from "../model-definition";
 import {Kind} from "./model-list";
 
 export type SingleRef<T, Kind extends RefKind> = T | undefined;
@@ -12,8 +12,7 @@ export interface SingleRef2WithKind<
 
 export interface SingleRef2FromMeta<
     T,
-    M extends ModelDefinition,
-    L extends keyof M["classes"]
+    R extends ReferenceMeta
 > extends SingleRef2<T> {}
 
 export interface SingleRef2<T> {
