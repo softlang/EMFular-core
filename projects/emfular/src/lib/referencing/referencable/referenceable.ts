@@ -22,7 +22,7 @@ export abstract class Referencable<
 
   $gId: string; //graphical ID
 
-  declare readonly ParentType: Parent;
+  declare readonly $ParentType: Parent;
 
   declare $classMeta: ClassMeta;
   declare $modelUri: string; //now inside modelMeta
