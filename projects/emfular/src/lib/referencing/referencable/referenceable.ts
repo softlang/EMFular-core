@@ -59,23 +59,23 @@ export abstract class Referencable<
     return this._$parent
   }
 
-  getParentReferencable(): Parent | undefined {
+  $getParentReferencable(): Parent | undefined {
     return this._$parent?._parent
   }
 
-  getEClass(): string {
+  $getEClass(): string {
     return ModelRegistry.getEClassForInstance(this)
   }
 
   assignRefs(ctx: SerializationContext, path: string) {
-    const ref: Ref = RefHandler.createRef(path, this.getEClass())
+    const ref: Ref = RefHandler.createRef(path, this.$getEClass())
     ctx.put(this, ref)
     for(let child of this.$treeChildren) {
       child.assignRefs(ctx, path)
     }
   }
 
-  destruct(mode: DeletionMode = DeletionMode.RELAXED) {
+  $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
     this._$parent?.remove(this, DeletionMode.RELAXED)
@@ -124,7 +124,7 @@ export abstract class Referencable<
     if (result && mode === DeletionMode.CASCADE && container.isRequired) {
         const instance = container.get()
         if (instance === undefined || (Array.isArray(instance) && instance.length === 0)) {
-          container._parent.destruct(mode)
+          container._parent.$destruct(mode)
         }
       }
     return result
@@ -134,7 +134,7 @@ export abstract class Referencable<
     const ctx = ctxOPt ? ctxOPt : new SerializationContext(this)
     //todo: this creates one assuming that the current element is root, once we have all parent pointers we can walk up first and then start
     const json: any = {};
-    json["eClass"] = this.getEClass(); //todo not always necessary
+    json["eClass"] = this.$getEClass(); //todo not always necessary
     this.attributesToJson(json);
     this.refContainersToJson(json, ctx);
 

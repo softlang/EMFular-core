@@ -48,7 +48,7 @@ export abstract class ReContainer<
 
     abstract remove(item: T, mode?: DeletionMode): boolean;
 
-    //called to destruct all elements in the container (e.g. when destroying a parent
+    //called to $destruct all elements in the container (e.g. when destroying a parent
     abstract delete(mode?: DeletionMode): void
 
     abstract toJson(ctx: SerializationContext): any

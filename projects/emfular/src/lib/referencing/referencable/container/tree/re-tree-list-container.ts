@@ -51,7 +51,7 @@ implements ReTreeChildrenContainer<T> {
             if (this._instance.indexOf(item) > -1) {
                 // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
                 // however this can be easily avoided since parent removal does not require any kind of following cascading deletes
-                item.destruct(mode);
+                item.$destruct(mode);
                 return true;
             }
             return false;

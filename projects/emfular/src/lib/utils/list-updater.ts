@@ -29,7 +29,7 @@ export class ListUpdater {
   static destructAllFromChangingList<T extends Referencable<any>>(list: T[], mode: DeletionMode) {
     while(list?.length > 0){
       if (mode === DeletionMode.CASCADE) {
-        list[0].destruct(mode)
+        list[0].$destruct(mode)
       } else if (mode === DeletionMode.RELAXED) {
         list[0].$parent?.remove(list[0], mode)
       }

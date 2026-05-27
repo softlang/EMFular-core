@@ -16,7 +16,7 @@ implements ReSingleInterface<T["$ParentType"], T>,
     }
 
     get(): T["$ParentType"] | undefined {
-        return (this._parent.getParentReferencable() as T["$ParentType"])
+        return (this._parent.$getParentReferencable() as T["$ParentType"])
     }
 
     //todo rewrite without using item parent explicitly?

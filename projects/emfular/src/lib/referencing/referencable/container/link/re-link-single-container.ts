@@ -49,7 +49,7 @@ implements ReLinkContainer<T, P> {
     }
 
     override delete(mode: DeletionMode = DeletionMode.RELAXED) {
-        this._instance?.destruct(mode)
+        this._instance?.$destruct(mode)
     }
 
     removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
