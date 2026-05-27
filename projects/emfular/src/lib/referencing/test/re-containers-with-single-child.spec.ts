@@ -5,6 +5,7 @@ import {
 } from "./re-containers-with-single-child";
 import {Ref} from "../ref/ref";
 import {JsonOf} from "../../serialization/json-deserializable";
+import {SingleRef} from "../../binding/proxy/single-ref";
 
 describe('ReContainersWithSingleChild tests', () => {
 
@@ -47,6 +48,16 @@ describe('ReContainersWithSingleChild tests', () => {
         expect(root.child).toEqual(child);
         expect(child.myParent).toEqual(root);
         expect(root2.child).toBeUndefined()
+    })
+
+    it('should demonstrate all extra container methods', () => {
+        const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
+        const child: ReSingleChildExample = new ReSingleChildExample();
+        root.child = child;
+        expect(root.child).toBe(child);
+        (root.child as SingleRef<any, any>).$_delete()
+        expect(root.child).toBeUndefined();
+
     })
 
     it('should serialize and deserialize a ReContainersWithSingleChild', () => {

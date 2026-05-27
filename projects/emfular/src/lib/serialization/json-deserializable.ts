@@ -1,7 +1,7 @@
 import { Referencable } from "../referencing/referencable/referenceable";
 import { Ref } from "../referencing/ref/ref";
 import {ModelList} from "../binding/proxy/model-list";
-import {SingleRef, SingleRef2} from "../binding/proxy/single-ref";
+import {SingleRef} from "../binding/proxy/single-ref";
 import {Kind} from "../binding/proxy/reference-kind";
 
 export interface JsonDeserializable<T extends Referencable<any>> {
@@ -11,14 +11,12 @@ export interface JsonDeserializable<T extends Referencable<any>> {
 type IsReferenceProp<T> =
     T extends object
         ? T extends ModelList<any, any> ? true
-        : T extends SingleRef2<any, any> ? true
         : T extends SingleRef<any, any> ? true
         : false
     : false;
 
 type KindOfRef<T> =
     T extends ModelList<any, infer Ki> ? Ki :
-        T extends SingleRef2<any, infer Ki> ? Ki :
             T extends SingleRef<any, infer Ki> ? Ki :
                 never;
 
@@ -55,11 +53,9 @@ type JsonForSingleByKind<C, Ki extends Kind> =
             never; // "none"
 
 export type JsonForSingleReference<T, K extends keyof T> =
-    T[K] extends SingleRef2<infer C, infer Ki>
+    T[K] extends SingleRef<infer C, infer Ki>
         ? JsonForSingleByKind<C, Ki>
-        : T[K] extends SingleRef<infer C, infer Ki>
-            ? JsonForSingleByKind<C, Ki>
-            : never;
+        : never;
 
 
 export type JsonForListReference<

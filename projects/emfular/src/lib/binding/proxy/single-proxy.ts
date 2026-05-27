@@ -1,7 +1,7 @@
 import {ReSingleInterface} from "../../referencing/referencable/container/re-single-interface";
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {SingleRef2} from "./single-ref";
+import {SingleRef} from "./single-ref";
 import {Kind} from "./reference-kind";
 
 export function createSingleRefProxy<
@@ -9,10 +9,10 @@ export function createSingleRefProxy<
     P extends Referencable<any>,
     K extends Kind
 >(container: ReSingleInterface<T, P, K>
-): SingleRef2<T, K> {
+): SingleRef<T, K> {
 
 
-    return new Proxy({} as SingleRef2<T, K>, {
+    return new Proxy({} as SingleRef<T, K>, {
         get(_target, prop, _receiver) {
             if (prop === "value") return container.get();
 
@@ -54,7 +54,7 @@ export function createSingleRefProxy<
             return undefined;
         },
 
-        set(_target: SingleRef2<T, K>, prop: string|symbol, value: T) {
+        set(_target: SingleRef<T, K>, prop: string|symbol, value: T) {
             if (prop === "value") {
                 return container.add(value);
             }
