@@ -13,6 +13,10 @@ import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
 
+//private, no export
+const   INIT_REFERENCES = Symbol("initReferences");
+
+
 /** base class for CORE models.
  *
  */
@@ -35,10 +39,10 @@ export abstract class Referencable<
 
   protected constructor() {
     this.$gId = uuidv4();
-    this.initReferences()
+    this[INIT_REFERENCES]()
   }
 
-  private initReferences() {
+  private [INIT_REFERENCES]() {
     const proto = Object.getPrototypeOf(this);
     const inits = proto.__referenceInitializers;
     if (inits) {
@@ -87,7 +91,7 @@ export abstract class Referencable<
     })
   }
 
-  protected getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
+  private getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
     let proto: any = Object.getPrototypeOf(this);
     let meta: ReferenceMeta | undefined;
 
