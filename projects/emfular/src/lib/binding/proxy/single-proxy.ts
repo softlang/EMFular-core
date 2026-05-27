@@ -11,10 +11,13 @@ export function createSingleRefProxy<
 >(container: ReSingleInterface<T, P, K>
 ): SingleRef<T, K> {
 
+    const target = {
+    } as SingleRef<T, K>;
 
-    return new Proxy({} as SingleRef<T, K>, {
+
+    return new Proxy(target as SingleRef<T, K>, {
         get(_target, prop, _receiver) {
-            if (prop === "value") return container.get();
+            if (prop === "value") return container.proxy;
 
             if (prop === "$_assign") {
                 return (item: T|undefined) => {

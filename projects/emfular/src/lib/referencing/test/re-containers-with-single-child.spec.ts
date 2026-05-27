@@ -53,8 +53,8 @@ describe('ReContainersWithSingleChild tests', () => {
     it('should demonstrate all extra container methods', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
         const child: ReSingleChildExample = new ReSingleChildExample();
-        root.child = child;
-        expect(root.child).toBe(child);
+        (root.child as SingleRef<any, any>).$_assign(child);
+        expect(root.child?.myParent).toEqual(child.myParent);
         (root.child as SingleRef<any, any>).$_delete()
         expect(root.child).toBeUndefined();
 
