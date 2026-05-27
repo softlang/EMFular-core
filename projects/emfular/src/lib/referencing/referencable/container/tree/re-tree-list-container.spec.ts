@@ -33,8 +33,8 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.link1).toContain(tester)
     expect(elem1.parentPointer).toBeDefined()
     expect(elem2.parentPointer).toBeDefined()
-    expect(elem1.parentPointer).toEqual(middle)
-    expect(elem2.parentPointer).toEqual(middle)
+    expect(elem1.parentPointer?.value).toEqual(middle)
+    expect(elem2.parentPointer.value).toEqual(middle)
     expect(tester.child2.remove(middle)).toBeTrue()
     expect(tester.child2.length).toBe(0)
     expect(tester.link3.length).toBe(1)
@@ -45,8 +45,8 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.link1.length).toBe(1)
     expect(elem1.parentPointer).toBeDefined()
     expect(elem2.parentPointer).toBeDefined()
-    expect(elem1.parentPointer).toEqual(middle)
-    expect(elem2.parentPointer).toEqual(middle)
+    expect(elem1.parentPointer?.value).toEqual(middle)
+    expect(elem2.parentPointer.value).toEqual(middle)
   });
 
   it("should give true if the removeCascade and remove inverse chain triggered an element removal, also removing it from other containers if required reference is deleted", () => {
@@ -74,8 +74,8 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.link1).toContain(tester)
     expect(elem1.parentPointer).toBeDefined()
     expect(elem2.parentPointer).toBeDefined()
-    expect(elem1.parentPointer).toEqual(middle)
-    expect(elem2.parentPointer).toEqual(middle)
+    expect(elem1.parentPointer?.value).toEqual(middle)
+    expect(elem2.parentPointer.value).toEqual(middle)
     expect(tester.child2.removeCascade(middle)).toBeTrue()
     expect(tester.child2.length).toBe(0)
     expect(tester.link3.length).toBe(0)
@@ -84,7 +84,7 @@ describe('ReferencableTreeListContainer', () => {
     expect(middle.child4.length).toBe(0)
     expect(elem1.link1.length).toBe(0)
     expect(elem2.link1.length).toBe(0)
-    expect(elem1.parentPointer).toBeUndefined()
-    expect(elem2.parentPointer).toBeUndefined()
+    expect(elem1.parentPointer?.value).toBeUndefined()
+    expect(elem2.parentPointer.value).toBeUndefined()
   })
 });

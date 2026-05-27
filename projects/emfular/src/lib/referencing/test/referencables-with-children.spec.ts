@@ -11,7 +11,7 @@ import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {Ref} from "../ref/ref";
 
-describe('ReContainersWithListChild tests', () => {
+describe('ReferencablesWithChildren tests', () => {
 
     let r1: RootWithChildren;
     let r2_1: Middle2WithChildren;
@@ -31,47 +31,47 @@ describe('ReContainersWithListChild tests', () => {
         expect(r2_1.child3.length).toBe(0);
         r2_1.child3.push(r3_1)
         expect(r2_1.child3.length).toBe(1);
-        expect(r3_1.parentPointer).toEqual(r2_1)
-        r3_2.parentPointer=r2_1
+        expect(r3_1.parentPointer?.value).toEqual(r2_1)
+        r3_2.parentPointer?.assign(r2_1)
         expect(r2_1.child3.length).toBe(2);
-        expect(r3_1.parentPointer).toEqual(r2_1)
-        expect(r3_2.parentPointer).toEqual(r2_1)
+        expect(r3_1.parentPointer?.value).toEqual(r2_1)
+        expect(r3_2.parentPointer?.value).toEqual(r2_1)
 
         expect(r2_2.child3.length).toBe(0);
         r2_2.child3.push(r3_1)
         expect(r2_2.child3.length).toBe(1);
         expect(r2_1.child3.length).toBe(1);
-        expect(r3_1.parentPointer).toEqual(r2_2)
-        expect(r3_2.parentPointer).toEqual(r2_1)
-        r3_2.parentPointer=r2_1
+        expect(r3_1.parentPointer?.value).toEqual(r2_2)
+        expect(r3_2.parentPointer?.value).toEqual(r2_1)
+        r3_2.parentPointer?.assign(r2_1)
         expect(r2_2.child3.length).toBe(1);
         expect(r2_1.child3.length).toBe(1);
-        expect(r3_1.parentPointer).toEqual(r2_2)
-        expect(r3_2.parentPointer).toEqual(r2_1)
-        r3_2.parentPointer=r2_2
+        expect(r3_1.parentPointer?.value).toEqual(r2_2)
+        expect(r3_2.parentPointer?.value).toEqual(r2_1)
+        r3_2.parentPointer?.assign(r2_2)
         expect(r2_2.child3.length).toBe(2);
         expect(r2_1.child3.length).toBe(0);
-        expect(r3_1.parentPointer).toEqual(r2_2)
-        expect(r3_2.parentPointer).toEqual(r2_2)
+        expect(r3_1.parentPointer?.value).toEqual(r2_2)
+        expect(r3_2.parentPointer?.value).toEqual(r2_2)
 
         //removal:
         r2_2.child3.remove(r3_1)
         expect(r2_2.child3.length).toBe(1);
         expect(r2_1.child3.length).toBe(0);
-        expect(r3_1.parentPointer).toEqual(undefined)
-        expect(r3_2.parentPointer).toEqual(r2_2)
+        expect(r3_1.parentPointer?.value).toEqual(undefined)
+        expect(r3_2.parentPointer?.value).toEqual(r2_2)
         // not possible removal:
         r2_2.child3.remove(r3_1)
         expect(r2_2.child3.length).toBe(1);
         expect(r2_1.child3.length).toBe(0);
-        expect(r3_1.parentPointer).toEqual(undefined)
-        expect(r3_2.parentPointer).toEqual(r2_2)
+        expect(r3_1.parentPointer?.value).toEqual(undefined)
+        expect(r3_2.parentPointer?.value).toEqual(r2_2)
         //not possible either:
         r2_1.child3.remove(r3_1)
         expect(r2_2.child3.length).toBe(1);
         expect(r2_1.child3.length).toBe(0);
-        expect(r3_1.parentPointer).toEqual(undefined)
-        expect(r3_2.parentPointer).toEqual(r2_2)
+        expect(r3_1.parentPointer?.value).toEqual(undefined)
+        expect(r3_2.parentPointer?.value).toEqual(r2_2)
 
     });
 

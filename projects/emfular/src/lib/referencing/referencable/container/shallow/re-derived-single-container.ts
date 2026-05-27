@@ -4,7 +4,7 @@ import {ReSingleInterface} from "../re-single-interface";
 import {ReDerivationResolver} from "./re-derivation-resolver";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {SingleRef2} from "../../../../binding/proxy/single-ref";
+import {SingleRef} from "../../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
 
 export class ReDerivedSingleContainer<
@@ -13,7 +13,7 @@ export class ReDerivedSingleContainer<
 > extends ReContainer<T,P>
     implements ReSingleInterface<T,P, "none"> {
 
-    private _proxy?: SingleRef2<T, "none">;
+    private _proxy?: SingleRef<T, "none">;
 
     private resolver: ReDerivationResolver<P, T | undefined>;
 
@@ -31,7 +31,7 @@ export class ReDerivedSingleContainer<
         return this.resolver.resolve(this._parent);
     }
 
-    get proxy(): SingleRef2<T, "none"> {
+    get proxy(): SingleRef<T, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy(this);
         }

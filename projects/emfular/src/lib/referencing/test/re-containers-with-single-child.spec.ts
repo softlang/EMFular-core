@@ -24,29 +24,29 @@ describe('ReContainersWithSingleChild tests', () => {
     it('should manage parent pointers correctly', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
         expect(root.parent).toBeUndefined()
-        expect(root.child).toBeUndefined()
+        expect(root.child.value).toBeUndefined()
         const child: ReSingleChildExample = new ReSingleChildExample();
-        expect(child.myParent).toBeUndefined()
+        expect(child.myParent.value).toBeUndefined()
         expect(child.parent).toBeUndefined()
         //set tree parent:
-        child.myParent = root;
+        child.myParent.assign(root);
         expect(child.parent).toBeDefined()
-        expect(child.myParent).toEqual(root);
-        expect(root.child).toBe(child);
+        expect(child.myParent.value).toEqual(root);
+        expect(root.child.value).toBe(child);
 
         const root2 = new ReContainersWithSingleChild();
-        expect(root.child).toBe(child);
-        expect(root2.child).toBeUndefined();
-        child.myParent = root2;
-        expect(child.myParent).toEqual(root2);
-        expect(root2.child).toBe(child);
-        expect(root.child).toBeUndefined();
+        expect(root.child.value).toBe(child);
+        expect(root2.child.value).toBeUndefined();
+        child.myParent.assign(root2);
+        expect(child.myParent.value).toEqual(root2);
+        expect(root2.child.value).toBe(child);
+        expect(root.child.value).toBeUndefined();
 
         //also set from parent end:
-        root.child = child;
-        expect(root.child).toEqual(child);
-        expect(child.myParent).toEqual(root);
-        expect(root2.child).toBeUndefined()
+        root.child.assign(child);
+        expect(root.child.value).toEqual(child);
+        expect(child.myParent.value).toEqual(root);
+        expect(root2.child.value).toBeUndefined()
     })
 
     it('should serialize and deserialize a ReContainersWithSingleChild', () => {
@@ -58,34 +58,34 @@ describe('ReContainersWithSingleChild tests', () => {
         expect(rootJson).toEqual({name: "re1", eClass: EClassesSingleChild.ReContainersWithSingleChild})
         const rootFromJson: ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(rootJson)
         expect(rootFromJson.name).toEqual(root.name)
-        expect(rootFromJson.child).toBeUndefined()
-        expect(rootFromJson.link).toBeUndefined()
+        expect(rootFromJson.child.value).toBeUndefined()
+        expect(rootFromJson.link.value).toBeUndefined()
 
         // now create parent/child:
-        child.myParent = root;
-        expect(child.myParent?.name).toEqual(root.name)
-        expect(child.myParent?.link).toBeUndefined()
+        child.myParent.assign(root);
+        expect(child.myParent?.value?.name).toEqual(root.name)
+        expect(child.myParent?.value?.link.value).toBeUndefined()
 
         const jsonNoLinks = root.toJson()
         expect(jsonNoLinks.child).toBeDefined()
         expect(jsonNoLinks.link).toBeUndefined()
 
         const fromNoLinks : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(jsonNoLinks)
-        expect(fromNoLinks.link).toBeUndefined()
-        expect(fromNoLinks.child?.myParent?.name).toEqual(root.name)
+        expect(fromNoLinks.link.value).toBeUndefined()
+        expect(fromNoLinks.child?.value?.myParent?.value?.name).toEqual(root.name)
 
         //add other links:
-        root.link = child;
-        expect(child.otherLink).toEqual(root)
+        root.link.assign(child);
+        expect(child.otherLink.value).toEqual(root)
         const completeJson: JsonOf<ReContainersWithSingleChild> = root.toJson()
         expect(completeJson.name).toEqual(root.name)
         expect(completeJson.link).toBeDefined()
         //todo: must compile withoutcast for correct jsonOf:
-        let ref: Ref|undefined = completeJson?.link as unknown as Ref
+        let ref = completeJson?.link as Ref
         expect(ref.eClass).toEqual(EClassesSingleChild.ReSingleChildExample)
         const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child;
         const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
         expect(completeFromJson.name).toEqual(root.name)
-        expect(completeFromJson.link).toEqual(completeFromJson.child)
+        expect(completeFromJson.link.value).toEqual(completeFromJson.child.value)
     })
 })

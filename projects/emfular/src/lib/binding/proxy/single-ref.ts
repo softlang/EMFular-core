@@ -2,17 +2,17 @@ import {DeletionMode} from "../../utils/deletion-mode";
 import {ReferenceMeta} from "../model-definition";
 import {Kind, KindFromMeta} from "./reference-kind";
 
-export type SingleRef<T, K extends Kind> = (T | undefined) & {readonly __kind?: K};
 
-export type SingleRef2FromMeta<
+export type SingleRefFromMeta<
     T,
     R extends ReferenceMeta
-> = SingleRef2<T, KindFromMeta<R>>
+> = SingleRef<T, KindFromMeta<R>>
 
-export interface SingleRef2<T, K extends Kind> {
+export interface SingleRef<T, K extends Kind> {
     readonly __kind?: K;   // phantom field
 
-    readonly value: T | undefined;
+    get value(): T | undefined;
+    assign(value: T | undefined): boolean;
     remove(item: T): boolean;
     removeCascade(item: T): boolean;
     delete(mode?: DeletionMode): void;

@@ -2,7 +2,7 @@ import {Referencable} from "../referencing/referencable/referenceable";
 import {ReferenceMeta} from "./model-definition";
 import {createContainer} from "./proxy/create-container";
 import {listProxyAccessor} from "./proxy/list-proxy-accessor";
-import {plainSingleProxyAccessor} from "./proxy/single-proxy-accessor";
+import {singleProxyAccessor} from "./proxy/single-proxy-accessor";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
     meta: M
@@ -23,7 +23,7 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
             Object.defineProperty(
                 prototype,
                 propertyKey,
-                plainSingleProxyAccessor<T,M>(symbol) //todo change
+                singleProxyAccessor<T,M>(symbol) //todo change
             );
         }
 

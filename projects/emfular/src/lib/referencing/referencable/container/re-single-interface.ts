@@ -1,6 +1,6 @@
 import {Referencable} from "../referenceable";
 import {ReContainer} from "./re-container";
-import {SingleRef2} from "../../../binding/proxy/single-ref";
+import {SingleRef} from "../../../binding/proxy/single-ref";
 import {Kind} from "../../../binding/proxy/reference-kind";
 
 export interface ReSingleInterface<
@@ -10,5 +10,5 @@ export interface ReSingleInterface<
 > extends ReContainer<T, P>{
     get(): T | undefined
 
-    get proxy(): SingleRef2<T, K>
+    get proxy(): SingleRef<T, K>
 }

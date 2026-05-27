@@ -20,7 +20,7 @@ describe("ReferencablesWithInheritance", () => {
 
       expect(r.children.length).toBe(0);
       //still access works:
-      b.myParent = r
+      b.myParent.assign(r)
       // even inverse chain is correctly triggered, resulting in add to children
       expect(r.children.length).toBe(1);
   })

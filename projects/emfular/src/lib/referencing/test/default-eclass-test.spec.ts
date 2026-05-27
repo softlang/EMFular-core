@@ -13,7 +13,7 @@ describe('defaultEClass initialization for containment references', () => {
         const parent = new ReContainersWithSingleChild();
 
         // Get the symbol under which the container is stored
-        const childKey = ReContainersWithSingleChildRefs.child.containerKey;
+        const childKey = (ReContainersWithSingleChildRefs.child as ReferenceMeta).containerKey;
         expect(childKey).toBeDefined();
 
         const childContainer = (parent as any)[childKey!];
