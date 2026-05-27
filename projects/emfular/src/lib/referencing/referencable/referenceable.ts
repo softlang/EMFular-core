@@ -14,7 +14,10 @@ import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-def
 import {DeletionMode} from "../../utils/deletion-mode";
 
 //private, no export
-const   INIT_REFERENCES = Symbol("initReferences");
+const INIT_REFERENCES = Symbol("initReferences");
+const GET_CONTAINER = Symbol("getContainer");
+const REFERENCES_TO_JSON = Symbol("referenceToJson");
+const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
 
 
 /** base class for CORE models.
@@ -91,7 +94,7 @@ export abstract class Referencable<
     })
   }
 
-  private getContainer<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
+  private [GET_CONTAINER]<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
     let proto: any = Object.getPrototypeOf(this);
     let meta: ReferenceMeta | undefined;
 
@@ -119,11 +122,11 @@ export abstract class Referencable<
   }
 
   public addToReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
-    return this.getContainer<T>(name).add(item)
+    return this[GET_CONTAINER]<T>(name).add(item)
   }
 
   public removeFromReferencableContainer<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
-    let container = this.getContainer<T>(name)
+    let container = this[GET_CONTAINER]<T>(name)
     let result = container.remove(item, mode)
     if (result && mode === DeletionMode.CASCADE && container.isRequired) {
         const instance = container.get()
@@ -139,21 +142,20 @@ export abstract class Referencable<
     //todo: this creates one assuming that the current element is root, once we have all parent pointers we can walk up first and then start
     const json: any = {};
     json["eClass"] = this.$getEClass(); //todo not always necessary
-    this.attributesToJson(json);
-    this.refContainersToJson(json, ctx);
+    this[ATTRIBUTES_TO_JSON](json);
+    this[REFERENCES_TO_JSON](json, ctx);
 
     return json as JsonOf<this>;
   }
 
 
-  private refContainersToJson(json: any, ctx: SerializationContext) {
-    this.$treeChildren.forEach(child => {
-      const jsc = child.toJson(ctx)
-      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
-        json[child.referenceName] = jsc
-      }
-    })
-    this.$otherReferences.forEach(child => {
+  private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
+    const relevantReferences = [
+      ...this.$treeChildren,
+      ...this.$otherReferences
+    ];
+
+    relevantReferences.forEach(child => {
       const jsc = child.toJson(ctx)
       if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
         json[child.referenceName] = jsc
@@ -161,7 +163,7 @@ export abstract class Referencable<
     })
   }
 
-  private attributesToJson(json: any) {
+  private [ATTRIBUTES_TO_JSON](json: any) {
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
     attributes.forEach((options: AttributeOptions, key) => {
