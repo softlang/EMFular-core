@@ -83,7 +83,7 @@ describe('ReContainersWithSingleChild tests', () => {
         //todo: must compile withoutcast for correct jsonOf:
         let ref: Ref|undefined = completeJson?.link as unknown as Ref
         expect(ref.eClass).toEqual(EClassesSingleChild.ReSingleChildExample)
-        const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child;
+        //const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child?.toJson();
         const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
         expect(completeFromJson.name).toEqual(root.name)
         expect(completeFromJson.link).toEqual(completeFromJson.child)

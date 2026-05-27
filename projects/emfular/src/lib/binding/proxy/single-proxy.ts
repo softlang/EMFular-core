@@ -16,15 +16,29 @@ export function createSingleRefProxy<
         get(_target, prop, _receiver) {
             if (prop === "value") return container.get();
 
-            if (prop === "remove") {
+            if (prop === "$_assign") {
+                return (item: T|undefined) => {
+                    if(item)
+                        return container.add(item)
+                    else {
+                        const cur = container.get()
+                        if (cur)
+                            return container.remove(cur)
+                        else
+                            return false
+                    }
+                }
+            }
+
+            if (prop === "$_remove") {
                 return (item: T) => container.remove(item);
             }
 
-            if (prop === "removeCascade") {
+            if (prop === "$_removeCascade") {
                 return (item: T) => container.remove(item, DeletionMode.CASCADE);
             }
 
-            if (prop === "delete") {
+            if (prop === "$_delete") {
                 return (mode?: DeletionMode) => {
                     container.delete(mode);
                 }
