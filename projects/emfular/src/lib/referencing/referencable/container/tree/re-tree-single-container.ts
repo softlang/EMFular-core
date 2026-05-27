@@ -57,7 +57,7 @@ implements ReTreeChildrenContainer<T> {
         if (mode === DeletionMode.CASCADE) {
             this._instance?.destruct(mode)
         } else if (mode === DeletionMode.RELAXED) {
-            this._instance?.parent?.remove(this._instance, mode)
+            this._instance?.$parent?.remove(this._instance, mode)
         }
     }
 

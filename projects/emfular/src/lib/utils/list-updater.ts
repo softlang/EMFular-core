@@ -31,7 +31,7 @@ export class ListUpdater {
       if (mode === DeletionMode.CASCADE) {
         list[0].destruct(mode)
       } else if (mode === DeletionMode.RELAXED) {
-        list[0].parent?.remove(list[0], mode)
+        list[0].$parent?.remove(list[0], mode)
       }
     }
   }

@@ -28,7 +28,7 @@ export abstract class Referencable<
   declare $modelUri: string; //now inside modelMeta
   declare $modelMeta: ModelDefinition;
 
-  private $parent?: ReTreeChildrenContainer<this>;
+  private _$parent?: ReTreeChildrenContainer<this>;
 
   readonly $treeChildren: ReTreeChildrenContainer<any>[] = [];
   readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
@@ -49,18 +49,18 @@ export abstract class Referencable<
   }
 
   setParent(parent: ReTreeChildrenContainer<this> | undefined) {
-    if(this.$parent) {
-      this.$parent.remove(this)
+    if(this._$parent) {
+      this._$parent.remove(this)
     }
-    this.$parent = parent;
+    this._$parent = parent;
   }
 
-  get parent(): ReTreeChildrenContainer<this> | undefined {
-    return this.$parent
+  get $parent(): ReTreeChildrenContainer<this> | undefined {
+    return this._$parent
   }
 
   getParentReferencable(): Parent | undefined {
-    return this.$parent?._parent
+    return this._$parent?._parent
   }
 
   getEClass(): string {
@@ -78,7 +78,7 @@ export abstract class Referencable<
   destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
-    this.$parent?.remove(this, DeletionMode.RELAXED)
+    this._$parent?.remove(this, DeletionMode.RELAXED)
     this.$otherReferences.forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
     })

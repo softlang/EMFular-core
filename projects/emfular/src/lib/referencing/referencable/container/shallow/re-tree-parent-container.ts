@@ -22,7 +22,7 @@ implements ReSingleInterface<T["$ParentType"], T>,
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: T["$ParentType"]): boolean {
         let me: T = this._parent
-        const currentParentCont = this._parent.parent
+        const currentParentCont = this._parent.$parent
         if(currentParentCont != undefined) {
             currentParentCont.remove(this._parent as T["$ParentType"], DeletionMode.RELAXED)
         }

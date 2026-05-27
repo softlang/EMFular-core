@@ -36,7 +36,7 @@ implements ReTreeChildrenContainer<T> {
 
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: T): boolean {
-        const oldParent = item.parent;
+        const oldParent = item.$parent;
         if(oldParent == this) {
             return false;
         } else {
