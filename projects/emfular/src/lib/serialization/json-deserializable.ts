@@ -9,11 +9,9 @@ export interface JsonDeserializable<T extends Referencable<any>> {
 }
 
 type IsReferenceProp<T> =
-    T extends object
-        ? T extends ModelList<any, any> ? true
+     T extends ModelList<any, any> ? true
         : T extends SingleRef<any, any> ? true
-        : false
-    : false;
+        : false;
 
 type KindOfRef<T> =
     T extends ModelList<any, infer Ki> ? Ki :
@@ -47,15 +45,12 @@ type AttributeKeys<T> = {
                         K
 }[keyof T];
 
-type JsonForSingleByKind<C, Ki extends Kind> =
-    Ki extends "tree" ? JsonOf<C> | undefined :
-        Ki extends "link" ? Ref | undefined :
-            never; // "none"
-
 export type JsonForSingleReference<T, K extends keyof T> =
     T[K] extends SingleRef<infer C, infer Ki>
-        ? JsonForSingleByKind<C, Ki>
-            : never;
+        ? Ki extends "tree" ? JsonOf<C> | undefined :
+            Ki extends "link" ? Ref | undefined :
+                never // "none"
+: never;
 
 
 export type JsonForListReference<
