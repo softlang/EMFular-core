@@ -48,7 +48,7 @@ export abstract class Referencable<
     }
   }
 
-  setParent(parent: ReTreeChildrenContainer<this> | undefined) {
+  set $parent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this._$parent) {
       this._$parent.remove(this)
     }

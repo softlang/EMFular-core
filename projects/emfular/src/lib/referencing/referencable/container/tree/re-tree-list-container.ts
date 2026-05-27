@@ -40,7 +40,7 @@ implements ReTreeChildrenContainer<T> {
         if(oldParent == this) {
             return false;
         } else {
-            item.setParent(this);
+            item.$parent = this;
             oldParent?.remove(item)
             return ListUpdater.addToListIfMissing(item, this._instance)
         }
@@ -58,7 +58,7 @@ implements ReTreeChildrenContainer<T> {
         }
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
-            item.setParent(undefined);
+            item.$parent = undefined;
             return true
         }
         return false;

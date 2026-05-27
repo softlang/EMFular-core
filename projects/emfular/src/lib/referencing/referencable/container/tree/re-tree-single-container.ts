@@ -32,7 +32,7 @@ implements ReTreeChildrenContainer<T> {
         if(item == this._instance) {
             return false;
         } else {
-            item.setParent(this);
+            item.$parent = this;
             this._instance = item;
             return true;
         }
@@ -42,7 +42,7 @@ implements ReTreeChildrenContainer<T> {
         if(this._instance == item) {
             if (mode === DeletionMode.RELAXED) {
                 this._instance = undefined;
-                item.setParent(undefined);
+                item.$parent = undefined;
                 return true;
             }
             // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
