@@ -57,6 +57,34 @@ describe('ReLinkSingleContainer', () => {
     expect(elem2.link.value).toBeUndefined();
   });
 
+  it('should raise exceptions on single proxy assignment', () => {
+    let tester1 = new ReContainersWithSingleChild();
+    let middle1 = new ReSingleChildExample();
+    let elem1 = new ReContainersWithSingleChild();
+    let tester2 = new ReContainersWithSingleChild2();
+    let middle2 = new ReSingleChildExample2();
+    let middle2b = new ReSingleChildExample2();
+    let elem2 = new ReContainersWithSingleChild2();
+    let elem2b = new ReContainersWithSingleChild2();
+    tester1.child.assign(middle1);
+    middle1.otherLink.assign(elem1);
+    tester2.child.assign(middle2);
+    middle2.otherLink.assign(elem2);
+    middle2b.otherLink.assign(elem2b);
+
+    expect(middle1.otherLink.value).toBeDefined();
+    expect(middle1.otherLink.value).toEqual(elem1);
+    expect(middle2.otherLink.value).toBeDefined();
+    expect(middle2.otherLink.value).toEqual(elem2);
+
+    expect(() => {
+      middle2.otherLink = middle1.otherLink;
+    }).toThrow();
+    expect(() => {
+      middle2.otherLink = middle2b.otherLink;
+    }).toThrow();
+  })
+
   it('should remove reference from container, triggering its deletion in case of required reference getting removed', () => {
     let tester1 = new ReContainersWithSingleChild();
     let middle1 = new ReSingleChildExample();

@@ -19,7 +19,7 @@ export function singleProxyAccessor<
         },
         set() {
             throw new Error(
-                "Cannot assign directly to a container-based single reference. Use proxy methods instead."
+                "Cannot assign directly to a container-based single reference. Use assign instead."
             );
         },
         enumerable: true,
