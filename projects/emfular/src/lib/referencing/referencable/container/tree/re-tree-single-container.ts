@@ -7,7 +7,7 @@ import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
-import {SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
+import {REFERENCE__SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
 
 export class ReTreeSingleContainer<T extends Referencable<any>>
     extends ReSingleContainer<T, T["$ParentType"]>
@@ -22,7 +22,7 @@ implements ReTreeChildrenContainer<T> {
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
-        this._instance?.[SERIALIZE_ASSIGN_REFS](ctx, RefHandler.computePrefix(path, this.referenceName))
+        this._instance?.[REFERENCE__SERIALIZE_ASSIGN_REFS](ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
     toJson(ctx: SerializationContext): JsonOf<T>|undefined {

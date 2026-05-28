@@ -8,7 +8,7 @@ import {ListUpdater} from "../../../../utils/list-updater";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
+import {REFERENCE__SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
 
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReListContainer<T, T["$ParentType"]>
@@ -25,7 +25,7 @@ implements ReTreeChildrenContainer<T> {
     assignRefs(ctx: SerializationContext, path: string) {
         const ownPath = RefHandler.computePrefix(path, this.referenceName)
         this._instance.map((elem, index) =>
-            elem[SERIALIZE_ASSIGN_REFS](ctx, RefHandler.mixWithIndex(ownPath, index))
+            elem[REFERENCE__SERIALIZE_ASSIGN_REFS](ctx, RefHandler.mixWithIndex(ownPath, index))
         )
     }
 

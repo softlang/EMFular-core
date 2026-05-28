@@ -5,7 +5,7 @@ import {ReLinkContainer} from "./re-link-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
-import {ADD_TO_REFERENCE, REMOVE_FROM_REFERENCE} from "../../referencable-symbols";
+import {REFERENCE__ADD_TO_REFERENCE, REFERENCE__REMOVE_FROM_REFERENCE} from "../../referencable-symbols";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
@@ -20,9 +20,9 @@ implements ReLinkContainer<T, P> {
 
     protected set(instance: T): void {
         if(this.inverseName !== undefined) {
-            this._instance?.[REMOVE_FROM_REFERENCE](this.inverseName, this._parent, DeletionMode.RELAXED)
+            this._instance?.[REFERENCE__REMOVE_FROM_REFERENCE](this.inverseName, this._parent, DeletionMode.RELAXED)
             this._instance = instance;
-            instance[ADD_TO_REFERENCE](this.inverseName, this._parent)
+            instance[REFERENCE__ADD_TO_REFERENCE](this.inverseName, this._parent)
         } else {
             this._instance = instance;
         }
@@ -41,7 +41,7 @@ implements ReLinkContainer<T, P> {
         if(this._instance == item) {
             this._instance = undefined;
             if (this.inverseName != undefined) {
-                item[REMOVE_FROM_REFERENCE](this.inverseName, this._parent, mode)
+                item[REFERENCE__REMOVE_FROM_REFERENCE](this.inverseName, this._parent, mode)
             }
             return true;
         } else {
@@ -55,7 +55,7 @@ implements ReLinkContainer<T, P> {
 
     removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
-            this._instance?.[REMOVE_FROM_REFERENCE](this.inverseName, item, mode)
+            this._instance?.[REFERENCE__REMOVE_FROM_REFERENCE](this.inverseName, item, mode)
             return true; // todo refine?
         }
         return false;

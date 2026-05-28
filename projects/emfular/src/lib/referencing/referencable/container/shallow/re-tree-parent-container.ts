@@ -5,7 +5,7 @@ import {ReSingleInterface} from "../re-single-interface";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
-import {ADD_TO_REFERENCE, REMOVE_FROM_REFERENCE} from "../../referencable-symbols";
+import {REFERENCE__ADD_TO_REFERENCE, REFERENCE__REMOVE_FROM_REFERENCE} from "../../referencable-symbols";
 
 export class ReTreeParentContainer<
     T extends Referencable<any>,
@@ -24,11 +24,11 @@ implements ReSingleInterface<P, T>,
 
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: P): boolean {
-        return item[ADD_TO_REFERENCE](this.inverseName!, this._parent)
+        return item[REFERENCE__ADD_TO_REFERENCE](this.inverseName!, this._parent)
     }
 
     remove(item: P, mode: DeletionMode = DeletionMode.RELAXED): boolean {
-        return item[REMOVE_FROM_REFERENCE](this.inverseName!, this._parent, mode)
+        return item[REFERENCE__REMOVE_FROM_REFERENCE](this.inverseName!, this._parent, mode)
     }
 
     delete(): void {}

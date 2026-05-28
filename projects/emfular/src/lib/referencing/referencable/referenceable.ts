@@ -12,7 +12,7 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {ADD_TO_REFERENCE, REMOVE_FROM_REFERENCE, SERIALIZE_ASSIGN_REFS} from "./referencable-symbols";
+import {REFERENCE__ADD_TO_REFERENCE, REFERENCE__REMOVE_FROM_REFERENCE, REFERENCE__SERIALIZE_ASSIGN_REFS} from "./referencable-symbols";
 
 //private, no export
 const INIT_REFERENCES = Symbol("initReferences");
@@ -79,11 +79,11 @@ export abstract class Referencable<
   }
 
   // ****************** inverse handling (called by link containers) **********************
-  public [ADD_TO_REFERENCE]<T extends Referencable<any>>(name: string, item: T): boolean {
+  public [REFERENCE__ADD_TO_REFERENCE]<T extends Referencable<any>>(name: string, item: T): boolean {
     return this[GET_CONTAINER]<T>(name).add(item)
   }
 
-  public [REMOVE_FROM_REFERENCE]<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
+  public [REFERENCE__REMOVE_FROM_REFERENCE]<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
     let container = this[GET_CONTAINER]<T>(name)
     let result = container.remove(item, mode)
     if (result && mode === DeletionMode.CASCADE && container.isRequired) {
@@ -166,7 +166,7 @@ export abstract class Referencable<
     })
   }
 
-  [SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
+  [REFERENCE__SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
     const ref: Ref = RefHandler.createRef(path, this.$getEClass())
     ctx.put(this, ref)
     for(let child of this.$treeChildren) {
