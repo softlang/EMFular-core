@@ -9,7 +9,7 @@ import {ADD_TO_REFERENCE, REMOVE_FROM_REFERENCE} from "../../referencable-symbol
 
 export class ReTreeParentContainer<
     T extends Referencable<any>,
-    P extends Referencable<any> = T["$ParentType"]>
+    P extends Referencable<T> = T["$ParentType"]>
     extends ReContainer<P,T>
 implements ReSingleInterface<P, T>,
     ReShallowInterface<P, T>{
@@ -24,12 +24,7 @@ implements ReSingleInterface<P, T>,
 
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: P): boolean {
-        let me: T = this._parent
-        const currentParentCont = this._parent.$parent
-        if(currentParentCont != undefined) {
-            currentParentCont.remove(this._parent, DeletionMode.RELAXED)
-        }
-        return item[ADD_TO_REFERENCE](this.inverseName!, me)
+        return item[ADD_TO_REFERENCE](this.inverseName!, this._parent)
     }
 
     remove(item: P, mode: DeletionMode = DeletionMode.RELAXED): boolean {
