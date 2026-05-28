@@ -16,7 +16,7 @@ import {
   REFERENCE__ADD_TO_REFERENCE, REFERENCE__DESERIALIZE_ATTRIBUTES,
   REFERENCE__DESERIALIZE_CHILDREN, REFERENCE__DESERIALIZE_OTHER_REFERENCES,
   REFERENCE__REMOVE_FROM_REFERENCE,
-  REFERENCE__SERIALIZE_ASSIGN_REFS
+  REFERENCE__SERIALIZE_ASSIGN_REFS, REFERENCE_INTERNAL_API
 } from "./referencable-symbols";
 
 //private, no export
@@ -83,22 +83,83 @@ export abstract class Referencable<
     })
   }
 
-  // ****************** inverse handling (called by link containers) **********************
-  public [REFERENCE__ADD_TO_REFERENCE]<T extends Referencable<any>>(name: string, item: T): boolean {
-    return this[GET_CONTAINER]<T>(name).add(item)
-  }
+  public [REFERENCE_INTERNAL_API]: ReferenceApi<this> = {
 
-  public [REFERENCE__REMOVE_FROM_REFERENCE]<T extends Referencable<any>>(name: string, item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
-    let container = this[GET_CONTAINER]<T>(name)
-    let result = container.remove(item, mode)
-    if (result && mode === DeletionMode.CASCADE && container.isRequired) {
+    // ****************** inverse handling (called by link containers) **********************
+
+    addToReference: <U extends Referencable<any>>(name: string, item: U): boolean => {
+      return this[GET_CONTAINER]<U>(name).add(item)
+    },
+
+    removeFromReference: <U extends Referencable<any>>(name: string, item: U, mode: DeletionMode = DeletionMode.RELAXED): boolean => {
+      let container = this[GET_CONTAINER]<U>(name)
+      let result = container.remove(item, mode)
+      if (result && mode === DeletionMode.CASCADE && container.isRequired) {
         const instance = container.get()
         if (instance === undefined || (Array.isArray(instance) && instance.length === 0)) {
           container._parent.$destruct(mode)
         }
       }
-    return result
-  }
+      return result
+    },
+
+    //************** Serialization *************************
+
+    serialize_assignRefs: (ctx: SerializationContext, path: string): void => {
+      const ref: Ref = RefHandler.createRef(path, this.$getEClass())
+      ctx.put(this, ref)
+      for(let child of this.$treeChildren) {
+        child.assignRefs(ctx, path)
+      }
+    },
+
+    deserializeChildren: <J extends JsonOf<this>>(
+        context: Deserializer,
+        parent: Ref,
+        json: J
+    ): void => {
+      this.$treeChildren.forEach(child => {
+        child.fromJson(parent.$ref, context, json);
+      });
+    },
+
+    deserializeAttributes: <J extends JsonOf<this>>(jsonTyped: J): void => {
+      const json: any = jsonTyped as any;
+      const ctor = this.constructor as any;
+      const attributes = getAllAttributes(ctor);
+      attributes.forEach((options, key) => {
+        if (json[key] !== undefined) {
+          (this as any)[key] = json[key];
+        } else if (options?.default !== undefined) {
+          (this as any)[key] = options.default;
+        }
+      });
+    },
+
+    deserializeOtherReferences: <J extends JsonOf<this>>(
+        context: Deserializer,
+        jsonTyped: J
+    ): void => {
+      const json = jsonTyped as any;
+
+      for (const container of this.$otherReferences) {
+        let jsonElem: Ref[] | Ref | undefined = json[container.referenceName];
+        if (jsonElem != undefined) {
+          const refArray = Array.isArray(jsonElem) ? jsonElem : [jsonElem];
+          refArray.map((ref: Ref) => {
+            container.add(context.get(ref.$ref));
+          });
+        }
+      }
+
+      for (const container of this.$treeChildren) {
+        container.createRefsOnChildren(context, json);
+      }
+    }
+  };
+
+
+  // ****************** inverse handling (called by link containers) **********************
 
   private [GET_CONTAINER]<
       T extends Referencable<any>
@@ -226,4 +287,31 @@ export abstract class Referencable<
     }
   }
 
+}
+
+
+export interface ReferenceApi<T extends Referencable<any>> {
+
+  // ****************** inverse handling (called by link containers) **********************
+  addToReference: <U extends Referencable<any>>(name: string, item: U) => boolean;
+  removeFromReference: <U extends Referencable<any>>(
+      name: string,
+      item: U,
+      mode?: DeletionMode
+  ) => boolean;
+
+  //************** Serialization *************************
+  serialize_assignRefs: (ctx: SerializationContext, path: string) => void;
+
+  //****************** Deserialization ************************
+  deserializeAttributes: <J extends JsonOf<T>>(json: J) => void;
+  deserializeChildren: <J extends JsonOf<T>>(
+      context: Deserializer,
+      parent: Ref,
+      json: J
+  ) => void;
+  deserializeOtherReferences: <J extends JsonOf<T>>(
+      context: Deserializer,
+      json: J
+  ) => void;
 }
