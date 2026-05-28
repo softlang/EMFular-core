@@ -6,6 +6,7 @@ import {ListUpdater} from "../../../../utils/list-updater";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
+import {ADD_TO_REFERENCE, REMOVE_FROM_REFERENCE} from "../../referencable-symbols";
 
 export class ReLinkListContainer<
     T extends Referencable<any>,
@@ -22,7 +23,7 @@ implements ReLinkContainer<T, P> {
         let res = ListUpdater.addToListIfMissing(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
-                return item.addToReferencableContainer(this.inverseName, this._parent)
+                return item[ADD_TO_REFERENCE](this.inverseName, this._parent)
             }
             return true;
         } else {
@@ -38,7 +39,7 @@ implements ReLinkContainer<T, P> {
         const res =  ListUpdater.removeFromList(item, this._instance)
         if (res) {
             if(this.inverseName !== undefined) {
-                item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
+                item[REMOVE_FROM_REFERENCE](this.inverseName, this._parent, mode)
             }
         }
         return res; //todo behaviour of flag different to add??
@@ -51,7 +52,7 @@ implements ReLinkContainer<T, P> {
     removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
             for (const child of [...this._instance]) {
-                child.removeFromReferencableContainer(this.inverseName, item, mode)
+                child[REMOVE_FROM_REFERENCE](this.inverseName, item, mode)
             }
             return true; // todo - refine?
         }
