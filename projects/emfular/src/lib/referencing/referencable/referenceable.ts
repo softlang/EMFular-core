@@ -46,16 +46,7 @@ export abstract class Referencable<
     this[INIT_REFERENCES]()
   }
 
-  private [INIT_REFERENCES]() {
-    const proto = Object.getPrototypeOf(this);
-    const inits = proto.__referenceInitializers;
-    if (inits) {
-      for (const init of inits) {
-        init.call(this);
-      }
-    }
-  }
-
+  // ************* public modeling API ********************
   set $parent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this._$parent) {
       this._$parent.remove(this)
@@ -75,14 +66,6 @@ export abstract class Referencable<
     return ModelRegistry.getEClassForInstance(this)
   }
 
-  [SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
-    const ref: Ref = RefHandler.createRef(path, this.$getEClass())
-    ctx.put(this, ref)
-    for(let child of this.$treeChildren) {
-      child.assignRefs(ctx, path)
-    }
-  }
-
   $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
@@ -95,33 +78,7 @@ export abstract class Referencable<
     })
   }
 
-  private [GET_CONTAINER]<T extends Referencable<any>>(refName: string): ReContainer<T, Parent> {
-    let proto: any = Object.getPrototypeOf(this);
-    let meta: ReferenceMeta | undefined;
-
-    // Walk up the prototype chain until we find the reference
-    while (proto) {
-      const classMeta = proto.$classMeta;
-      if (classMeta && classMeta.references && refName in classMeta.references) {
-        meta = classMeta.references[refName];
-        break;
-      }
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    if (!meta) {
-      throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
-    }
-    const key: symbol = meta.containerKey!;
-    const container = (this as any)[key];
-
-    if (!container) {
-      throw new Error(`Container for reference '${refName}' not initialized`);
-    }
-
-    return container as ReContainer<T, Parent>;
-  }
-
+  // ****************** inverse handling (called by link containers) **********************
   public addToReferencableContainer<T extends Referencable<any>>(name: string, item: T): boolean {
     return this[GET_CONTAINER]<T>(name).add(item)
   }
@@ -138,6 +95,34 @@ export abstract class Referencable<
     return result
   }
 
+  private [GET_CONTAINER]<
+      T extends Referencable<any>
+  >(refName: string): ReContainer<T, Parent> {
+    let proto: any = Object.getPrototypeOf(this);
+    let meta: ReferenceMeta | undefined;
+
+    // Walk up the prototype chain until we find the reference
+    while (proto) {
+      const classMeta = proto.$classMeta;
+      if (classMeta && classMeta.references && refName in classMeta.references) {
+        meta = classMeta.references[refName];
+        break;
+      }
+      proto = Object.getPrototypeOf(proto);
+    }
+    if (!meta) {
+      throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
+    }
+    const key: symbol = meta.containerKey!;
+    const container = (this as any)[key];
+    if (!container) {
+      throw new Error(`Container for reference '${refName}' not initialized`);
+    }
+    return container as ReContainer<T, Parent>;
+  }
+
+  //************** Serialization *************************
+
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {
     const ctx = ctxOPt ? ctxOPt : new SerializationContext(this)
     //todo: this creates one assuming that the current element is root, once we have all parent pointers we can walk up first and then start
@@ -147,21 +132,6 @@ export abstract class Referencable<
     this[REFERENCES_TO_JSON](json, ctx);
 
     return json as JsonOf<this>;
-  }
-
-
-  private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
-    const relevantReferences = [
-      ...this.$treeChildren,
-      ...this.$otherReferences
-    ];
-
-    relevantReferences.forEach(child => {
-      const jsc = child.toJson(ctx)
-      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
-        json[child.referenceName] = jsc
-      }
-    })
   }
 
   private [ATTRIBUTES_TO_JSON](json: any) {
@@ -181,6 +151,30 @@ export abstract class Referencable<
       }
     })
   }
+
+  private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
+    const relevantReferences = [
+      ...this.$treeChildren,
+      ...this.$otherReferences
+    ];
+
+    relevantReferences.forEach(child => {
+      const jsc = child.toJson(ctx)
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
+    })
+  }
+
+  [SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
+    const ref: Ref = RefHandler.createRef(path, this.$getEClass())
+    ctx.put(this, ref)
+    for(let child of this.$treeChildren) {
+      child.assignRefs(ctx, path)
+    }
+  }
+
+  //****************** Deserialization ************************
 
   createChildren<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {
     this.$treeChildren.forEach(child => {
@@ -214,6 +208,17 @@ export abstract class Referencable<
     }
     for (let container of this.$treeChildren) {
       container.createRefsOnChildren(context, json)
+    }
+  }
+
+  // ************* container construction *******************
+  private [INIT_REFERENCES]() {
+    const proto = Object.getPrototypeOf(this);
+    const inits = proto.__referenceInitializers;
+    if (inits) {
+      for (const init of inits) {
+        init.call(this);
+      }
     }
   }
 
