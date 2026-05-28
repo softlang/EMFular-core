@@ -12,7 +12,12 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {REFERENCE__ADD_TO_REFERENCE, REFERENCE__REMOVE_FROM_REFERENCE, REFERENCE__SERIALIZE_ASSIGN_REFS} from "./referencable-symbols";
+import {
+  REFERENCE__ADD_TO_REFERENCE, REFERENCE__DESERIALIZE_ATTRIBUTES,
+  REFERENCE__DESERIALIZE_CHILDREN, REFERENCE__DESERIALIZE_OTHER_REFERENCES,
+  REFERENCE__REMOVE_FROM_REFERENCE,
+  REFERENCE__SERIALIZE_ASSIGN_REFS
+} from "./referencable-symbols";
 
 //private, no export
 const INIT_REFERENCES = Symbol("initReferences");
@@ -175,14 +180,13 @@ export abstract class Referencable<
   }
 
   //****************** Deserialization ************************
-
-  createChildren<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {
+  [REFERENCE__DESERIALIZE_CHILDREN]<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {
     this.$treeChildren.forEach(child => {
       child.fromJson(parent.$ref, context, json)
     })
   }
 
-  attributesFromJson<J extends JsonOf<this>>(jsonTyped: J) {
+  [REFERENCE__DESERIALIZE_ATTRIBUTES]<J extends JsonOf<this>>(jsonTyped: J) {
     const json: any = jsonTyped as any
     const ctor = this.constructor as any;
     const attributes = getAllAttributes(ctor);
@@ -195,7 +199,7 @@ export abstract class Referencable<
     })
   }
 
-  public deserializeLinks<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
+  public [REFERENCE__DESERIALIZE_OTHER_REFERENCES]<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
     const json = jsonTyped as any
     for (let container of this.$otherReferences) {
       let jsonElem: Ref[] |Ref | undefined = json[container.referenceName]

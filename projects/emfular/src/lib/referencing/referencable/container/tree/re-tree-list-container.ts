@@ -8,7 +8,7 @@ import {ListUpdater} from "../../../../utils/list-updater";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {REFERENCE__SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
+import {REFERENCE__DESERIALIZE_OTHER_REFERENCES, REFERENCE__SERIALIZE_ASSIGN_REFS} from "../../referencable-symbols";
 
 export class ReTreeListContainer<T extends Referencable<any>>
     extends ReListContainer<T, T["$ParentType"]>
@@ -92,7 +92,7 @@ implements ReTreeChildrenContainer<T> {
         let myJson: JsonOf<T>[] = json[this.referenceName];
         if(myJson && myJson.length == this._instance.length) {
             myJson.forEach((ref, index) => {
-                this._instance[index].deserializeLinks(context, ref)
+                this._instance[index][REFERENCE__DESERIALIZE_OTHER_REFERENCES](context, ref)
             })
         }
     }
