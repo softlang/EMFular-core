@@ -13,9 +13,8 @@ import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
 import {
-  REFERENCE__ADD_TO_REFERENCE, REFERENCE__DESERIALIZE_ATTRIBUTES,
+  REFERENCE__DESERIALIZE_ATTRIBUTES,
   REFERENCE__DESERIALIZE_CHILDREN, REFERENCE__DESERIALIZE_OTHER_REFERENCES,
-  REFERENCE__REMOVE_FROM_REFERENCE,
   REFERENCE__SERIALIZE_ASSIGN_REFS, REFERENCE_INTERNAL_API
 } from "./referencable-symbols";
 
@@ -86,7 +85,6 @@ export abstract class Referencable<
   public [REFERENCE_INTERNAL_API]: ReferenceApi<this> = {
 
     // ****************** inverse handling (called by link containers) **********************
-
     addToReference: <U extends Referencable<any>>(name: string, item: U): boolean => {
       return this[GET_CONTAINER]<U>(name).add(item)
     },

@@ -5,11 +5,7 @@ import {ReSingleInterface} from "../re-single-interface";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
-import {
-    REFERENCE__ADD_TO_REFERENCE,
-    REFERENCE__REMOVE_FROM_REFERENCE,
-    REFERENCE_INTERNAL_API
-} from "../../referencable-symbols";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 export class ReTreeParentContainer<
     T extends Referencable<any>,
