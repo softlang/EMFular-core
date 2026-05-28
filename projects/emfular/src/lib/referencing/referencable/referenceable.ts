@@ -12,6 +12,7 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
+import {SERIALIZE_ASSIGN_REFS} from "./referencable-symbols";
 
 //private, no export
 const INIT_REFERENCES = Symbol("initReferences");
@@ -74,7 +75,7 @@ export abstract class Referencable<
     return ModelRegistry.getEClassForInstance(this)
   }
 
-  assignRefs(ctx: SerializationContext, path: string) {
+  [SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
     const ref: Ref = RefHandler.createRef(path, this.$getEClass())
     ctx.put(this, ref)
     for(let child of this.$treeChildren) {

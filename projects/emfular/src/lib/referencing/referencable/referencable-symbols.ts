@@ -1,0 +1,1 @@
+export const SERIALIZE_ASSIGN_REFS = Symbol("serialize_assignRefs")
