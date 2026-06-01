@@ -19,7 +19,7 @@ implements ReTreeChildrenContainer<T> {
     constructor(parent: T["$ParentType"], name: string,  refMeta: ReferenceMeta, eClass?: string) {
         super(parent, name, refMeta);
         this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+        this._parent[REFERENCE_INTERNAL_API].treeChildren().push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {

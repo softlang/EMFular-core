@@ -15,9 +15,12 @@ import {DeletionMode} from "../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
 
 //private, no export
-const INIT_REFERENCES = Symbol("initReferences");
+const TREE_CHILDREN = Symbol("treeChildren");
+const LINKS = Symbol("links");
+
 const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
+const INIT_REFERENCES = Symbol("initReferences");
 
 
 /** base class for CORE models.
@@ -36,8 +39,8 @@ export abstract class Referencable<
 
   private _$parent?: ReTreeChildrenContainer<this>;
 
-  private $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  private $otherReferences: ReLinkContainer<any,Parent>[] = [];
+  private [TREE_CHILDREN]: ReTreeChildrenContainer<any>[] = [];
+  private [LINKS]: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -45,17 +48,15 @@ export abstract class Referencable<
   }
 
   // ************* public modeling API ********************
+  get $parent(): ReTreeChildrenContainer<this> | undefined {
+    return this._$parent
+  }
   set $parent(parent: ReTreeChildrenContainer<this> | undefined) {
     if(this._$parent) {
       this._$parent.remove(this)
     }
     this._$parent = parent;
   }
-
-  get $parent(): ReTreeChildrenContainer<this> | undefined {
-    return this._$parent
-  }
-
   $getParentReferencable(): Parent | undefined {
     return this._$parent?._parent
   }
@@ -68,10 +69,10 @@ export abstract class Referencable<
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
     this._$parent?.remove(this, DeletionMode.RELAXED)
-    this.$otherReferences.forEach(refContainer => {
+    this[LINKS].forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
     })
-    this.$treeChildren.forEach(child => {
+    this[TREE_CHILDREN].forEach(child => {
       child.delete(mode)
     })
   }
@@ -111,8 +112,8 @@ export abstract class Referencable<
 
   private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
     const relevantReferences = [
-      ...this.$treeChildren,
-      ...this.$otherReferences
+      ...this[TREE_CHILDREN],
+      ...this[LINKS]
     ];
 
     relevantReferences.forEach(child => {
@@ -130,7 +131,7 @@ export abstract class Referencable<
     serialize_assignRefs: (ctx: SerializationContext, path: string): void => {
       const ref: Ref = RefHandler.createRef(path, this.$getEClass())
       ctx.put(this, ref)
-      for(let child of this.$treeChildren) {
+      for(let child of this[TREE_CHILDREN]) {
         child.assignRefs(ctx, path)
       }
     },
@@ -154,7 +155,7 @@ export abstract class Referencable<
         parent: Ref,
         json: J
     ): void => {
-      this.$treeChildren.forEach(child => {
+      this[TREE_CHILDREN].forEach(child => {
         child.fromJson(parent.$ref, context, json);
       });
     },
@@ -164,7 +165,7 @@ export abstract class Referencable<
         jsonTyped: J
     ): void => {
       const json = jsonTyped as any;
-      for (const container of this.$otherReferences) {
+      for (const container of this[LINKS]) {
         let jsonElem: Ref[] | Ref | undefined = json[container.referenceName];
         if (jsonElem != undefined) {
           const refArray = Array.isArray(jsonElem) ? jsonElem : [jsonElem];
@@ -173,7 +174,7 @@ export abstract class Referencable<
           });
         }
       }
-      for (const container of this.$treeChildren) {
+      for (const container of this[TREE_CHILDREN]) {
         container.createRefsOnChildren(context, json);
       }
     },
@@ -195,13 +196,8 @@ export abstract class Referencable<
       return result
     },
 
-    treeChildren: (): ReTreeChildrenContainer<any>[] => {
-      return this.$treeChildren
-    },
-
-    otherLinks: (): ReLinkContainer<any,Parent>[] => {
-      return this.$otherReferences
-    },
+    treeChildren: (): ReTreeChildrenContainer<any>[] => this[TREE_CHILDREN],
+    otherLinks: (): ReLinkContainer<any,Parent>[] => this[LINKS],
 
 
   getContainer: <
