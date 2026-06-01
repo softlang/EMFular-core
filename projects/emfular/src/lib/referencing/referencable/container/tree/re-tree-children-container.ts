@@ -5,7 +5,8 @@ import { ReContainer } from "../re-container";
 import {JsonOf} from "../../../../serialization/json-deserializable";
 
 export interface ReTreeChildrenContainer<
-    T extends Referencable<any>,
+    T extends Referencable<P>,
+    P extends Referencable<any> =T["$ParentType"]
 > extends ReContainer<T, T["$ParentType"]> {
 
     // serialization
