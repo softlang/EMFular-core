@@ -32,9 +32,21 @@ export class ReDerivedSingleContainer<
     override remove(_:T) { return false; }
     override delete() {}
 
-    checkDerivationConstraints(): string | undefined {
+    checkDerivationMethodExistence(): string | undefined {
         if (!this.resolver.canResolve(this._parent)) {
             return `Derivation violation: no derivation function found for reference '${this.referenceName}'.`;
+        }
+        return undefined;
+    }
+
+    checkDerivationMethodImpl(): string | undefined {
+        try {
+            this.get()
+        } catch (e) {
+            if (e instanceof Error) {
+                return e.message;
+            }
+            return String(e);
         }
         return undefined;
     }

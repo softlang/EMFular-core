@@ -229,11 +229,22 @@ export abstract class Referencable<
       const container = (this as any)[symbol];
       if (ref.derivingMethod !== undefined) {
         const derivedContainer = container as ReContainer<any, any> & {
-          checkDerivationConstraints(): string | undefined;
+          checkDerivationMethodExistence(): string | undefined;
+          checkDerivationMethodImpl(): string | undefined;
         }
-        const derivationViolation = derivedContainer.checkDerivationConstraints();
-        if (derivationViolation !== undefined) {
-          this.$violations.set(derivedContainer.referenceName, derivationViolation);
+        const methodExistenceViolation = derivedContainer.checkDerivationMethodExistence();
+        if (methodExistenceViolation !== undefined) {
+          this.$violations.set(derivedContainer.referenceName, methodExistenceViolation);
+        } else {
+          const implementationViolation = derivedContainer.checkDerivationMethodImpl();
+          if (implementationViolation !== undefined) {
+            this.$violations.set(derivedContainer.referenceName, implementationViolation);
+          } else {
+            const cardinalityViolation = derivedContainer.checkCardinalityConstraints();
+            if (cardinalityViolation !== undefined) {
+              this.$violations.set(derivedContainer.referenceName, cardinalityViolation);
+            }
+          }
         }
       }
       if (ref.isParent === true) {
