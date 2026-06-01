@@ -77,10 +77,57 @@ export abstract class Referencable<
     })
   }
 
+  //************** Serialization *************************
+  toJson(ctxOPt?: SerializationContext): JsonOf<this> {
+    const ctx = ctxOPt ?? new SerializationContext()
+    if(!ctxOPt) {//initialize new context
+      this[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.rootPath)
+      //todo: this fills ctx assuming that the current element is the root, once we have all parent pointers we can walk up first and then start
+    }
+    const json: any = {};
+    json["eClass"] = this.$getEClass(); //todo not always necessary
+    this[ATTRIBUTES_TO_JSON](json);
+    this[REFERENCES_TO_JSON](json, ctx);
+
+    return json as JsonOf<this>;
+  }
+
+  private [ATTRIBUTES_TO_JSON](json: any) {
+    const ctor = this.constructor as any;
+    const attributes = getAllAttributes(ctor);
+    attributes.forEach((options: AttributeOptions, key) => {
+      if (this.hasOwnProperty(key)) { // skip sibling attributes that are on prototype
+        let value: any = (this as any)[key];
+        //suppress defaults here:
+        if(value == undefined || value == "" || value ==false || value == options.default) return;
+        // use right name (jsonName)
+        if(options.jsonName) {
+          json[options.jsonName] = value;
+        } else {
+          json[key] = value;
+        }
+      }
+    })
+  }
+
+  private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
+    const relevantReferences = [
+      ...this.$treeChildren,
+      ...this.$otherReferences
+    ];
+
+    relevantReferences.forEach(child => {
+      const jsc = child.toJson(ctx)
+      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
+        json[child.referenceName] = jsc
+      }
+    })
+  }
+
+
   public [REFERENCE_INTERNAL_API]: ReferenceApi<this, Parent> = {
 
     //************** Serialization *************************
-
     serialize_assignRefs: (ctx: SerializationContext, path: string): void => {
       const ref: Ref = RefHandler.createRef(path, this.$getEClass())
       ctx.put(this, ref)
@@ -177,54 +224,6 @@ export abstract class Referencable<
 
   };
 
-
-  //************** Serialization *************************
-
-  toJson(ctxOPt?: SerializationContext): JsonOf<this> {
-    const ctx = ctxOPt ?? new SerializationContext()
-    if(!ctxOPt) {//initialize new context
-      this[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.rootPath)
-      //todo: this fills ctx assuming that the current element is the root, once we have all parent pointers we can walk up first and then start
-    }
-    const json: any = {};
-    json["eClass"] = this.$getEClass(); //todo not always necessary
-    this[ATTRIBUTES_TO_JSON](json);
-    this[REFERENCES_TO_JSON](json, ctx);
-
-    return json as JsonOf<this>;
-  }
-
-  private [ATTRIBUTES_TO_JSON](json: any) {
-    const ctor = this.constructor as any;
-    const attributes = getAllAttributes(ctor);
-    attributes.forEach((options: AttributeOptions, key) => {
-      if (this.hasOwnProperty(key)) { // skip sibling attributes that are on prototype
-        let value: any = (this as any)[key];
-        //suppress defaults here:
-        if(value == undefined || value == "" || value ==false || value == options.default) return;
-        // use right name (jsonName)
-        if(options.jsonName) {
-          json[options.jsonName] = value;
-        } else {
-          json[key] = value;
-        }
-      }
-    })
-  }
-
-  private [REFERENCES_TO_JSON](json: any, ctx: SerializationContext) {
-    const relevantReferences = [
-      ...this.$treeChildren,
-      ...this.$otherReferences
-    ];
-
-    relevantReferences.forEach(child => {
-      const jsc = child.toJson(ctx)
-      if (jsc != undefined && !(Array.isArray(jsc) && jsc.length == 0)) {
-        json[child.referenceName] = jsc
-      }
-    })
-  }
 
   // ************* container construction *******************
   private [INIT_REFERENCES]() {
