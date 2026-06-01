@@ -16,10 +16,10 @@ describe('ReContainersWithSingleChild tests', () => {
 
 
         expect(root[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
-        expect(root.$otherReferences.length).toBe(1)
+        expect(root[REFERENCE_INTERNAL_API].otherLinks().length).toBe(1)
 
         expect(child[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
-        expect(child.$otherReferences.length).toBe(1)
+        expect(child[REFERENCE_INTERNAL_API].otherLinks().length).toBe(1)
     })
 
     it('should manage parent pointers correctly', () => {
@@ -84,7 +84,6 @@ describe('ReContainersWithSingleChild tests', () => {
         //todo: must compile withoutcast for correct jsonOf:
         let ref: Ref|undefined = completeJson?.link as unknown as Ref
         expect(ref.eClass).toEqual(EClassesSingleChild.ReSingleChildExample)
-        const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child;
         const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
         expect(completeFromJson.name).toEqual(root.name)
         expect(completeFromJson.link).toEqual(completeFromJson.child)

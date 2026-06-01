@@ -114,13 +114,13 @@ describe('ReContainersWithListChild tests', () => {
 
     it("should register the containers correctly on the parent", () => {
         expect(r1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
-        expect(r1.$otherReferences.length).toBe(2)
+        expect(r1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(2)
 
         expect(r2_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(2)
-        expect(r2_1.$otherReferences.length).toBe(0)
+        expect(r2_1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(0)
 
         expect(r3_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
-        expect(r1.$otherReferences.length).toBe(2)
+        expect(r1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(2)
     })
 
     it('should allow swapping elements in a ModelList created via decorators', () => {

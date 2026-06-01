@@ -15,7 +15,7 @@ implements ReLinkContainer<T, P> {
 
     constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta);
-        this._parent.$otherReferences.push(this)
+        this._parent[REFERENCE_INTERNAL_API].otherLinks().push(this)
     }
 
     protected set(instance: T): void {

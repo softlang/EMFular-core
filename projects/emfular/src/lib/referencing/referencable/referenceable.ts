@@ -37,7 +37,7 @@ export abstract class Referencable<
   private _$parent?: ReTreeChildrenContainer<this>;
 
   private $treeChildren: ReTreeChildrenContainer<any>[] = [];
-  readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
+  private $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -199,7 +199,12 @@ export abstract class Referencable<
       return this.$treeChildren
     },
 
-    getContainer: <
+    otherLinks: (): ReLinkContainer<any,Parent>[] => {
+      return this.$otherReferences
+    },
+
+
+  getContainer: <
         U extends Referencable<any>
     >(refName: string): ReContainer<U, Parent> => {
       let proto: any = Object.getPrototypeOf(this);
@@ -263,6 +268,7 @@ export interface ReferenceApi<
 
   // *************** container accessors *******************
   treeChildren: () => ReTreeChildrenContainer<any>[];
+  otherLinks: () => ReLinkContainer<any,Parent>[];
   getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
 
   // ****************** inverse handling (called by link containers) **********************
