@@ -12,11 +12,7 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {
-  REFERENCE__DESERIALIZE_ATTRIBUTES,
-  REFERENCE__DESERIALIZE_CHILDREN, REFERENCE__DESERIALIZE_OTHER_REFERENCES,
-  REFERENCE__SERIALIZE_ASSIGN_REFS, REFERENCE_INTERNAL_API
-} from "./referencable-symbols";
+import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
 
 //private, no export
 const INIT_REFERENCES = Symbol("initReferences");
@@ -111,16 +107,7 @@ export abstract class Referencable<
       }
     },
 
-    deserializeChildren: <J extends JsonOf<this>>(
-        context: Deserializer,
-        parent: Ref,
-        json: J
-    ): void => {
-      this.$treeChildren.forEach(child => {
-        child.fromJson(parent.$ref, context, json);
-      });
-    },
-
+    //****************** Deserialization ************************
     deserializeAttributes: <J extends JsonOf<this>>(jsonTyped: J): void => {
       const json: any = jsonTyped as any;
       const ctor = this.constructor as any;
@@ -134,12 +121,21 @@ export abstract class Referencable<
       });
     },
 
+    deserializeChildren: <J extends JsonOf<this>>(
+        context: Deserializer,
+        parent: Ref,
+        json: J
+    ): void => {
+      this.$treeChildren.forEach(child => {
+        child.fromJson(parent.$ref, context, json);
+      });
+    },
+
     deserializeOtherReferences: <J extends JsonOf<this>>(
         context: Deserializer,
         jsonTyped: J
     ): void => {
       const json = jsonTyped as any;
-
       for (const container of this.$otherReferences) {
         let jsonElem: Ref[] | Ref | undefined = json[container.referenceName];
         if (jsonElem != undefined) {
@@ -149,7 +145,6 @@ export abstract class Referencable<
           });
         }
       }
-
       for (const container of this.$treeChildren) {
         container.createRefsOnChildren(context, json);
       }
@@ -228,50 +223,6 @@ export abstract class Referencable<
         json[child.referenceName] = jsc
       }
     })
-  }
-
-  [REFERENCE__SERIALIZE_ASSIGN_REFS](ctx: SerializationContext, path: string) {
-    const ref: Ref = RefHandler.createRef(path, this.$getEClass())
-    ctx.put(this, ref)
-    for(let child of this.$treeChildren) {
-      child.assignRefs(ctx, path)
-    }
-  }
-
-  //****************** Deserialization ************************
-  [REFERENCE__DESERIALIZE_CHILDREN]<J extends JsonOf<this>>(context: Deserializer, parent: Ref, json: J) {
-    this.$treeChildren.forEach(child => {
-      child.fromJson(parent.$ref, context, json)
-    })
-  }
-
-  [REFERENCE__DESERIALIZE_ATTRIBUTES]<J extends JsonOf<this>>(jsonTyped: J) {
-    const json: any = jsonTyped as any
-    const ctor = this.constructor as any;
-    const attributes = getAllAttributes(ctor);
-    attributes.forEach((options, key) => {
-      if (json[key] !== undefined) {
-        (this as any)[key] = json[key];
-      } else if (options?.default !== undefined) {
-        (this as any)[key] = options.default;
-      }
-    })
-  }
-
-  public [REFERENCE__DESERIALIZE_OTHER_REFERENCES]<J extends JsonOf<this>>(context: Deserializer, jsonTyped: J) {
-    const json = jsonTyped as any
-    for (let container of this.$otherReferences) {
-      let jsonElem: Ref[] |Ref | undefined = json[container.referenceName]
-      if (jsonElem != undefined) {
-        const refArray = Array.isArray(jsonElem)? jsonElem : [jsonElem]
-        refArray.map((ref: Ref) => {
-          container.add(context.get(ref.$ref));
-        })
-      }
-    }
-    for (let container of this.$treeChildren) {
-      container.createRefsOnChildren(context, json)
-    }
   }
 
   // ************* container construction *******************

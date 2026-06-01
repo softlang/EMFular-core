@@ -1,14 +1,14 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {Ref} from "../referencing/ref/ref";
 import {RefHandler} from "../referencing/ref/ref-handler";
-import {REFERENCE__SERIALIZE_ASSIGN_REFS} from "../referencing/referencable/referencable-symbols";
+import {REFERENCE_INTERNAL_API} from "../referencing/referencable/referencable-symbols";
 
 export class SerializationContext {
 
     private refs = new Map<Referencable<any>, Ref>();
 
     constructor(root: Referencable<any>) {
-        root[REFERENCE__SERIALIZE_ASSIGN_REFS](this, RefHandler.rootPath)
+        root[REFERENCE_INTERNAL_API].serialize_assignRefs(this, RefHandler.rootPath)
     }
 
     put<T extends Referencable<any>>(obj: T, ref: Ref) {
