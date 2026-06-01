@@ -32,7 +32,6 @@ export abstract class Referencable<
   declare readonly $ParentType: Parent;
 
   declare $classMeta: ClassMeta;
-  declare $modelUri: string; //now inside modelMeta
   declare $modelMeta: ModelDefinition;
 
   private _$parent?: ReTreeChildrenContainer<this>;

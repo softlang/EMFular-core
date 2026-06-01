@@ -36,7 +36,7 @@ export abstract class ReContainer<
 
     isAcceptableItem(item: Referencable<any>): boolean {
         const expectedType = this.meta.target
-        const targetEclass = this._parent.$modelUri+expectedType //eclass composition only works since we work inside one model
+        const targetEclass = this._parent.$modelMeta.uri+expectedType //eclass composition only works since we work inside one model
         let targetConstr = ModelRegistry.get(targetEclass)
         return item instanceof targetConstr;
     }

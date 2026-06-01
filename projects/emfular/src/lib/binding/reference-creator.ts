@@ -35,7 +35,7 @@ export function createContainer<
     }
 
     if (meta.containment) {
-        const defaultEClass = parent.$modelUri + meta.target;
+        const defaultEClass = parent.$modelMeta.uri + meta.target;
         if (isList) {
             return new ReTreeListContainer<T>(parent, propertyKey, meta, defaultEClass )
         } else {
