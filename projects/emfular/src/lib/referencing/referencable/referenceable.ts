@@ -16,7 +16,6 @@ import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
 
 //private, no export
 const INIT_REFERENCES = Symbol("initReferences");
-const GET_CONTAINER = Symbol("getContainer");
 const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
 
@@ -78,24 +77,7 @@ export abstract class Referencable<
     })
   }
 
-  public [REFERENCE_INTERNAL_API]: ReferenceApi<this> = {
-
-    // ****************** inverse handling (called by link containers) **********************
-    addToReference: <U extends Referencable<any>>(name: string, item: U): boolean => {
-      return this[GET_CONTAINER]<U>(name).add(item)
-    },
-
-    removeFromReference: <U extends Referencable<any>>(name: string, item: U, mode: DeletionMode = DeletionMode.RELAXED): boolean => {
-      let container = this[GET_CONTAINER]<U>(name)
-      let result = container.remove(item, mode)
-      if (result && mode === DeletionMode.CASCADE && container.isRequired) {
-        const instance = container.get()
-        if (instance === undefined || (Array.isArray(instance) && instance.length === 0)) {
-          container._parent.$destruct(mode)
-        }
-      }
-      return result
-    },
+  public [REFERENCE_INTERNAL_API]: ReferenceApi<this, Parent> = {
 
     //************** Serialization *************************
 
@@ -148,37 +130,53 @@ export abstract class Referencable<
       for (const container of this.$treeChildren) {
         container.createRefsOnChildren(context, json);
       }
+    },
+
+    // ****************** inverse handling (called by link containers) **********************
+    addToReference: <U extends Referencable<any>>(name: string, item: U): boolean => {
+      return this[REFERENCE_INTERNAL_API].getContainer<U>(name).add(item)
+    },
+
+    removeFromReference: <U extends Referencable<any>>(name: string, item: U, mode: DeletionMode = DeletionMode.RELAXED): boolean => {
+      let container = this[REFERENCE_INTERNAL_API].getContainer<U>(name)
+      let result = container.remove(item, mode)
+      if (result && mode === DeletionMode.CASCADE && container.isRequired) {
+        const instance = container.get()
+        if (instance === undefined || (Array.isArray(instance) && instance.length === 0)) {
+          container._parent.$destruct(mode)
+        }
+      }
+      return result
+    },
+
+    getContainer: <
+        U extends Referencable<any>
+    >(refName: string): ReContainer<U, Parent> => {
+      let proto: any = Object.getPrototypeOf(this);
+      let meta: ReferenceMeta | undefined;
+      // Walk up the prototype chain until we find the reference
+      while (proto) {
+        const classMeta = proto.$classMeta;
+        if (classMeta && classMeta.references && refName in classMeta.references) {
+          meta = classMeta.references[refName];
+          break;
+        }
+        proto = Object.getPrototypeOf(proto);
+      }
+      if (!meta) {
+        throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
+      }
+      const key: symbol = meta.containerKey!;
+      const container = (this as any)[key];
+      if (!container) {
+        throw new Error(`Container for reference '${refName}' not initialized`);
+      }
+      return container as ReContainer<U, Parent>;
     }
+
+
   };
 
-
-  // ****************** inverse handling (called by link containers) **********************
-
-  private [GET_CONTAINER]<
-      T extends Referencable<any>
-  >(refName: string): ReContainer<T, Parent> {
-    let proto: any = Object.getPrototypeOf(this);
-    let meta: ReferenceMeta | undefined;
-
-    // Walk up the prototype chain until we find the reference
-    while (proto) {
-      const classMeta = proto.$classMeta;
-      if (classMeta && classMeta.references && refName in classMeta.references) {
-        meta = classMeta.references[refName];
-        break;
-      }
-      proto = Object.getPrototypeOf(proto);
-    }
-    if (!meta) {
-      throw new Error(`Reference '${refName}' not found on class '${this.constructor.name}'`);
-    }
-    const key: symbol = meta.containerKey!;
-    const container = (this as any)[key];
-    if (!container) {
-      throw new Error(`Container for reference '${refName}' not initialized`);
-    }
-    return container as ReContainer<T, Parent>;
-  }
 
   //************** Serialization *************************
 
@@ -239,7 +237,24 @@ export abstract class Referencable<
 }
 
 
-export interface ReferenceApi<T extends Referencable<any>> {
+export interface ReferenceApi<
+    Self extends Referencable<Parent>,
+    Parent extends Referencable<any>
+> {
+  //************** Serialization *************************
+  serialize_assignRefs: (ctx: SerializationContext, path: string) => void;
+
+  //****************** Deserialization ************************
+  deserializeAttributes: <J extends JsonOf<Self>>(json: J) => void;
+  deserializeChildren: <J extends JsonOf<Self>>(
+      context: Deserializer,
+      parent: Ref,
+      json: J
+  ) => void;
+  deserializeOtherReferences: <J extends JsonOf<Self>>(
+      context: Deserializer,
+      json: J
+  ) => void;
 
   // ****************** inverse handling (called by link containers) **********************
   addToReference: <U extends Referencable<any>>(name: string, item: U) => boolean;
@@ -248,19 +263,6 @@ export interface ReferenceApi<T extends Referencable<any>> {
       item: U,
       mode?: DeletionMode
   ) => boolean;
+  getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
 
-  //************** Serialization *************************
-  serialize_assignRefs: (ctx: SerializationContext, path: string) => void;
-
-  //****************** Deserialization ************************
-  deserializeAttributes: <J extends JsonOf<T>>(json: J) => void;
-  deserializeChildren: <J extends JsonOf<T>>(
-      context: Deserializer,
-      parent: Ref,
-      json: J
-  ) => void;
-  deserializeOtherReferences: <J extends JsonOf<T>>(
-      context: Deserializer,
-      json: J
-  ) => void;
 }
