@@ -9,13 +9,15 @@ import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
-export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReSingleContainer<T, T["$ParentType"]>
+export class ReTreeSingleContainer<
+    T extends Referencable<P>,
+    P extends Referencable<any> =T["$ParentType"]
+> extends ReSingleContainer<T, P>
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["$ParentType"], referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
+    constructor(parent: P, referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
         super(parent, referenceName, refMeta);
         this.defaultEClass = eClass;
         this._parent[REFERENCE_INTERNAL_API].treeChildren().push(this)

@@ -10,8 +10,10 @@ import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
-export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReListContainer<T, T["$ParentType"]>
+export class ReTreeListContainer<
+    T extends Referencable<P>,
+    P extends Referencable<any> =T["$ParentType"]
+> extends ReListContainer<T, T["$ParentType"]>
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
