@@ -32,11 +32,10 @@ export abstract class Referencable<
 
   $gId: string; //graphical ID
 
-  declare readonly $ParentType: Parent;
-
   declare $classMeta: ClassMeta;
   declare $modelMeta: ModelDefinition;
 
+  declare readonly $ParentType: Parent;
   private _$parent?: ReTreeChildrenContainer<this>;
 
   private [TREE_CHILDREN]: ReTreeChildrenContainer<any>[] = [];

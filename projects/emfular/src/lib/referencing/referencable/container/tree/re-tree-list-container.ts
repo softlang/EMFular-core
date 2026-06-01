@@ -13,12 +13,12 @@ import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 export class ReTreeListContainer<
     T extends Referencable<P>,
     P extends Referencable<any> =T["$ParentType"]
-> extends ReListContainer<T, T["$ParentType"]>
+> extends ReListContainer<T, P>
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["$ParentType"], name: string,  refMeta: ReferenceMeta, eClass?: string) {
+    constructor(parent: P, name: string,  refMeta: ReferenceMeta, eClass?: string) {
         super(parent, name, refMeta);
         this.defaultEClass = eClass;
         this._parent[REFERENCE_INTERNAL_API].treeChildren().push(this)
