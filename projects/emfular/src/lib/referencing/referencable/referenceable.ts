@@ -36,7 +36,7 @@ export abstract class Referencable<
 
   private _$parent?: ReTreeChildrenContainer<this>;
 
-  readonly $treeChildren: ReTreeChildrenContainer<any>[] = [];
+  private $treeChildren: ReTreeChildrenContainer<any>[] = [];
   readonly $otherReferences: ReLinkContainer<any,Parent>[] = [];
 
   protected constructor() {
@@ -195,6 +195,10 @@ export abstract class Referencable<
       return result
     },
 
+    treeChildren: (): ReTreeChildrenContainer<any>[] => {
+      return this.$treeChildren
+    },
+
     getContainer: <
         U extends Referencable<any>
     >(refName: string): ReContainer<U, Parent> => {
@@ -257,6 +261,10 @@ export interface ReferenceApi<
       json: J
   ) => void;
 
+  // *************** container accessors *******************
+  treeChildren: () => ReTreeChildrenContainer<any>[];
+  getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
+
   // ****************** inverse handling (called by link containers) **********************
   addToReference: <U extends Referencable<any>>(name: string, item: U) => boolean;
   removeFromReference: <U extends Referencable<any>>(
@@ -264,6 +272,5 @@ export interface ReferenceApi<
       item: U,
       mode?: DeletionMode
   ) => boolean;
-  getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
 
 }

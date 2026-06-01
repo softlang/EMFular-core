@@ -9,6 +9,7 @@ import {
 } from "./referencables-with-children";
 import {RefHandler} from "../ref/ref-handler";
 import {Ref} from "../ref/ref";
+import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe('ReContainersWithListChild tests', () => {
 
@@ -112,13 +113,13 @@ describe('ReContainersWithListChild tests', () => {
     //todo deserialization test
 
     it("should register the containers correctly on the parent", () => {
-        expect(r1.$treeChildren.length).toBe(1)
+        expect(r1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
         expect(r1.$otherReferences.length).toBe(2)
 
-        expect(r2_1.$treeChildren.length).toBe(2)
+        expect(r2_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(2)
         expect(r2_1.$otherReferences.length).toBe(0)
 
-        expect(r3_1.$treeChildren.length).toBe(0)
+        expect(r3_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
         expect(r1.$otherReferences.length).toBe(2)
     })
 

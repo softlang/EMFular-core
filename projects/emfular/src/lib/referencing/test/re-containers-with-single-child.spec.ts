@@ -5,6 +5,7 @@ import {
 } from "./re-containers-with-single-child";
 import {Ref} from "../ref/ref";
 import {JsonOf} from "../../serialization/json-deserializable";
+import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe('ReContainersWithSingleChild tests', () => {
 
@@ -14,10 +15,10 @@ describe('ReContainersWithSingleChild tests', () => {
         const child: ReSingleChildExample = new ReSingleChildExample()
 
 
-        expect(root.$treeChildren.length).toBe(1)
+        expect(root[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
         expect(root.$otherReferences.length).toBe(1)
 
-        expect(child.$treeChildren.length).toBe(0)
+        expect(child[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
         expect(child.$otherReferences.length).toBe(1)
     })
 
