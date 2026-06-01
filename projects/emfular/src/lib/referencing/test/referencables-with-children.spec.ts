@@ -7,7 +7,6 @@ import {
     RootWithChildren,
     RootWithChildrenJson
 } from "./referencables-with-children";
-import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {Ref} from "../ref/ref";
 
@@ -79,8 +78,6 @@ describe('ReContainersWithListChild tests', () => {
         r1.child2.push(r2_1, r2_2)
         r2_1.child3.push(r3_1)
         r3_1.link1.push(r1)
-        const ctx = new SerializationContext(r1)
-        expect(ctx.get(r3_1).$ref).toEqual("//@child2.0/@child3.0")
         const r3json: ReChild3Json = {
             name: 'referencable3',
             eClass: EClasses.ReChild3,

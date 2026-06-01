@@ -181,8 +181,11 @@ export abstract class Referencable<
   //************** Serialization *************************
 
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {
-    const ctx = ctxOPt ? ctxOPt : new SerializationContext(this)
-    //todo: this creates one assuming that the current element is root, once we have all parent pointers we can walk up first and then start
+    const ctx = ctxOPt ?? new SerializationContext()
+    if(!ctxOPt) {//initialize new context
+      this[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.rootPath)
+      //todo: this fills ctx assuming that the current element is the root, once we have all parent pointers we can walk up first and then start
+    }
     const json: any = {};
     json["eClass"] = this.$getEClass(); //todo not always necessary
     this[ATTRIBUTES_TO_JSON](json);
