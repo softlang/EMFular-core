@@ -222,6 +222,16 @@ export abstract class Referencable<
         throw new Error(`Container for reference '${refName}' not initialized`);
       }
       return container as ReContainer<U, Parent>;
+    },
+    // parent
+    getParentContainer: (): ReTreeChildrenContainer<any> | undefined => {
+      return this._$parent;
+    },
+    setParentContainer: (parent: ReTreeChildrenContainer<this> | undefined): void => {
+      if (this._$parent) {
+        this._$parent.remove(this);
+      }
+      this._$parent = parent;
     }
 
 
@@ -265,6 +275,9 @@ export interface ReferenceApi<
   treeChildren: () => ReTreeChildrenContainer<any>[];
   otherLinks: () => ReLinkContainer<any,Parent>[];
   getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
+  // parent
+  getParentContainer: () => ReTreeChildrenContainer<any>|undefined,
+  setParentContainer: (parent: ReTreeChildrenContainer<any>|undefined) => void;
 
   // ****************** inverse handling (called by link containers) **********************
   addToReference: <U extends Referencable<any>>(name: string, item: U) => boolean;
