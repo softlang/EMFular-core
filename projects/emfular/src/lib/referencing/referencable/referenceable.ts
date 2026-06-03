@@ -17,6 +17,7 @@ import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
 //private, no export
 const TREE_CHILDREN = Symbol("treeChildren");
 const LINKS = Symbol("links");
+const PARENT = Symbol("parent");
 
 const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
@@ -36,7 +37,7 @@ export abstract class Referencable<
   declare $modelMeta: ModelDefinition;
 
   declare readonly $ParentType: Parent;
-  private _$parent?: ReTreeChildrenContainer<this>;
+  private [PARENT]?: ReTreeChildrenContainer<this>;
 
   private [TREE_CHILDREN]: ReTreeChildrenContainer<any>[] = [];
   private [LINKS]: ReLinkContainer<any,Parent>[] = [];
@@ -48,7 +49,7 @@ export abstract class Referencable<
 
   // ************* public modeling API ********************
   $getEParent(): Parent | undefined {
-    return this._$parent?._parent
+    return this[PARENT]?._parent
   }
 
   $getEClass(): string {
@@ -58,7 +59,7 @@ export abstract class Referencable<
   $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
-    this._$parent?.remove(this, DeletionMode.RELAXED)
+    this[PARENT]?.remove(this, DeletionMode.RELAXED)
     this[LINKS].forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
     })
@@ -216,13 +217,13 @@ export abstract class Referencable<
     },
     // parent
     getParentContainer: (): ReTreeChildrenContainer<this> | undefined => {
-      return this._$parent;
+      return this[PARENT];
     },
     setParentContainer: <S extends this>(parent: ReTreeChildrenContainer<S, Parent> | undefined): void => {
-      if (this._$parent) {
-        this._$parent.remove(this);
+      if (this[PARENT]) {
+        this[PARENT].remove(this);
       }
-      this._$parent = (parent as (ReTreeChildrenContainer<this, Parent> | undefined));
+      this[PARENT] = (parent as (ReTreeChildrenContainer<this, Parent> | undefined));
     }
 
   };
