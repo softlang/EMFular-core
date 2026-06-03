@@ -72,8 +72,15 @@ export abstract class Referencable<
   toJson(ctxOPt?: SerializationContext): JsonOf<this> {
     const ctx = ctxOPt ?? new SerializationContext()
     if(!ctxOPt) {//initialize new context
-      this[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.rootPath)
-      //todo: this fills ctx assuming that the current element is the root, once we have all parent pointers we can walk up first and then start
+      //1) first find the root
+      let root: Referencable<any>|undefined = this
+      let oldRoot: Referencable<any>|undefined = this
+      while (root !== undefined) {
+        oldRoot = root
+        root = root.$getEParent()
+      }
+      //2) then assign refs from the root down
+      oldRoot[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.rootPath)
     }
     const json: any = {};
     json["eClass"] = this.$getEClass(); //todo not always necessary
