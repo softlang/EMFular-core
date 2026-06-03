@@ -19,7 +19,7 @@ implements ReSingleInterface<P, T>,
     }
 
     get(): P | undefined {
-        return (this._parent.$getParentReferencable())
+        return (this._parent.$getEParent())
     }
 
     //todo rewrite without using item parent explicitly?

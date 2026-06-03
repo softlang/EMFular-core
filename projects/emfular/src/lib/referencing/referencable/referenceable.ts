@@ -47,7 +47,7 @@ export abstract class Referencable<
   }
 
   // ************* public modeling API ********************
-  $getParentReferencable(): Parent | undefined {
+  $getEParent(): Parent | undefined {
     return this._$parent?._parent
   }
 
