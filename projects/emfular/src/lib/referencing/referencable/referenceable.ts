@@ -13,6 +13,7 @@ import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
+import {Self} from "@angular/core";
 
 //private, no export
 const TREE_CHILDREN = Symbol("treeChildren");
@@ -224,7 +225,7 @@ export abstract class Referencable<
       return container as ReContainer<U, Parent>;
     },
     // parent
-    getParentContainer: (): ReTreeChildrenContainer<any> | undefined => {
+    getParentContainer: (): ReTreeChildrenContainer<this> | undefined => {
       return this._$parent;
     },
     setParentContainer: (parent: ReTreeChildrenContainer<this> | undefined): void => {
@@ -276,7 +277,7 @@ export interface ReferenceApi<
   otherLinks: () => ReLinkContainer<any,Parent>[];
   getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
   // parent
-  getParentContainer: () => ReTreeChildrenContainer<any>|undefined,
+  getParentContainer: () => ReTreeChildrenContainer<Self>|undefined,
   setParentContainer: (parent: ReTreeChildrenContainer<any>|undefined) => void;
 
   // ****************** inverse handling (called by link containers) **********************
