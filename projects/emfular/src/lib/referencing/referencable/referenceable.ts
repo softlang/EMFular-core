@@ -47,15 +47,6 @@ export abstract class Referencable<
   }
 
   // ************* public modeling API ********************
-  get $parent(): ReTreeChildrenContainer<this> | undefined {
-    return this._$parent
-  }
-  set $parent(parent: ReTreeChildrenContainer<this> | undefined) {
-    if(this._$parent) {
-      this._$parent.remove(this)
-    }
-    this._$parent = parent;
-  }
   $getParentReferencable(): Parent | undefined {
     return this._$parent?._parent
   }

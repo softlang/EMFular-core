@@ -39,11 +39,11 @@ implements ReTreeChildrenContainer<T> {
 
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: T): boolean {
-        const oldParent = item.$parent;
+        const oldParent = item[REFERENCE_INTERNAL_API].getParentContainer();
         if(oldParent == this) {
             return false;
         } else {
-            item.$parent = this;
+            item[REFERENCE_INTERNAL_API].setParentContainer(this);
             oldParent?.remove(item)
             return ListUpdater.addToListIfMissing(item, this._instance)
         }
@@ -61,7 +61,7 @@ implements ReTreeChildrenContainer<T> {
         }
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
-            item.$parent = undefined;
+            item[REFERENCE_INTERNAL_API].setParentContainer(undefined);
             return true
         }
         return false;

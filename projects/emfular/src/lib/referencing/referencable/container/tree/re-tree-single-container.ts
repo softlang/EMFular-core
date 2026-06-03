@@ -35,7 +35,7 @@ implements ReTreeChildrenContainer<T> {
         if(item == this._instance) {
             return false;
         } else {
-            item.$parent = this;
+            item[REFERENCE_INTERNAL_API].setParentContainer(this);
             this._instance = item;
             return true;
         }
@@ -45,7 +45,7 @@ implements ReTreeChildrenContainer<T> {
         if(this._instance == item) {
             if (mode === DeletionMode.RELAXED) {
                 this._instance = undefined;
-                item.$parent = undefined;
+                item[REFERENCE_INTERNAL_API].setParentContainer(undefined);
                 return true;
             }
             // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
@@ -60,7 +60,7 @@ implements ReTreeChildrenContainer<T> {
         if (mode === DeletionMode.CASCADE) {
             this._instance?.$destruct(mode)
         } else if (mode === DeletionMode.RELAXED) {
-            this._instance?.$parent?.remove(this._instance, mode)
+            this._instance?.[REFERENCE_INTERNAL_API].getParentContainer()?.remove(this._instance, mode)
         }
     }
 

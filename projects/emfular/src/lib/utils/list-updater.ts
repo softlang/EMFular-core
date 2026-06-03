@@ -1,5 +1,6 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import { DeletionMode } from "./deletion-mode";
+import {REFERENCE_INTERNAL_API} from "../referencing/referencable/referencable-symbols";
 
 export class ListUpdater {
 
@@ -31,7 +32,7 @@ export class ListUpdater {
       if (mode === DeletionMode.CASCADE) {
         list[0].$destruct(mode)
       } else if (mode === DeletionMode.RELAXED) {
-        list[0].$parent?.remove(list[0], mode)
+        list[0][REFERENCE_INTERNAL_API].getParentContainer()?.remove(list[0], mode)
       }
     }
   }
