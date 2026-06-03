@@ -67,10 +67,6 @@ implements ReTreeChildrenContainer<T> {
         return false;
     }
 
-    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
-        ListUpdater.destructAllFromChangingList(this._instance, mode)
-    }
-
     //creates one child level plus calls next createChildren
     fromJson(formerPrefix: string, context: Deserializer, json: any) {
         let myJson: JsonOf<T>[] = json[this.referenceName];
