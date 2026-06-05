@@ -4,6 +4,7 @@ import {createContainer} from "./reference-creator";
 import {ReSingleInterface} from "../referencing/referencable/container/re-single-interface";
 import {KindFromMeta, RefineReference} from "./reference-typing";
 import {ReListInterface} from "../referencing/referencable/container/re-list-interface";
+import {REFERENCE_INITIALIZERS} from "../referencing/referencable/referencable-symbols";
 
 export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
     meta: M
@@ -65,11 +66,10 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
 
         }
 
-        if (!prototype.__referenceInitializers) {
-            prototype.__referenceInitializers = [];
+        if (!prototype[REFERENCE_INITIALIZERS]) {
+            prototype[REFERENCE_INITIALIZERS] = [];
         }
-
-        (prototype.__referenceInitializers as Array<(this: any) => void>)
+        (prototype[REFERENCE_INITIALIZERS] as Array<(this: any) => void>)
             .push(function (this: any) {
                 this[symbol] = createContainer<T, any>(
                     this, meta, String(propertyKey)

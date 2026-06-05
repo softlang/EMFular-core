@@ -12,7 +12,7 @@ import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
-import {REFERENCE_INTERNAL_API} from "./referencable-symbols";
+import {REFERENCE_INITIALIZERS, REFERENCE_INTERNAL_API} from "./referencable-symbols";
 
 //private, no export
 const TREE_CHILDREN = Symbol("treeChildren");
@@ -238,7 +238,7 @@ export abstract class Referencable<
   // ************* container construction *******************
   private [INIT_REFERENCES]() {
     const proto = Object.getPrototypeOf(this);
-    const inits = proto.__referenceInitializers;
+    const inits = proto[REFERENCE_INITIALIZERS];
     if (inits) {
       for (const init of inits) {
         init.call(this);
