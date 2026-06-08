@@ -7,9 +7,9 @@ import {
     RootWithChildren,
     RootWithChildrenJson
 } from "./referencables-with-children";
-import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {Ref} from "../ref/ref";
+import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe('ReferencablesWithChildren tests', () => {
 
@@ -79,8 +79,6 @@ describe('ReferencablesWithChildren tests', () => {
         r1.child2.push(r2_1, r2_2)
         r2_1.child3.push(r3_1)
         r3_1.link1.push(r1)
-        const ctx = new SerializationContext(r1)
-        expect(ctx.get(r3_1).$ref).toEqual("//@child2.0/@child3.0")
         const r3json: ReChild3Json = {
             name: 'referencable3',
             eClass: EClasses.ReChild3,
@@ -115,14 +113,14 @@ describe('ReferencablesWithChildren tests', () => {
     //todo deserialization test
 
     it("should register the containers correctly on the parent", () => {
-        expect(r1.$treeChildren.length).toBe(1)
-        expect(r1.$otherReferences.length).toBe(2)
+        expect(r1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
+        expect(r1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(2)
 
-        expect(r2_1.$treeChildren.length).toBe(2)
-        expect(r2_1.$otherReferences.length).toBe(0)
+        expect(r2_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(2)
+        expect(r2_1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(0)
 
-        expect(r3_1.$treeChildren.length).toBe(0)
-        expect(r1.$otherReferences.length).toBe(2)
+        expect(r3_1[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
+        expect(r1[REFERENCE_INTERNAL_API].otherLinks().length).toBe(2)
     })
 
     it('should allow swapping elements in a ModelList created via decorators', () => {

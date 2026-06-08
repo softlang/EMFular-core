@@ -7,6 +7,7 @@ import {
   ReSingleChildExample2
 } from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 describe('ReLinkSingleContainer', () => {
   it('should create an instance', () => {
@@ -41,8 +42,8 @@ describe('ReLinkSingleContainer', () => {
     expect(elem1.link.value).toEqual(middle1);
     expect(elem2.link.value).toBeDefined();
     expect(elem2.link.value).toEqual(middle2);
-    expect(elem1.$otherReferences[0].remove(middle1)).toBeTrue();
-    expect(elem2.$otherReferences[0].remove(middle2)).toBeTrue();
+    expect(elem1[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle1)).toBeTrue();
+    expect(elem2[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle2)).toBeTrue();
     expect(tester1.child.value).toBeDefined();
     expect(tester1.child.value).toEqual(middle1);
     expect(tester2.child.value).toBeDefined();
@@ -112,8 +113,8 @@ describe('ReLinkSingleContainer', () => {
     expect(elem1.link.value).toEqual(middle1);
     expect(elem2.link.value).toBeDefined();
     expect(elem2.link.value).toEqual(middle2);
-    expect(elem1.$otherReferences[0].remove(middle1, DeletionMode.CASCADE)).toBeTrue();
-    expect(elem2.$otherReferences[0].remove(middle2, DeletionMode.CASCADE)).toBeTrue();
+    expect(elem1[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle1, DeletionMode.CASCADE)).toBeTrue();
+    expect(elem2[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle2, DeletionMode.CASCADE)).toBeTrue();
     expect(tester1.child.value).toBeDefined();
     expect(tester1.child.value).toEqual(middle1);
     expect(tester2.child.value).toBeUndefined();

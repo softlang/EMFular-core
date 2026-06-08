@@ -4,44 +4,42 @@ import {ReContainer} from "../re-container";
 import {ReSingleInterface} from "../re-single-interface";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../../../utils/deletion-mode";
 import {SingleRef} from "../../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
-export class ReTreeParentContainer<T extends Referencable<any>>
-    extends ReContainer<T["ParentType"],T>
-implements ReSingleInterface<T["ParentType"], T, "none">,
-    ReShallowInterface<T["ParentType"], T>{
+export class ReTreeParentContainer<
+    T extends Referencable<any>,
+    P extends Referencable<T> = T["$ParentType"]>
+    extends ReContainer<P,T>
+implements ReSingleInterface<P, T, "none">,
+    ReShallowInterface<P, T>{
 
-    private _proxy?: SingleRef<T, "none">;
+    private _proxy?: SingleRef<P, "none">;
 
     constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta); // referenceName is actually unused for this container type
     }
 
-    get(): T["ParentType"] | undefined {
-        return (this._parent.getParentReferencable() as T["ParentType"])
+    get(): P | undefined {
+        return (this._parent.$getEParent())
     }
 
-    get proxy(): SingleRef<T, "none"> {
+    get proxy(): SingleRef<P, "none"> {
         if (!this._proxy) {
-            this._proxy = createSingleRefProxy(this);
+            this._proxy = createSingleRefProxy<P,T,"none">(this);
         }
         return this._proxy;
     }
 
     //todo rewrite without using item parent explicitly?
-    addWithoutTypeCheck(item: T["ParentType"]): boolean {
-        let me: T = this._parent
-        const currentParentCont = this._parent.parent
-        if(currentParentCont != undefined) {
-            currentParentCont.remove(this._parent as T["ParentType"], DeletionMode.RELAXED)
-        }
-        return item.addToReferencableContainer(this.inverseName, me)
+    addWithoutTypeCheck(item: P): boolean {
+        return item[REFERENCE_INTERNAL_API].addToReference(this.inverseName!, this._parent)
     }
 
-    remove(item: T["ParentType"], mode: DeletionMode = DeletionMode.RELAXED): boolean {
-        return item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
+    remove(item: P, mode: DeletionMode = DeletionMode.RELAXED): boolean {
+        return item[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName!, this._parent, mode)
     }
 
     delete(): void {}

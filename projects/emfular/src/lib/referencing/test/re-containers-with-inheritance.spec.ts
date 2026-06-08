@@ -1,5 +1,6 @@
 import {A, B, InheritanceRoot, ModelInheritance} from "./re-containers-with-inheritance";
 import {ReContainer} from "../referencable/container/re-container";
+import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe("ReferencablesWithInheritance", () => {
 
@@ -29,7 +30,7 @@ describe("ReferencablesWithInheritance", () => {
         const root = new InheritanceRoot();
         const root2 = new InheritanceRoot();
         const a = new A();
-        let ref = root.$treeChildren[0] as ReContainer<any, any>;
+        const ref = root[REFERENCE_INTERNAL_API].treeChildren()[0] as ReContainer<any, any>;
         expect(root.children.length).toBe(0);
         const res = ref.add(root2)
         expect(res).toBeFalse()

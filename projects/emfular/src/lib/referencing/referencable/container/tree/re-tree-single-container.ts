@@ -7,21 +7,24 @@ import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
-export class ReTreeSingleContainer<T extends Referencable<any>>
-    extends ReSingleContainer<T, T["ParentType"], "tree">
+export class ReTreeSingleContainer<
+    T extends Referencable<P>,
+    P extends Referencable<any> =T["$ParentType"]
+> extends ReSingleContainer<T, P, "tree">
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
+    constructor(parent: P, referenceName: string,  refMeta: ReferenceMeta, eClass?: string) {
         super(parent, referenceName, refMeta);
         this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+        this._parent[REFERENCE_INTERNAL_API].treeChildren().push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
-        this._instance?.assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
+        this._instance?.[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.computePrefix(path, this.referenceName))
     }
 
     toJson(ctx: SerializationContext): JsonOf<T>|undefined {
@@ -32,7 +35,7 @@ implements ReTreeChildrenContainer<T> {
         if(item == this._instance) {
             return false;
         } else {
-            item.setParent(this);
+            item[REFERENCE_INTERNAL_API].setParentContainer(this);
             this._instance = item;
             return true;
         }
@@ -42,12 +45,12 @@ implements ReTreeChildrenContainer<T> {
         if(this._instance == item) {
             if (mode === DeletionMode.RELAXED) {
                 this._instance = undefined;
-                item.setParent(undefined);
+                item[REFERENCE_INTERNAL_API].setParentContainer(undefined);
                 return true;
             }
             // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
             // however this can be easily avoided since parent removal does not require any kind of following cascading deletes
-            this._instance?.destruct(mode);
+            this._instance?.$destruct(mode);
             return true;
         }
         return false;
@@ -55,9 +58,9 @@ implements ReTreeChildrenContainer<T> {
 
     delete(mode: DeletionMode = DeletionMode.RELAXED) {
         if (mode === DeletionMode.CASCADE) {
-            this._instance?.destruct(mode)
+            this._instance?.$destruct(mode)
         } else if (mode === DeletionMode.RELAXED) {
-            this._instance?.parent?.remove(this._instance, mode)
+            this._instance?.[REFERENCE_INTERNAL_API].getParentContainer()?.remove(this._instance, mode)
         }
     }
 
@@ -80,7 +83,7 @@ implements ReTreeChildrenContainer<T> {
     createRefsOnChildren(context: Deserializer, json: any) {
         let myJson: JsonOf<T> = json[this.referenceName];
         if(this._instance && myJson ) {
-            this._instance.deserializeLinks(context, myJson)
+            this._instance[REFERENCE_INTERNAL_API].deserializeOtherReferences(context, myJson)
         }
     }
 }

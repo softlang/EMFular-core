@@ -5,6 +5,7 @@ import {ReLinkContainer} from "./re-link-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import { DeletionMode } from "../../../../utils/deletion-mode";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 export class ReLinkSingleContainer<
     T extends Referencable<any>,
@@ -14,14 +15,14 @@ implements ReLinkContainer<T, P> {
 
     constructor(parent: P, referenceName: string, refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta);
-        this._parent.$otherReferences.push(this)
+        this._parent[REFERENCE_INTERNAL_API].otherLinks().push(this)
     }
 
     protected set(instance: T): void {
         if(this.inverseName !== undefined) {
-            this._instance?.removeFromReferencableContainer(this.inverseName, this._parent, DeletionMode.RELAXED)
+            this._instance?.[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, DeletionMode.RELAXED)
             this._instance = instance;
-            instance.addToReferencableContainer(this.inverseName, this._parent)
+            instance[REFERENCE_INTERNAL_API].addToReference(this.inverseName, this._parent)
         } else {
             this._instance = instance;
         }
@@ -40,7 +41,7 @@ implements ReLinkContainer<T, P> {
         if(this._instance == item) {
             this._instance = undefined;
             if (this.inverseName != undefined) {
-                item.removeFromReferencableContainer(this.inverseName, this._parent, mode)
+                item[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, mode)
             }
             return true;
         } else {
@@ -49,12 +50,12 @@ implements ReLinkContainer<T, P> {
     }
 
     override delete(mode: DeletionMode = DeletionMode.RELAXED) {
-        this._instance?.destruct(mode)
+        this._instance?.$destruct(mode)
     }
 
     removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
-            this._instance?.removeFromReferencableContainer(this.inverseName, item, mode)
+            this._instance?.[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, item, mode)
             return true; // todo refine?
         }
         return false;

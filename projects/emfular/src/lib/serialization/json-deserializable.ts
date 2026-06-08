@@ -38,7 +38,7 @@ type StartsWithPrivate<K> =
 
 type AttributeKeys<T> = {
     [K in keyof T]:
-    K extends "ParentType" ? never :
+    K extends "$ParentType" ? never :
         StartsWithPrivate<K> extends true ? never :
             T[K] extends Function ? never :
                     IsReferenceProp<T[K]> extends true ? never :

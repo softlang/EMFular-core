@@ -2,6 +2,7 @@ import { ReTreeSingleContainer } from './re-tree-single-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {ReContainersWithSingleChild, ReSingleChildExample} from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 describe('ReferencableTreeSingletonContainer', () => {
   it('should create an instance', () => {
@@ -23,7 +24,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink.value).toEqual(elem1);
     expect(elem1.link.value).toBeDefined();
     expect(elem1.link.value).toEqual(middle);
-    expect(tester.$treeChildren[0].remove(middle)).toBeTrue();
+    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)).toBeTrue();
     expect(tester.child.value).toBeUndefined();
     expect(middle.myParent.value).toBeUndefined();
     expect(middle.otherLink.value).toBeDefined();
@@ -46,7 +47,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink.value).toEqual(elem1);
     expect(elem1.link.value).toBeDefined();
     expect(elem1.link.value).toEqual(middle);
-    expect(tester.$treeChildren[0].remove(middle, DeletionMode.CASCADE)).toBeTrue();
+    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle, DeletionMode.CASCADE)).toBeTrue();
     expect(tester.child.value).toBeUndefined();
     expect(middle.myParent.value).toBeUndefined();
     expect(middle.otherLink.value).toBeUndefined();
