@@ -5,6 +5,7 @@ import {
 } from "./re-containers-with-single-child";
 import {Ref} from "../ref/ref";
 import {JsonOf} from "../../serialization/json-deserializable";
+import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe('ReContainersWithSingleChild tests', () => {
 
@@ -14,23 +15,23 @@ describe('ReContainersWithSingleChild tests', () => {
         const child: ReSingleChildExample = new ReSingleChildExample()
 
 
-        expect(root.$treeChildren.length).toBe(1)
-        expect(root.$otherReferences.length).toBe(1)
+        expect(root[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
+        expect(root[REFERENCE_INTERNAL_API].otherLinks().length).toBe(1)
 
-        expect(child.$treeChildren.length).toBe(0)
-        expect(child.$otherReferences.length).toBe(1)
+        expect(child[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)
+        expect(child[REFERENCE_INTERNAL_API].otherLinks().length).toBe(1)
     })
 
     it('should manage parent pointers correctly', () => {
         const root: ReContainersWithSingleChild = new ReContainersWithSingleChild();
-        expect(root.parent).toBeUndefined()
+        expect(root[REFERENCE_INTERNAL_API].getParentContainer()).toBeUndefined()
         expect(root.child).toBeUndefined()
         const child: ReSingleChildExample = new ReSingleChildExample();
         expect(child.myParent).toBeUndefined()
-        expect(child.parent).toBeUndefined()
+        expect(child[REFERENCE_INTERNAL_API].getParentContainer()).toBeUndefined()
         //set tree parent:
         child.myParent = root;
-        expect(child.parent).toBeDefined()
+        expect(child[REFERENCE_INTERNAL_API].getParentContainer()).toBeDefined()
         expect(child.myParent).toEqual(root);
         expect(root.child).toBe(child);
 
@@ -83,7 +84,6 @@ describe('ReContainersWithSingleChild tests', () => {
         //todo: must compile withoutcast for correct jsonOf:
         let ref: Ref|undefined = completeJson?.link as unknown as Ref
         expect(ref.eClass).toEqual(EClassesSingleChild.ReSingleChildExample)
-        const childJson: JsonOf<ReSingleChildExample> |undefined = completeJson.child;
         const completeFromJson : ReContainersWithSingleChild = ReContainersWithSingleChild.fromJSON(completeJson)
         expect(completeFromJson.name).toEqual(root.name)
         expect(completeFromJson.link).toEqual(completeFromJson.child)

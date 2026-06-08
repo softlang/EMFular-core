@@ -286,7 +286,7 @@ export function createListProxy<
                 const index = Number(prop);
                 const arr = container.get();
                 if (index < arr.length) {
-                    arr[index].destruct();
+                    arr[index].$destruct();
                     return true;
                 }
                 return false;

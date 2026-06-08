@@ -1,14 +1,9 @@
 import {Referencable} from "../referencing/referencable/referenceable";
 import {Ref} from "../referencing/ref/ref";
-import {RefHandler} from "../referencing/ref/ref-handler";
 
 export class SerializationContext {
 
     private refs = new Map<Referencable<any>, Ref>();
-
-    constructor(root: Referencable<any>) {
-        root.assignRefs(this, RefHandler.rootPath)
-    }
 
     put<T extends Referencable<any>>(obj: T, ref: Ref) {
         this.refs.set(obj, ref);

@@ -8,23 +8,26 @@ import {ListUpdater} from "../../../../utils/list-updater";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
-export class ReTreeListContainer<T extends Referencable<any>>
-    extends ReListContainer<T, T["ParentType"]>
+export class ReTreeListContainer<
+    T extends Referencable<P>,
+    P extends Referencable<any> =T["$ParentType"]
+> extends ReListContainer<T, P>
 implements ReTreeChildrenContainer<T> {
 
     readonly defaultEClass?: string;
 
-    constructor(parent: T["ParentType"], name: string,  refMeta: ReferenceMeta, eClass?: string) {
+    constructor(parent: P, name: string,  refMeta: ReferenceMeta, eClass?: string) {
         super(parent, name, refMeta);
         this.defaultEClass = eClass;
-        this._parent.$treeChildren.push(this)
+        this._parent[REFERENCE_INTERNAL_API].treeChildren().push(this)
     }
 
     assignRefs(ctx: SerializationContext, path: string) {
         const ownPath = RefHandler.computePrefix(path, this.referenceName)
         this._instance.map((elem, index) =>
-            elem.assignRefs(ctx, RefHandler.mixWithIndex(ownPath, index))
+            elem[REFERENCE_INTERNAL_API].serialize_assignRefs(ctx, RefHandler.mixWithIndex(ownPath, index))
         )
     }
 
@@ -36,11 +39,11 @@ implements ReTreeChildrenContainer<T> {
 
     //todo rewrite without using item parent explicitly?
     addWithoutTypeCheck(item: T): boolean {
-        const oldParent = item.parent;
+        const oldParent = item[REFERENCE_INTERNAL_API].getParentContainer();
         if(oldParent == this) {
             return false;
         } else {
-            item.setParent(this);
+            item[REFERENCE_INTERNAL_API].setParentContainer(this);
             oldParent?.remove(item)
             return ListUpdater.addToListIfMissing(item, this._instance)
         }
@@ -51,21 +54,17 @@ implements ReTreeChildrenContainer<T> {
             if (this._instance.indexOf(item) > -1) {
                 // if remove is called on an items parent the CASCADE mode would cause an infinite loop,
                 // however this can be easily avoided since parent removal does not require any kind of following cascading deletes
-                item.destruct(mode);
+                item.$destruct(mode);
                 return true;
             }
             return false;
         }
         let removed =  ListUpdater.removeFromList(item, this._instance)
         if(removed){
-            item.setParent(undefined);
+            item[REFERENCE_INTERNAL_API].setParentContainer(undefined);
             return true
         }
         return false;
-    }
-
-    override delete(mode: DeletionMode = DeletionMode.RELAXED) {
-        ListUpdater.destructAllFromChangingList(this._instance, mode)
     }
 
     //creates one child level plus calls next createChildren
@@ -91,7 +90,7 @@ implements ReTreeChildrenContainer<T> {
         let myJson: JsonOf<T>[] = json[this.referenceName];
         if(myJson && myJson.length == this._instance.length) {
             myJson.forEach((ref, index) => {
-                this._instance[index].deserializeLinks(context, ref)
+                this._instance[index][REFERENCE_INTERNAL_API].deserializeOtherReferences(context, ref)
             })
         }
     }

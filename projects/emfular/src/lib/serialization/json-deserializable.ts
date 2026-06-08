@@ -10,7 +10,7 @@ type IsReferencable<T> =
     T extends Referencable<any> ? true : false;
 
 type IsReferenceProp<T, K> =
-    K extends "ParentType" ? false :
+    K extends "$ParentType" ? false :
         T extends object
             ? T extends MetaAwareModelList<any, any> ? true
                 : T extends SingleRef<any, any>
@@ -37,7 +37,7 @@ type StartsWithPrivate<K> =
 
 type AttributeKeys<T> = {
     [K in keyof T]:
-    K extends "ParentType" ? never :
+    K extends "$ParentType" ? never :
         StartsWithPrivate<K> extends true ? never :
             T[K] extends Function ? never :
                     IsReferenceProp<T[K], K> extends true ? never :
