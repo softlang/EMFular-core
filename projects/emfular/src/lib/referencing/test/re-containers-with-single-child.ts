@@ -5,7 +5,7 @@ import {JsonOf} from "../../serialization/json-deserializable";
 import {Deserializer} from "../../serialization/deserializer";
 import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
-import {SingleRefFromMeta} from "../../binding/proxy/single-ref";
+import {SingleRef} from "../../binding/proxy/single-ref";
 
 
 export const ModelSingleChild = {
@@ -119,10 +119,10 @@ export enum EClassesSingleChild {
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
-    declare child: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.child.kind>;
+    declare child: SingleRef<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.child.kind>;
 
     @reference(ReContainersWithSingleChildRefs.link)
-    declare link: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.link.kind>;
+    declare link: SingleRef<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.link.kind>;
 
     @attribute()
     name: string = "re1";
@@ -144,10 +144,10 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 export class ReContainersWithSingleChild2 extends Referencable<any> {
 
     @reference(ReContainersWithSingleChild2Refs.child)
-    declare child: SingleRefFromMeta<ReSingleChildExample2, typeof ReContainersWithSingleChildRefs.child.kind>;
+    declare child: SingleRef<ReSingleChildExample2, typeof ReContainersWithSingleChildRefs.child.kind>;
 
     @reference(ReContainersWithSingleChild2Refs.link)
-    declare link: SingleRefFromMeta<ReSingleChildExample2 , typeof ReContainersWithSingleChildRefs.link.kind>;
+    declare link: SingleRef<ReSingleChildExample2 , typeof ReContainersWithSingleChildRefs.link.kind>;
 
     @attribute()
     name: string = "re1";
@@ -169,10 +169,10 @@ export class ReContainersWithSingleChild2 extends Referencable<any> {
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
 
     @reference(ReSingleChildExampleRefs.myParent)
-    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.myParent.kind>;
+    declare myParent: SingleRef<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.myParent.kind>;
 
     @reference(ReSingleChildExampleRefs.otherLink)
-    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.otherLink.kind>;
+    declare otherLink: SingleRef<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.otherLink.kind>;
 
     @attribute()
     myBool = true;
@@ -186,10 +186,10 @@ export class ReSingleChildExample extends Referencable<ReContainersWithSingleChi
 export class ReSingleChildExample2 extends Referencable<ReContainersWithSingleChild2> {
 
     @reference(ReSingleChildExample2Refs.myParent)
-    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.myParent.kind>;
+    declare myParent: SingleRef<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.myParent.kind>;
 
     @reference(ReSingleChildExample2Refs.otherLink)
-    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.otherLink.kind>;
+    declare otherLink: SingleRef<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.otherLink.kind>;
 
     @attribute()
     myBool = true;

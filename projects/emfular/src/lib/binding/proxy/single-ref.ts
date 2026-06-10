@@ -1,12 +1,5 @@
 import {DeletionMode} from "../../utils/deletion-mode";
-import {ReferenceMeta} from "../model-definition";
-import {Kind, KindFromMeta} from "./reference-kind";
-
-
-export type SingleRefFromMeta<
-    T,
-    R extends Kind
-> = SingleRef<T, R>
+import {Kind} from "./reference-kind";
 
 export interface SingleRef<T, K extends Kind> {
     readonly __kind?: K;   // phantom field
