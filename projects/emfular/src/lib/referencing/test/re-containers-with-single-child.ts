@@ -19,12 +19,14 @@ export const ModelSingleChild = {
                     target: "ReSingleChildExample",
                     containment: true,
                     opposite: "myParent",
-                    max: 1
+                    max: 1,
+                    kind: "tree"
                 },
                 link: {
                     target: "ReSingleChildExample",
                     opposite: "otherLink",
-                    max: 1
+                    max: 1,
+                    kind: "link"
                 }
             }
         },
@@ -34,12 +36,14 @@ export const ModelSingleChild = {
                     target: "ReSingleChildExample2",
                     containment: true,
                     opposite: "myParent",
-                    max: 1
+                    max: 1,
+                    kind: "tree"
                 },
                 link: {
                     target: "ReSingleChildExample2",
                     opposite: "otherLink",
-                    max: 1
+                    max: 1,
+                    kind: "link"
                 }
             }
         },
@@ -50,12 +54,14 @@ export const ModelSingleChild = {
                     target: "ReContainersWithSingleChild",
                     isParent: true,
                     opposite: "child",
-                    max: 1
+                    max: 1,
+                    kind: "none"
                 },
                 otherLink: {
                     target: "ReContainersWithSingleChild",
                     opposite: "link",
-                    max: 1
+                    max: 1,
+                    kind: "link"
                 }
             }
         },
@@ -66,13 +72,15 @@ export const ModelSingleChild = {
                     target: "ReContainersWithSingleChild2",
                     isParent: true,
                     opposite: "child",
-                    max: 1
+                    max: 1,
+                    kind: "none",
                 },
                 otherLink: {
                     target: "ReContainersWithSingleChild2",
                     opposite: "link",
                     min: 1,
-                    max: 1
+                    max: 1,
+                    kind: "link"
                 }
             }
         }
@@ -111,10 +119,10 @@ export enum EClassesSingleChild {
 export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
-    declare child: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.child>;
+    declare child: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.child.kind>;
 
     @reference(ReContainersWithSingleChildRefs.link)
-    declare link: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.link>;
+    declare link: SingleRefFromMeta<ReSingleChildExample, typeof ReContainersWithSingleChildRefs.link.kind>;
 
     @attribute()
     name: string = "re1";
@@ -136,10 +144,10 @@ export class ReContainersWithSingleChild extends Referencable<any> {
 export class ReContainersWithSingleChild2 extends Referencable<any> {
 
     @reference(ReContainersWithSingleChild2Refs.child)
-    declare child: SingleRefFromMeta<ReSingleChildExample2, typeof ReContainersWithSingleChildRefs.child>;
+    declare child: SingleRefFromMeta<ReSingleChildExample2, typeof ReContainersWithSingleChildRefs.child.kind>;
 
     @reference(ReContainersWithSingleChild2Refs.link)
-    declare link: SingleRefFromMeta<ReSingleChildExample2 , typeof ReContainersWithSingleChildRefs.link>;
+    declare link: SingleRefFromMeta<ReSingleChildExample2 , typeof ReContainersWithSingleChildRefs.link.kind>;
 
     @attribute()
     name: string = "re1";
@@ -161,10 +169,10 @@ export class ReContainersWithSingleChild2 extends Referencable<any> {
 export class ReSingleChildExample extends Referencable<ReContainersWithSingleChild> {
 
     @reference(ReSingleChildExampleRefs.myParent)
-    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.myParent>;
+    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.myParent.kind>;
 
     @reference(ReSingleChildExampleRefs.otherLink)
-    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.otherLink>;
+    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild, typeof ReSingleChildExampleRefs.otherLink.kind>;
 
     @attribute()
     myBool = true;
@@ -178,10 +186,10 @@ export class ReSingleChildExample extends Referencable<ReContainersWithSingleChi
 export class ReSingleChildExample2 extends Referencable<ReContainersWithSingleChild2> {
 
     @reference(ReSingleChildExample2Refs.myParent)
-    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.myParent>;
+    declare myParent: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.myParent.kind>;
 
     @reference(ReSingleChildExample2Refs.otherLink)
-    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.otherLink>;
+    declare otherLink: SingleRefFromMeta<ReContainersWithSingleChild2, typeof ReSingleChildExample2Refs.otherLink.kind>;
 
     @attribute()
     myBool = true;

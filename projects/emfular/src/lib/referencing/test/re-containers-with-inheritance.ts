@@ -16,7 +16,8 @@ export const ModelInheritance: ModelDefinition = {
                     target: "AbstractBase",
                     containment: true,
                     min: 0,
-                    max: -1
+                    max: -1,
+                    kind: "tree"
                 }
             }
         },
@@ -27,6 +28,7 @@ export const ModelInheritance: ModelDefinition = {
                     isParent: true,
                     max: 1,
                     opposite: 'children',
+                    kind: "link"
                 }
             }
         },
@@ -57,7 +59,7 @@ export class InheritanceRoot extends Referencable<any> {
     }
 
     @reference(ModelInheritanceRefs.children)
-    declare children: ModelListFromMeta<AbstractBase, typeof ModelInheritanceRefs.children>;
+    declare children: ModelListFromMeta<AbstractBase, typeof ModelInheritanceRefs.children.kind>;
 }
 
 @eClass(ModelInheritance, "AbstractBase")
@@ -68,7 +70,7 @@ export abstract class AbstractBase extends Referencable<InheritanceRoot> {
     }
 
     @reference(AbstractBaseRefs.myParent)
-    declare myParent: SingleRefFromMeta<InheritanceRoot, typeof AbstractBaseRefs.myParent>;
+    declare myParent: SingleRefFromMeta<InheritanceRoot, typeof AbstractBaseRefs.myParent.kind>;
 }
 
 @eClass(ModelInheritance, "A")

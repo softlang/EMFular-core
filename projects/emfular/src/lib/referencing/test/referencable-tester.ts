@@ -7,6 +7,7 @@ export const refTesterRef = {
         test: {
             target: "ReferencableTester",
             max: -1,
+            kind: "none"
         } satisfies ReferenceMeta
     }
 }

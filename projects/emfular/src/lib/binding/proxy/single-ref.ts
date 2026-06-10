@@ -5,8 +5,8 @@ import {Kind, KindFromMeta} from "./reference-kind";
 
 export type SingleRefFromMeta<
     T,
-    R extends ReferenceMeta
-> = SingleRef<T, KindFromMeta<R>>
+    R extends Kind
+> = SingleRef<T, R>
 
 export interface SingleRef<T, K extends Kind> {
     readonly __kind?: K;   // phantom field

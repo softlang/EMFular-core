@@ -3,8 +3,8 @@ import {ReferenceMeta} from "../model-definition";
 import {Kind, KindFromMeta} from "./reference-kind";
 
 
-export type ModelListFromMeta<T, R extends ReferenceMeta> =
-    ModelList<T, KindFromMeta<R>>;
+export type ModelListFromMeta<T, R extends Kind> =
+    ModelList<T, R>;
 
 export interface ModelList<T, K extends Kind>
     extends Array<T> {

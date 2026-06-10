@@ -1,3 +1,5 @@
+import {Kind} from "./proxy/reference-kind";
+
 export type TsEnum = Record<string, string | number>;
 
 export interface ReferenceMeta {
@@ -11,6 +13,8 @@ export interface ReferenceMeta {
 
     // assigned by @reference
     containerKey?: symbol
+
+    kind: Kind
 }
 
 export interface ClassMeta {
