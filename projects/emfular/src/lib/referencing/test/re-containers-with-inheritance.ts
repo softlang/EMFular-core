@@ -2,7 +2,7 @@ import { ModelDefinition } from "../../binding/model-definition";
 import { Referencable } from "../referencable/referenceable";
 import { eClass } from "../../binding/eclass-decorator";
 import { reference } from "../../binding/reference-decorator";
-import {ModelListFromMeta} from "../../binding/proxy/model-list";
+import {ModelList} from "../../binding/proxy/model-list";
 import {SingleRef} from "../../binding/proxy/single-ref";
 
 export const ModelInheritance: ModelDefinition = {
@@ -59,7 +59,7 @@ export class InheritanceRoot extends Referencable<any> {
     }
 
     @reference(ModelInheritanceRefs.children)
-    declare children: ModelListFromMeta<AbstractBase, typeof ModelInheritanceRefs.children.kind>;
+    declare children: ModelList<AbstractBase, typeof ModelInheritanceRefs.children.kind>;
 }
 
 @eClass(ModelInheritance, "AbstractBase")

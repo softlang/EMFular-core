@@ -4,7 +4,7 @@ import {attribute} from "../../binding/attribute-decorator";
 import {JsonOf} from "../../serialization/json-deserializable";
 import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
-import {ModelListFromMeta} from "../../binding/proxy/model-list";
+import {ModelList} from "../../binding/proxy/model-list";
 import {SingleRef} from "../../binding/proxy/single-ref";
 
 export const ModelWithChildren = {
@@ -132,11 +132,11 @@ export enum EClasses {
 export class RootWithChildren extends Referencable<any> {
 
     @reference(RootWithChildrenRefs.child2)
-    declare child2: ModelListFromMeta<Middle2WithChildren, typeof RootWithChildrenRefs.child2.kind>
+    declare child2: ModelList<Middle2WithChildren, typeof RootWithChildrenRefs.child2.kind>
     @reference(RootWithChildrenRefs.link3)
-    declare link3: ModelListFromMeta<ReChild3, typeof RootWithChildrenRefs.link3.kind>;
+    declare link3: ModelList<ReChild3, typeof RootWithChildrenRefs.link3.kind>;
     @reference(RootWithChildrenRefs.link4)
-    declare link4: ModelListFromMeta<ReChild4, typeof RootWithChildrenRefs.link4.kind>;
+    declare link4: ModelList<ReChild4, typeof RootWithChildrenRefs.link4.kind>;
 
     @attribute()
     name: string = "referencable1";
@@ -150,9 +150,9 @@ export class RootWithChildren extends Referencable<any> {
 export class Middle2WithChildren extends Referencable<RootWithChildren> {
 
     @reference(Middle2WithChildrenRefs.child3)
-    declare child3: ModelListFromMeta<ReChild3, typeof Middle2WithChildrenRefs.child3.kind>
+    declare child3: ModelList<ReChild3, typeof Middle2WithChildrenRefs.child3.kind>
     @reference(Middle2WithChildrenRefs.child4)
-    declare child4: ModelListFromMeta<ReChild4, typeof Middle2WithChildrenRefs.child4.kind>
+    declare child4: ModelList<ReChild4, typeof Middle2WithChildrenRefs.child4.kind>
 
     @attribute()
     name: string = "referencable2";
@@ -165,7 +165,7 @@ export class Middle2WithChildren extends Referencable<RootWithChildren> {
 @eClass(ModelWithChildren, "ReChild3")
 export class ReChild3 extends Referencable<Middle2WithChildren> {
     @reference(ReChild3Refs.link1)
-    declare link1: ModelListFromMeta<RootWithChildren, typeof ReChild3Refs.link1.kind>
+    declare link1: ModelList<RootWithChildren, typeof ReChild3Refs.link1.kind>
 
     @reference(ReChild3Refs.parentPointer)
     declare parentPointer?: SingleRef<Middle2WithChildren, typeof ReChild3Refs.parentPointer.kind>;
@@ -181,7 +181,7 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
 @eClass(ModelWithChildren, "ReChild4")
 export class ReChild4 extends Referencable<Middle2WithChildren> {
     @reference(ReChild4Refs.link1)
-    declare link1: ModelListFromMeta<RootWithChildren, typeof ReChild4Refs.link1.kind>
+    declare link1: ModelList<RootWithChildren, typeof ReChild4Refs.link1.kind>
 
     @reference(ReChild4Refs.parentPointer)
     declare parentPointer: SingleRef<Middle2WithChildren, typeof ReChild4Refs.parentPointer.kind>;
