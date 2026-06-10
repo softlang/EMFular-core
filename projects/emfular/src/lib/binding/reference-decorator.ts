@@ -18,13 +18,13 @@ export function reference<T extends Referencable<any>, M extends ReferenceMeta>(
             Object.defineProperty(
                 prototype,
                 propertyKey,
-                listProxyAccessor<T,M>(propertyKey, symbol)
+                listProxyAccessor<T,M["kind"]>(propertyKey, symbol)
             );
         } else {
             Object.defineProperty(
                 prototype,
                 propertyKey,
-                singleProxyAccessor<T,M>(symbol) //todo change
+                singleProxyAccessor<T,M["kind"]>(symbol) //todo change
             );
         }
 

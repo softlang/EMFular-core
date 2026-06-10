@@ -1,16 +1,12 @@
 import {Referencable} from "../../referencing/referencable/referenceable";
 import {SingleRef} from "./single-ref";
 import {ReSingleInterface} from "../../referencing/referencable/container/re-single-interface";
-import {ReferenceMeta} from "../model-definition";
-import {KindFromMeta} from "./reference-kind";
-
+import {Kind} from "./reference-kind";
 
 export function singleProxyAccessor<
     T extends Referencable<any>,
-    M extends ReferenceMeta
+    Ki extends Kind
 >(symbol: symbol) {
-
-    type Ki = KindFromMeta<M>
 
     return {
         get(this: any): SingleRef<T, Ki> {
