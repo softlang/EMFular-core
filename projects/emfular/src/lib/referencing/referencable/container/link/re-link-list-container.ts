@@ -45,6 +45,12 @@ implements ReLinkContainer<T, P> {
         return res; //todo behaviour of flag different to add??
     }
 
+    override delete(mode: DeletionMode = DeletionMode.RELAXED): void {
+        while (this._instance.length > 0) {
+            this.remove(this._instance[0], mode);
+        }
+    }
+
     removeFromInverse(item: T, mode: DeletionMode = DeletionMode.RELAXED): boolean {
         if(this.inverseName !== undefined) {
             for (const child of [...this._instance]) {
