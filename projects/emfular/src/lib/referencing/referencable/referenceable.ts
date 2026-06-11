@@ -4,7 +4,7 @@ import {ReContainer} from "./container/re-container";
 import {Deserializer} from "../../serialization/deserializer";
 import {getAllAttributes} from "../../binding/attribute-collector";
 import {AttributeOptions} from "../../binding/attribute-decorator";
-import {JsonOf} from "../../serialization/json-deserializable";
+import {JsonOf} from "../../serialization/json-typing";
 import {SerializationContext} from "../../serialization/serialization-context";
 import {RefHandler} from "../ref/ref-handler";
 import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-container";

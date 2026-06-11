@@ -4,7 +4,7 @@ import {
     ReSingleChildExample
 } from "./re-containers-with-single-child";
 import {Ref} from "../ref/ref";
-import {JsonOf} from "../../serialization/json-deserializable";
+import {JsonOf} from "../../serialization/json-typing";
 import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
 
 describe('ReContainersWithSingleChild tests', () => {

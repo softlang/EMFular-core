@@ -6,7 +6,7 @@ idea:
 import {Referencable} from "../referencing/referencable/referenceable";
 import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
-import {JsonOf} from "./json-deserializable";
+import {JsonOf} from "./json-typing";
 import {ModelRegistry} from "../binding/model-registry";
 import {REFERENCE_INTERNAL_API} from "../referencing/referencable/referencable-symbols";
 

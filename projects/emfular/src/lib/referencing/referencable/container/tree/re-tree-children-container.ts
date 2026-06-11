@@ -2,7 +2,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {Deserializer} from "../../../../serialization/deserializer";
 import {Referencable} from "../../referenceable";
 import { ReContainer } from "../re-container";
-import {JsonOf} from "../../../../serialization/json-deserializable";
+import {JsonOf} from "../../../../serialization/json-typing";
 
 export interface ReTreeChildrenContainer<
     T extends Referencable<P>,
