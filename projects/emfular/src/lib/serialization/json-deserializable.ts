@@ -22,13 +22,9 @@ type KindOfRef<T> =
 type ReferenceKeys<T> = {
     [K in keyof T]:
     StartsWithPrivate<K> extends true ? never :
-        K extends "ParentType" ? never :
-            IsReferenceProp<T[K]> extends true
-                ? (
-                    // but only if its kind is not "none"
-                    KindOfRef<T[K]> extends "none" ? never : K
-                    )
-                : never
+        IsReferenceProp<T[K]> extends true
+            ? (KindOfRef<T[K]> extends "none" ? never : K)
+            : never
 }[keyof T];
 
 
@@ -45,29 +41,24 @@ type AttributeKeys<T> = {
                         K
 }[keyof T];
 
-export type JsonForSingleReference<T, K extends keyof T> =
-    T[K] extends SingleRef<infer C, infer Ki>
-        ? Ki extends "tree" ? JsonOf<C> | undefined :
+export type JsonForSingleReference<T, Ki extends Kind> =
+    Ki extends "tree" ? JsonOf<T> | undefined :
             Ki extends "link" ? Ref | undefined :
-                never // "none"
-: never;
+                never; // "none";
 
-
-export type JsonForListReference<
-    T,
-    Ki extends Kind
-> =
+export type JsonForListReference<T, Ki extends Kind> =
     Ki extends "tree" ? JsonOf<T>[] :
         Ki extends "link" ? Ref[] :
             never;
 
-export type JsonForReference<T, K extends keyof T> =
-    T[K] extends ModelList<infer Ty, infer Ki>
-        ? JsonForListReference<Ty, Ki>
-        : JsonForSingleReference<T, K>;
+export type JsonForReference<T> =
+    T extends ModelList<infer Ty, infer Ki>
+        ? JsonForListReference<Ty, Ki>:
+        T extends SingleRef<infer Ty, infer Ki>
+            ? JsonForSingleReference<Ty, Ki>:
+            never;
 
 export type JsonOf<T> =
     & { eClass?: string }
     & { [K in AttributeKeys<T>]?: T[K]; }
-    & { [K in ReferenceKeys<T>]?: JsonForReference<T, K> };
-
+    & { [K in ReferenceKeys<T>]?: JsonForReference<T[K]> };
