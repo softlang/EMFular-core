@@ -10,3 +10,5 @@ export interface SingleRef<T, K extends Kind> {
     removeCascade(item: T): boolean;
     delete(mode?: DeletionMode): void;
 }
+
+export type SingleRefI<T, K extends Kind> = (T|undefined) & SingleRef<T, K>;

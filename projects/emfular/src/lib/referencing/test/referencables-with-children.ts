@@ -5,7 +5,7 @@ import {JsonOf} from "../../serialization/json-typing";
 import {ModelDefinition} from "../../binding/model-definition";
 import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../../binding/proxy/model-list";
-import {SingleRef} from "../../binding/proxy/single-ref";
+import {SingleRefI} from "../../binding/proxy/single-ref";
 
 export const ModelWithChildren = {
     name: "namespace",
@@ -168,7 +168,7 @@ export class ReChild3 extends Referencable<Middle2WithChildren> {
     declare link1: ModelList<RootWithChildren, typeof ReChild3Refs.link1.kind>
 
     @reference(ReChild3Refs.parentPointer)
-    declare parentPointer?: SingleRef<Middle2WithChildren, typeof ReChild3Refs.parentPointer.kind>;
+    declare parentPointer?: SingleRefI<Middle2WithChildren, typeof ReChild3Refs.parentPointer.kind>;
 
     @attribute()
     name: string = "referencable3";
@@ -184,7 +184,7 @@ export class ReChild4 extends Referencable<Middle2WithChildren> {
     declare link1: ModelList<RootWithChildren, typeof ReChild4Refs.link1.kind>
 
     @reference(ReChild4Refs.parentPointer)
-    declare parentPointer: SingleRef<Middle2WithChildren, typeof ReChild4Refs.parentPointer.kind>;
+    declare parentPointer: SingleRefI<Middle2WithChildren, typeof ReChild4Refs.parentPointer.kind>;
 
     @attribute()
     name: string = "referencable4";

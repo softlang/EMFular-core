@@ -3,7 +3,7 @@ import { Referencable } from "../referencable/referenceable";
 import { eClass } from "../../binding/eclass-decorator";
 import { reference } from "../../binding/reference-decorator";
 import {ModelList} from "../../binding/proxy/model-list";
-import {SingleRef} from "../../binding/proxy/single-ref";
+import {SingleRefI} from "../../binding/proxy/single-ref";
 
 export const ModelInheritance: ModelDefinition = {
     name: "ModelInheritance",
@@ -70,7 +70,7 @@ export abstract class AbstractBase extends Referencable<InheritanceRoot> {
     }
 
     @reference(AbstractBaseRefs.myParent)
-    declare myParent: SingleRef<InheritanceRoot, typeof AbstractBaseRefs.myParent.kind>;
+    declare myParent: SingleRefI<InheritanceRoot, typeof AbstractBaseRefs.myParent.kind>;
 }
 
 @eClass(ModelInheritance, "A")
