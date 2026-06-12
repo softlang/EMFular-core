@@ -1,5 +1,5 @@
 import {Referencable} from "../../referencing/referencable/referenceable";
-import {SingleRef} from "./single-ref";
+import {SingleRefI} from "./single-ref";
 import {ReSingleInterface} from "../../referencing/referencable/container/re-single-interface";
 import {Kind} from "./reference-kind";
 
@@ -9,7 +9,7 @@ export function singleProxyAccessor<
 >(symbol: symbol) {
 
     return {
-        get(this: any): SingleRef<T, Ki> {
+        get(this: any): SingleRefI<T, Ki> {
             const c = this[symbol] as ReSingleInterface<T, any, Ki>;
             return c.proxy;
         },

@@ -5,7 +5,7 @@ import {ReSingleInterface} from "../re-single-interface";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {DeletionMode} from "../../../../utils/deletion-mode";
-import {SingleRef} from "../../../../binding/proxy/single-ref";
+import {SingleRefI} from "../../../../binding/proxy/single-ref";
 import {createSingleRefProxy} from "../../../../binding/proxy/single-proxy";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
@@ -16,7 +16,7 @@ export class ReTreeParentContainer<
 implements ReSingleInterface<P, T, "none">,
     ReShallowInterface<P, T>{
 
-    private _proxy?: SingleRef<P, "none">;
+    private _proxy?: SingleRefI<P, "none">;
 
     constructor(parent: T, referenceName: string,  refMeta: ReferenceMeta) {
         super(parent, referenceName, refMeta); // referenceName is actually unused for this container type
@@ -26,7 +26,7 @@ implements ReSingleInterface<P, T, "none">,
         return (this._parent.$getEParent())
     }
 
-    get proxy(): SingleRef<P, "none"> {
+    get proxy(): SingleRefI<P, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy<P,T,"none">(this);
         }
