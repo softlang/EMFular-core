@@ -18,21 +18,17 @@ implements ReLinkContainer<T, P> {
         this._parent[REFERENCE_INTERNAL_API].otherLinks().push(this)
     }
 
-    override set(instance: T): void {
-        if(this.inverseName !== undefined) {
-            this._instance?.[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, DeletionMode.RELAXED)
-            this._instance = instance;
-            instance[REFERENCE_INTERNAL_API].addToReference(this.inverseName, this._parent)
-        } else {
-            this._instance = instance;
-        }
-    }
-
     addWithoutTypeCheck(item: T): boolean {
         if (this._instance == item) {
             return false;
         } else {
-            this.set(item);
+            if(this._instance) {
+                this.remove(this._instance)
+            }
+            this._instance = item
+            if(this.inverseName) {
+                item[REFERENCE_INTERNAL_API].addToReference(this.inverseName, this._parent)
+            }
             return true;
         }
     }
