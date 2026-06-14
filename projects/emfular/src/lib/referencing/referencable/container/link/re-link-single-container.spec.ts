@@ -86,6 +86,30 @@ describe('ReLinkSingleContainer', () => {
     }).toThrow();
   })
 
+  it("set() should update a non-tree single link container correctly", () => {
+    const root = new ReContainersWithSingleChild();
+    const child1 = new ReSingleChildExample();
+    const child2 = new ReSingleChildExample();
+
+    const container: ReLinkSingleContainer<any, any> = root[REFERENCE_INTERNAL_API].getContainer("link") as ReLinkSingleContainer<any, any>;
+
+    // assign
+    container.set(child1);
+    expect(container.get()).toBe(child1);
+    expect(root.link.value).toBe(child1);
+
+    // replace
+    container.set(child2);
+    expect(container.get()).toBe(child2);
+    expect(root.link.value).toBe(child2);
+
+    // clear
+    container.set(undefined);
+    expect(container.get()).toBeUndefined();
+    expect(root.link.value).toBeUndefined();
+  });
+
+
   it('should remove reference from container, triggering its deletion in case of required reference getting removed', () => {
     let tester1 = new ReContainersWithSingleChild();
     let middle1 = new ReSingleChildExample();
