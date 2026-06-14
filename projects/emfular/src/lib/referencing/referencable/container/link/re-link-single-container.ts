@@ -18,7 +18,7 @@ implements ReLinkContainer<T, P> {
         this._parent[REFERENCE_INTERNAL_API].otherLinks().push(this)
     }
 
-    protected set(instance: T): void {
+    override set(instance: T): void {
         if(this.inverseName !== undefined) {
             this._instance?.[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, DeletionMode.RELAXED)
             this._instance = instance;

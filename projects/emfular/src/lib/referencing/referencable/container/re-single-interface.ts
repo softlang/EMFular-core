@@ -9,6 +9,7 @@ export interface ReSingleInterface<
     K extends Kind
 > extends ReContainer<T, P>{
     get(): T | undefined
+    set(v: T|undefined): void
 
     get proxy(): SingleRefI<T, K>
 }

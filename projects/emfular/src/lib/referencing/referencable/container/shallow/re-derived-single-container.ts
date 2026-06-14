@@ -31,6 +31,10 @@ export class ReDerivedSingleContainer<
         return this.resolver.resolve(this._parent);
     }
 
+    set(_: T|undefined): void {
+        throw new Error("Setting on derived is not allowed: it holds no data, but is just DERIVED")
+    }
+
     get proxy(): SingleRefI<T, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy(this);

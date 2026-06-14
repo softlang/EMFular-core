@@ -25,6 +25,16 @@ implements ReSingleInterface<T, P, K>{
         return this._instance;
     }
 
+    set(v: T|undefined): void {
+        if(v == undefined) {
+            if(this._instance) {
+                this.remove(this._instance)
+            }
+        } else {
+            this.add(v)
+        }
+    }
+
     public get proxy(): SingleRefI<T, K> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy<T, P, K>(this);

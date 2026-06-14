@@ -1,0 +1,44 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Seite-1" id="recontainer-diagram">
+    <mxGraphModel dx="934" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ReContainer swimlane -->
+        <mxCell id="ReContainer" parent="1"
+          style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;"
+          value="&amp;lt;&amp;lt;abstract&amp;gt;&amp;gt;&lt;div&gt;ReContainer&lt;/div&gt;"
+          vertex="1">
+          <mxGeometry x="190" y="80" width="260" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Box 1: type parameters -->
+        <mxCell id="ReContainer-params" parent="ReContainer"
+          style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;"
+          value="&lt;T extends Referencable&lt;any&gt;,&#10; P extends Referencable&lt;any&gt;&gt;"
+          vertex="1">
+          <mxGeometry y="40" width="260" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Box 2: attributes -->
+        <mxCell id="ReContainer-attrs" parent="ReContainer"
+          style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;"
+          value="+ _parent: P&#10;+ meta: ReferenceMeta&#10;+ referenceName: string&#10;+ inverseName?: string&#10;+ isRequired: boolean"
+          vertex="1">
+          <mxGeometry y="80" width="260" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Box 3: methods -->
+        <mxCell id="ReContainer-methods" parent="ReContainer"
+          style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;"
+          value="+ get(): T | T[] | undefined&#10;+ add(item: T): boolean&#10;+ isAcceptableItem(item: Referencable&lt;any&gt;): boolean&#10;+ isAcceptableEclass(eClass: string): boolean&#10;+ remove(item: T, mode?: DeletionMode): boolean&#10;+ delete(mode?: DeletionMode): void&#10;+ toJson(ctx: SerializationContext): any&#10;# addWithoutTypeCheck(item: T): boolean"
+          vertex="1">
+          <mxGeometry y="140" width="260" height="100" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

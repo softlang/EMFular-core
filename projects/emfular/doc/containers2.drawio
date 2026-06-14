@@ -1,0 +1,88 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="re-containers" name="ReContainers">
+    <mxGraphModel dx="3168" dy="718" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ReContainer_tpl" parent="1" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontStyle=2;" value="&lt;T extends Referencable, P extends Referencable&gt;" vertex="1">
+          <mxGeometry height="20" width="380" x="360" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ReContainer" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;&lt;abstract class&gt;&gt;&#xa;ReContainer" vertex="1">
+          <mxGeometry height="360" width="380" x="360" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ReContainer_attrs" parent="ReContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ _parent: P&#xa;+ meta: ReferenceMeta&#xa;+ referenceName: string&#xa;+ inverseName?: string&#xa;+ isRequired: boolean" vertex="1">
+          <mxGeometry height="120" width="380" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ReContainer_methods" parent="ReContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ get(): T | T[] | undefined&#xa;+ add(item: T): boolean&#xa;+ isAcceptableItem(item: Referencable): boolean&#xa;+ isAcceptableEclass(eClass: string): boolean&#xa;+ remove(item: T, mode?: DeletionMode): boolean&#xa;+ delete(mode?: DeletionMode): void&#xa;+ toJson(ctx: SerializationContext): any&#xa;# addWithoutTypeCheck(item: T): boolean" vertex="1">
+          <mxGeometry height="214" width="380" y="146" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleInterface_tpl" parent="1" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontStyle=2;" value="&lt;T extends Referencable, P extends Referencable, K extends Kind&gt;" vertex="1">
+          <mxGeometry height="20" width="300" x="820" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleInterface" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;&lt;interface&gt;&gt;&#xa;ReSingleInterface" vertex="1">
+          <mxGeometry height="160" width="300" x="840" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleInterface_attrs" parent="ReSingleInterface" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="20" width="300" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleInterface_methods" parent="ReSingleInterface" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ get(): T | undefined&#xa;+ proxy: SingleRefI&lt;T, K&gt;" vertex="1">
+          <mxGeometry height="100" width="300" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleContainer_tpl" parent="1" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontStyle=2;" value="&lt;T extends Referencable, P extends Referencable, K extends Kind&gt;" vertex="1">
+          <mxGeometry height="20" width="340" x="820" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleContainer" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;&lt;abstract&gt;&gt;&#xa;ReSingleContainer" vertex="1">
+          <mxGeometry height="196" width="340" x="790" y="486" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleContainer_attrs" parent="ReSingleContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="# _instance?: T&#xa;# _proxy?: SingleRefI&lt;T, K&gt;" vertex="1">
+          <mxGeometry height="60" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ReSingleContainer_methods" parent="ReSingleContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ get(): T | undefined&#xa;+ proxy: SingleRefI&lt;T, K&gt;" vertex="1">
+          <mxGeometry height="110" width="340" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListInterface_tpl" parent="1" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontStyle=2;" value="&lt;T extends Referencable, P extends Referencable, K extends Kind&gt;" vertex="1">
+          <mxGeometry height="20" width="330" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListInterface" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;&lt;interface&gt;&gt;&#xa;ReListInterface" vertex="1">
+          <mxGeometry height="196" width="330" x="-30" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListInterface_attrs" parent="ReListInterface" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="20" width="330" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListInterface_methods" parent="ReListInterface" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ proxy: ModelList&lt;T, K&gt;&#xa;+ get(): T[]&#xa;+ move(from: number, to: number): void&#xa;+ swap(from: number, to: number): void" vertex="1">
+          <mxGeometry height="150" width="330" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListContainer_tpl" parent="1" style="text;align=center;verticalAlign=middle;whiteSpace=wrap;html=1;fontStyle=2;" value="&lt;T extends Referencable, P extends Referencable, K extends Kind&gt;" vertex="1">
+          <mxGeometry height="20" width="380" x="40" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListContainer" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;&lt;abstract&gt;&gt;&#xa;ReListContainer" vertex="1">
+          <mxGeometry height="256" width="380" x="40" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListContainer_attrs" parent="ReListContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ _instance: T[]&#xa;- _proxy?: ModelList&lt;T, K&gt;" vertex="1">
+          <mxGeometry height="60" width="380" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="ReListContainer_methods" parent="ReListContainer" style="text;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" value="+ get(): T[]&#xa;+ proxy: ModelList&lt;T, K&gt;&#xa;+ delete(mode: DeletionMode = RELAXED): void&#xa;+ move(from: number, to: number): void&#xa;+ swap(from: number, to: number): void" vertex="1">
+          <mxGeometry height="170" width="380" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-1" edge="1" parent="1" source="ReSingleInterface" style="endArrow=block;endFill=0;dashed=1;" target="ReContainer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-2" edge="1" parent="1" source="ReSingleContainer" style="endArrow=block;endFill=0;" target="ReContainer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-3" edge="1" parent="1" source="ReSingleContainer" style="endArrow=block;endFill=0;dashed=1;" target="ReSingleInterface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-4" edge="1" parent="1" source="ReListInterface" style="endArrow=block;endFill=0;dashed=1;" target="ReContainer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-5" edge="1" parent="1" source="ReListContainer" style="endArrow=block;endFill=0;edgeStyle=orthogonalEdgeStyle;rounded=0;curved=0;" target="ReContainer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V0DF4dDkpBBrT504QE8d-6" edge="1" parent="1" source="ReListContainer" style="endArrow=block;endFill=0;dashed=1;" target="ReListInterface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,51 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="recontainer" name="ReContainer">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- MAIN SWIMLANE -->
+        <mxCell id="ReContainer" value="" parent="1"
+          style="swimlane;childLayout=stackLayout;horizontal=1;startSize=26;
+                 rounded=0;whiteSpace=wrap;html=1;collapsible=0;">
+          <mxGeometry x="80" y="80" width="420" height="420" as="geometry"/>
+        </mxCell>
+
+        <!-- 1) TEMPLATE PARAMETERS -->
+        <mxCell id="ReContainer_tpl"
+          value="&lt;T extends Referencable, P extends Referencable&gt;"
+          parent="ReContainer"
+          style="text;align=center;verticalAlign=middle;fontStyle=2;whiteSpace=wrap;">
+          <mxGeometry x="0" y="0" width="420" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 2) CLASSIFIER HEADER -->
+        <mxCell id="ReContainer_header"
+          value="&lt;&lt;abstract&gt;&gt;&#10;&lt;b&gt;ReContainer&lt;/b&gt;"
+          parent="ReContainer"
+          style="text;align=center;verticalAlign=middle;whiteSpace=wrap;">
+          <mxGeometry x="0" y="40" width="420" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 3) ATTRIBUTES -->
+        <mxCell id="ReContainer_attrs"
+          value="+ _parent: P&#10;+ meta: ReferenceMeta&#10;+ referenceName: string&#10;+ inverseName?: string&#10;+ isRequired: boolean"
+          parent="ReContainer"
+          style="text;align=left;verticalAlign=top;whiteSpace=wrap;">
+          <mxGeometry x="0" y="100" width="420" height="120" as="geometry"/>
+        </mxCell>
+
+        <!-- 4) METHODS -->
+        <mxCell id="ReContainer_methods"
+          value="+ get(): T | T[] | undefined&#10;+ add(item: T): boolean&#10;+ isAcceptableItem(item: Referencable): boolean&#10;+ isAcceptableEclass(eClass: string): boolean&#10;+ remove(item: T, mode?: DeletionMode): boolean&#10;+ delete(mode?: DeletionMode): void&#10;+ toJson(ctx: SerializationContext): any&#10;# addWithoutTypeCheck(item: T): boolean"
+          parent="ReContainer"
+          style="text;align=left;verticalAlign=top;whiteSpace=wrap;">
+          <mxGeometry x="0" y="220" width="420" height="200" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

@@ -26,6 +26,10 @@ implements ReSingleInterface<P, T, "none">,
         return (this._parent.$getEParent())
     }
 
+    set(v: P|undefined): void {
+        this._parent.$getEParent().set(v);
+    }
+
     get proxy(): SingleRefI<P, "none"> {
         if (!this._proxy) {
             this._proxy = createSingleRefProxy<P,T,"none">(this);

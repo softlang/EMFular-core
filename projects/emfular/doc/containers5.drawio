@@ -1,0 +1,51 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="test" name="Test">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- MAIN SWIMLANE -->
+        <mxCell id="ClassA" value="" parent="1"
+          style="swimlane;childLayout=stackLayout;horizontal=1;
+                 startSize=0;collapsible=0;rounded=0;html=1;">
+          <mxGeometry x="80" y="80" width="400" height="300" as="geometry"/>
+        </mxCell>
+
+        <!-- 1) TEMPLATE PARAMETERS -->
+        <mxCell id="ClassA_tpl"
+          value="&lt;T, P&gt;"
+          parent="ClassA"
+          style="text;align=center;verticalAlign=middle;whiteSpace=wrap;">
+          <mxGeometry x="0" y="0" width="400" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- 2) HEADER -->
+        <mxCell id="ClassA_header"
+          value="&lt;&lt;abstract&gt;&gt;&#10;&lt;b&gt;ClassA&lt;/b&gt;"
+          parent="ClassA"
+          style="text;align=center;verticalAlign=middle;whiteSpace=wrap;">
+          <mxGeometry x="0" y="40" width="400" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- 3) ATTRIBUTES -->
+        <mxCell id="ClassA_attrs"
+          value="+ attr1: string&#10;+ attr2: number"
+          parent="ClassA"
+          style="text;align=left;verticalAlign=top;whiteSpace=wrap;">
+          <mxGeometry x="0" y="100" width="400" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- 4) METHODS -->
+        <mxCell id="ClassA_methods"
+          value="+ m1(): void&#10;+ m2(x: number): boolean"
+          parent="ClassA"
+          style="text;align=left;verticalAlign=top;whiteSpace=wrap;">
+          <mxGeometry x="0" y="180" width="400" height="120" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+
