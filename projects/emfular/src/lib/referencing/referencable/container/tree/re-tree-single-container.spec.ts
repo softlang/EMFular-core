@@ -53,4 +53,56 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink.value).toBeUndefined();
     expect(elem1.link.value).toBeUndefined();
   });
+
+  it("add() should update a tree single container correctly", () => {
+    const parent = new ReContainersWithSingleChild();
+    const child1 = new ReSingleChildExample();
+    const child2 = new ReSingleChildExample();
+
+    const container = parent[REFERENCE_INTERNAL_API].getContainer("child");
+
+    // assign child1
+    container.add(child1);
+    expect(container.get()).toBe(child1);
+    expect(child1.myParent.value).toBe(parent);
+
+    // replace with child2
+    container.add(child2);
+    expect(container.get()).toBe(child2);
+    expect(child2.myParent.value).toBe(parent);
+
+    // THIS is the critical assertion:
+    expect(child1.myParent.value).toBeUndefined();
+
+    // clear by removing child2
+    container.remove(child2);
+    expect(container.get()).toBeUndefined();
+    expect(child2.myParent.value).toBeUndefined();
+  });
+
+
+  it("set() should update a tree single container correctly", () => {
+    const parent = new ReContainersWithSingleChild();
+    const child1 = new ReSingleChildExample();
+    const child2 = new ReSingleChildExample();
+
+    const container = parent[REFERENCE_INTERNAL_API].getContainer("child") as ReTreeSingleContainer<any>;
+
+    // assign
+    container.set(child1);
+    expect(container.get()).toBe(child1);
+    expect(child1.myParent.value).toBe(parent);
+
+    // replace
+    container.set(child2);
+    expect(container.get()).toBe(child2);
+    expect(child2.myParent.value).toBe(parent);
+    expect(child1.myParent.value).toBeUndefined();
+
+    // clear
+    container.set(undefined);
+    expect(container.get()).toBeUndefined();
+    expect(child2.myParent.value).toBeUndefined();
+  });
+
 });
