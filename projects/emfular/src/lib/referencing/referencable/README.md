@@ -57,10 +57,6 @@ Exports the symbols used for hidden reference machinery.
 - `REFERENCE_INTERNAL_API`: key for each instance's internal reference API.
 - `REFERENCE_INITIALIZERS`: key for per-class hidden container initializer functions.
 
-### `referenceable.spec.ts`
-
-Placeholder test suite for `Referencable` construction.
-
 ## Base Container Files
 
 ### `container/re-container.ts`
@@ -157,8 +153,6 @@ List-valued containment container.
 - `fromJson(formerPrefix, context, json)`: determines all child eClasses, creates child refs, creates child backbones, and adds them.
 - `createRefsOnChildren(context, json)`: resolves each child's non-containment references when the JSON array length matches the current list.
 
-The adjacent `*.spec.ts` files verify containment behavior, parent updates, ordering, deserialization, and deletion modes.
-
 ## Link Container Files
 
 Link containers implement non-containment references. They register with `otherLinks()` on the parent, serialize as refs from `SerializationContext`, and maintain configured opposite references.
@@ -192,8 +186,6 @@ List-valued non-containment link.
 - `remove(item, mode = RELAXED)`: removes the item and updates the configured inverse reference.
 - `delete(mode = RELAXED)`: removes every linked item through `remove()`, so inverse references are cleaned up as the list is emptied.
 - `removeFromInverse(item, mode = RELAXED)`: asks every linked child to remove the supplied item from the inverse reference.
-
-The adjacent specs cover single and list link behavior, including inverse updates and deletion behavior.
 
 ## Shallow And Derived Container Files
 
@@ -247,8 +239,6 @@ Read-only list-valued derived reference.
 - `delete()`: no-op.
 - `move(from, to)`: no-op.
 - `swap(from, to)`: no-op.
-
-The shallow specs cover parent references and derived single/list resolution.
 
 ## Hidden List Proxy Files
 
