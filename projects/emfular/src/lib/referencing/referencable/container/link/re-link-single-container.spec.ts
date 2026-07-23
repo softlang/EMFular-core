@@ -8,6 +8,7 @@ import {
 } from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
+import {ReSingleInterface} from "../re-single-interface";
 
 describe('ReLinkSingleContainer', () => {
   it('should create an instance', () => {
@@ -85,6 +86,30 @@ describe('ReLinkSingleContainer', () => {
       middle2.otherLink = middle2b.otherLink;
     }).toThrow();
   })
+
+  it("should support set() on a tree relationship", () => {
+    const root = new ReContainersWithSingleChild();
+    const child = new ReSingleChildExample();
+    const child2 = new ReSingleChildExample();
+
+    const container: ReSingleInterface<any, any, any> = root[REFERENCE_INTERNAL_API].getContainer("child") as ReSingleInterface<any, any, any>;
+
+    // assign
+    container.set(child);
+    expect(container.get()).toBe(child);
+    expect(child.myParent.value).toBe(root);
+
+    // replace
+    container.set(child2);
+    expect(container.get()).toBe(child2);
+    expect(child2.myParent.value).toBe(root);
+    expect(child.myParent.value).toBeUndefined(); //todo throws! (no proper unset)
+
+    // clear
+    container.set(undefined);
+    expect(container.get()).toBeUndefined();
+    expect(child2.myParent.value).toBeUndefined();
+  });
 
   it("set() should update a non-tree single link container correctly", () => {
     const root = new ReContainersWithSingleChild();
