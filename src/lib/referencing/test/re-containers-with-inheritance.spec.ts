@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import {A, B, InheritanceRoot, ModelInheritance} from "./re-containers-with-inheritance";
 import {ReContainer} from "../referencable/container/re-container";
 import {REFERENCE_INTERNAL_API} from "../referencable/referencable-symbols";
@@ -14,10 +15,10 @@ describe("ReferencablesWithInheritance", () => {
       expect(r.$classMeta).toBe(ModelInheritance.classes["InheritanceRoot"]);
 
 // ❗ InheritanceRoot should have children reference
-      expect("children" in r.$classMeta.references).toBeTrue();
+      expect("children" in r.$classMeta.references).toBeTruthy();
       // ❗ A and B do not have the reference from its base
-      expect("myParent" in a.$classMeta.references).toBeFalse();
-      expect("myParent" in b.$classMeta.references).toBeFalse();
+      expect("myParent" in a.$classMeta.references).toBeFalsy();
+      expect("myParent" in b.$classMeta.references).toBeFalsy();
 
       expect(r.children.length).toBe(0);
       //still access works:
@@ -33,10 +34,10 @@ describe("ReferencablesWithInheritance", () => {
         const ref = root[REFERENCE_INTERNAL_API].treeChildren()[0] as ReContainer<any, any>;
         expect(root.children.length).toBe(0);
         const res = ref.add(root2)
-        expect(res).toBeFalse()
+        expect(res).toBeFalsy()
         expect(root.children.length).toBe(0);
         const res2 = ref.add(a)
-        expect(res2).toBeTrue()
+        expect(res2).toBeTruthy()
         expect(root.children.length).toBe(1);
     })
 

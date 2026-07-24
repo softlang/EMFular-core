@@ -1,5 +1,5 @@
+import { describe, expect, it } from 'vitest';
 import {Middle2WithChildren, ReChild3, RootWithChildren} from "./referencables-with-children";
-import {DeletionMode} from "../../utils/deletion-mode";
 
 describe('ReContainer delete tests', () => {
     it("should relaxed delete re-tree-container correctly", () =>{

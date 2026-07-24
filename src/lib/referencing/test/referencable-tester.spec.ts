@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { ReferencableTester } from './referencable-tester';
 
 describe('ReferencableTester', () => {
