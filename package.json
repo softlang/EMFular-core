@@ -15,7 +15,10 @@
     "url": "https://github.com/softlang/EMFular-core"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.lib.json"
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.lib.json",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "peerDependencies": {
     "@types/uuid": "^10.0.0",
@@ -25,5 +28,9 @@
     "reflect-metadata": "^0.2.2",
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "vitest": "^4.1.10"
+  }
 }
