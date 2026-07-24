@@ -1,4 +1,5 @@
 import { RefHandler } from './ref-handler';
+import { describe, expect, it } from 'vitest';
 
 describe('RefHandler', () => {
   it('should create an instance', () => {

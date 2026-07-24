@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { ReLinkListContainer } from './re-link-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {RootWithChildren, ReChild3, ReChild4, Middle2WithChildren} from "../../../test/referencables-with-children";
@@ -13,8 +15,8 @@ describe('ReLinkListContainer', () => {
     let middle = new Middle2WithChildren()
     let elem1 = new ReChild3()
     let elem2 = new ReChild4()
-    expect(tester.link3.remove(elem1)).toBeFalse()
-    expect(tester.link4.remove(elem2)).toBeFalse()
+    expect(tester.link3.remove(elem1)).toBeFalsy()
+    expect(tester.link4.remove(elem2)).toBeFalsy()
     tester.link3.push(elem1)
     tester.link4.push(elem2)
     middle.child3.push(elem1)
@@ -35,8 +37,8 @@ describe('ReLinkListContainer', () => {
     expect(elem2.parentPointer).toBeDefined()
     expect(elem1.parentPointer).toEqual(middle)
     expect(elem2.parentPointer).toEqual(middle)
-    expect(tester.link3.remove(elem1)).toBeTrue()
-    expect(tester.link4.remove(elem2)).toBeTrue()
+    expect(tester.link3.remove(elem1)).toBeTruthy()
+    expect(tester.link4.remove(elem2)).toBeTruthy()
     expect(tester.link3.length).toBe(0)
     expect(tester.link4.length).toBe(0)
     expect(middle.child3.length).toBe(1)
@@ -54,8 +56,8 @@ describe('ReLinkListContainer', () => {
     let middle = new Middle2WithChildren()
     let elem1 = new ReChild3()
     let elem2 = new ReChild4()
-    expect(tester.link3.removeCascade(elem1)).toBeFalse()
-    expect(tester.link4.removeCascade(elem2)).toBeFalse()
+    expect(tester.link3.removeCascade(elem1)).toBeFalsy()
+    expect(tester.link4.removeCascade(elem2)).toBeFalsy()
     tester.link3.push(elem1)
     tester.link4.push(elem2)
     middle.child3.push(elem1)
@@ -76,8 +78,8 @@ describe('ReLinkListContainer', () => {
     expect(elem2.parentPointer).toBeDefined()
     expect(elem1.parentPointer).toEqual(middle)
     expect(elem2.parentPointer).toEqual(middle)
-    expect(tester.link3.removeCascade(elem1)).toBeTrue()
-    expect(tester.link4.removeCascade(elem2)).toBeTrue()
+    expect(tester.link3.removeCascade(elem1)).toBeTruthy()
+    expect(tester.link4.removeCascade(elem2)).toBeTruthy()
     expect(tester.link3.length).toBe(0)
     expect(tester.link4.length).toBe(0)
     expect(middle.child3.length).toBe(1)

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { ReTreeSingleContainer } from './re-tree-single-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {ReContainersWithSingleChild, ReSingleChildExample} from "../../../test/re-containers-with-single-child";
@@ -24,7 +25,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toEqual(elem1);
     expect(elem1.link).toBeDefined();
     expect(elem1.link).toEqual(middle);
-    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)).toBeTrue();
+    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)).toBeTruthy();
     expect(tester.child).toBeUndefined();
     expect(middle.myParent).toBeUndefined();
     expect(middle.otherLink).toBeDefined();
@@ -47,7 +48,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toEqual(elem1);
     expect(elem1.link).toBeDefined();
     expect(elem1.link).toEqual(middle);
-    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle, DeletionMode.CASCADE)).toBeTrue();
+    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle, DeletionMode.CASCADE)).toBeTruthy();
     expect(tester.child).toBeUndefined();
     expect(middle.myParent).toBeUndefined();
     expect(middle.otherLink).toBeUndefined();

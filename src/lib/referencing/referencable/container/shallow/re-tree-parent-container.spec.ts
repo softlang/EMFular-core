@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { ReTreeParentContainer } from './re-tree-parent-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 

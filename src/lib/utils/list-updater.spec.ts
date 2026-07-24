@@ -1,4 +1,5 @@
 import { ListUpdater } from './list-updater';
+import { describe, expect, it } from 'vitest';
 
 describe('ListUpdater', () => {
 
@@ -16,7 +17,7 @@ describe('ListUpdater', () => {
     expect(bool).toBeTruthy();
     expect(list).toEqual([obj1]);
     bool = ListUpdater.addToListIfMissing(obj1, list)
-    expect(bool).toBeFalse();
+    expect(bool).toBeFalsy();
     expect(list).toEqual([obj1]);
     bool = ListUpdater.addToListIfMissing(obj2, list)
     expect(bool).toBeTruthy();
@@ -26,19 +27,19 @@ describe('ListUpdater', () => {
   it('should remove an element', () => {
     const list: any[] = [obj1, obj2, obj3]
     let bool = ListUpdater.removeFromList(obj2, list)
-    expect(bool).toBeTrue();
+    expect(bool).toBeTruthy();
     expect(list).toEqual([obj1, obj3]);
     bool = ListUpdater.removeFromList(obj2, list)
-    expect(bool).toBeFalse();
+    expect(bool).toBeFalsy();
     expect(list).toEqual([obj1, obj3]);
     bool = ListUpdater.removeFromList(obj3, list)
-    expect(bool).toBeTrue();
+    expect(bool).toBeTruthy();
     expect(list).toEqual([obj1]);
     bool = ListUpdater.removeFromList(obj3, list)
-    expect(bool).toBeFalse();
+    expect(bool).toBeFalsy();
     expect(list).toEqual([obj1]);
     bool = ListUpdater.removeFromList(obj1, list)
-    expect(bool).toBeTrue();
+    expect(bool).toBeTruthy();
     expect(list).toEqual([]);
   })
 });
