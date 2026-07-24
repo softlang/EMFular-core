@@ -1,20 +1,28 @@
 {
   "name": "emfular-core",
   "version": "1.0.0",
-  "description": "Pure TS library with basic types and parser to move from XPath references to runtime models",
-  "keywords": ["XPath", "Parser", "TS", "EMF"],
+  "description": "Pure TS library to enforce EMF-style model semantics and enable EMFjson I/O",
+  "keywords": [
+    "EMF",
+    "TS"
+  ],
   "author": {
     "name": "Susanne Göbel",
     "email": "goebel@uni-koblenz.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/softlang/EMFular/tree/main/projects/core"
+    "url": "https://github.com/softlang/EMFular-core"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json"
   },
   "peerDependencies": {
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
+    "reflect-metadata": "^0.2.2",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
