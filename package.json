@@ -14,6 +14,10 @@
     "type": "git",
     "url": "https://github.com/softlang/EMFular-core"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ]
   "scripts": {
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc -p tsconfig.lib.json",
