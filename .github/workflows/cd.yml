@@ -6,7 +6,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
@@ -58,6 +58,27 @@ jobs:
           fi
           echo "Versions match: $VERSION"
 
+      - name: Publish
+        id: publish
+        working-directory: dist
+        continue-on-error: true
+        run: npm publish
 
-      - name: Publish package
-        run: npm publish --provenance
+      - name: Show npm debug log
+        if: always()
+        run: |
+          echo "===== npm logs ====="
+          ls -l /home/runner/.npm/_logs
+          for f in /home/runner/.npm/_logs/*; do
+            echo
+            echo "===== $f ====="
+            cat "$f"
+          done
+
+      - name: Fail if publish failed
+        if: steps.publish.outcome != 'success'
+        run: exit 1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        
