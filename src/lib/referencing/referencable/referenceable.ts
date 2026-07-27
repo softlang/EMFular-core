@@ -56,6 +56,14 @@ export abstract class Referencable<
     return ModelRegistry.getEClassForInstance(this)
   }
 
+  get $treeChildren(): ReTreeChildrenContainer<this>[] {
+    return this[REFERENCE_INTERNAL_API].treeChildren()
+  }
+
+  get $otherLinks(): ReLinkContainer<any, Parent>[] {
+    return this[REFERENCE_INTERNAL_API].otherLinks();
+  }
+
   $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
