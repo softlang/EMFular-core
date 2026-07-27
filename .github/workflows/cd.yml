@@ -60,7 +60,6 @@ jobs:
 
       - name: Publish
         id: publish
-        working-directory: dist
         continue-on-error: true
         run: npm publish
 
