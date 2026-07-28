@@ -13,6 +13,7 @@ import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
 import {DeletionMode} from "../../utils/deletion-mode";
 import {REFERENCE_INITIALIZERS, REFERENCE_INTERNAL_API} from "./referencable-symbols";
+import {ReTreeParentContainer} from "./container/shallow/re-tree-parent-container";
 
 //private, no export
 const TREE_CHILDREN = Symbol("treeChildren");
@@ -23,7 +24,6 @@ const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
 const INIT_REFERENCES = Symbol("initReferences");
 
-import {ReTreeParentContainer} from "./container/shallow/re-tree-parent-container";
 
 /** base class for CORE models.
  *
