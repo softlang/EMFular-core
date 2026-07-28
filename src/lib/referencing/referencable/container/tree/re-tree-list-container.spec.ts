@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { ReTreeListContainer } from './re-tree-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren} from "../../../test/referencables-with-children";
@@ -13,7 +15,7 @@ describe('ReferencableTreeListContainer', () => {
     let middle = new Middle2WithChildren()
     let elem1 = new ReChild3()
     let elem2 = new ReChild4()
-    expect(tester.child2.remove(middle)).toBeFalse()
+    expect(tester.child2.remove(middle)).toBeFalsy()
     tester.link3.push(elem1)
     tester.link4.push(elem2)
     tester.child2.push(middle)
@@ -35,7 +37,7 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.parentPointer).toBeDefined()
     expect(elem1.parentPointer).toEqual(middle)
     expect(elem2.parentPointer).toEqual(middle)
-    expect(tester.child2.remove(middle)).toBeTrue()
+    expect(tester.child2.remove(middle)).toBeTruthy()
     expect(tester.child2.length).toBe(0)
     expect(tester.link3.length).toBe(1)
     expect(tester.link4.length).toBe(1)
@@ -54,7 +56,7 @@ describe('ReferencableTreeListContainer', () => {
     let middle = new Middle2WithChildren()
     let elem1 = new ReChild3()
     let elem2 = new ReChild4()
-    expect(tester.child2.removeCascade(middle)).toBeFalse()
+    expect(tester.child2.removeCascade(middle)).toBeFalsy()
     tester.link3.push(elem1)
     tester.link4.push(elem2)
     tester.child2.push(middle)
@@ -76,7 +78,7 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.parentPointer).toBeDefined()
     expect(elem1.parentPointer).toEqual(middle)
     expect(elem2.parentPointer).toEqual(middle)
-    expect(tester.child2.removeCascade(middle)).toBeTrue()
+    expect(tester.child2.removeCascade(middle)).toBeTruthy()
     expect(tester.child2.length).toBe(0)
     expect(tester.link3.length).toBe(0)
     expect(tester.link4.length).toBe(0)

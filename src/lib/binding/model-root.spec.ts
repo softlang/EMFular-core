@@ -1,4 +1,5 @@
 import { ModelRoot } from './model-root';
+import { describe, expect, it } from 'vitest';
 
 class RootTester extends ModelRoot {
   constructor() {

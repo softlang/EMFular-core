@@ -1,4 +1,5 @@
 import { JsonComparer } from './json-comparer';
+import { describe, expect, it } from 'vitest';
 
 describe('JsonComparer', () => {
   it('should create an instance', () => {

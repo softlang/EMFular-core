@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 import { ReDerivedSingleContainer } from './re-derived-single-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 

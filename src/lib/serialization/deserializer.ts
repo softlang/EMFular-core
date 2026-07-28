@@ -8,6 +8,7 @@ import {RefHandler} from "../referencing/ref/ref-handler";
 import {Ref} from "../referencing/ref/ref";
 import {JsonOf} from "./json-deserializable";
 import {ModelRegistry} from "../binding/model-registry";
+import {REFERENCE_INTERNAL_API} from "../referencing/referencable/referencable-symbols";
 
 export class Deserializer {
 
@@ -18,8 +19,8 @@ export class Deserializer {
     const entry = ModelRegistry.get<T>(ref.eClass)
     const obj: T = new entry()
     this.put(ref,obj)
-    obj.attributesFromJson(json)
-    obj.createChildren(this, ref, json)
+    obj[REFERENCE_INTERNAL_API].deserializeAttributes(json)
+    obj[REFERENCE_INTERNAL_API].deserializeChildren(this, ref, json)
     return obj
   }
 
@@ -54,7 +55,7 @@ export class Deserializer {
       eClass: rootEClass
     }
     const model: C = context.createTreeBackbone<C>(ref, json);
-    model.deserializeLinks(context, json)
+    model[REFERENCE_INTERNAL_API].deserializeOtherReferences(context, json)
     return model;
   }
 

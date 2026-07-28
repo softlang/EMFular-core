@@ -1,21 +1,47 @@
 {
-  "name": "emfular",
-  "version": "10.1.0",
-  "description": "Pure TS library with basic types and parser to move from XPath references to runtime models",
-  "keywords": ["XPath", "Parser", "TS", "EMF"],
+  "name": "emfular-core",
+  "version": "1.1.0",
+  "description": "Pure TS library to enforce EMF-style model semantics and enable EMFjson I/O",
+  "keywords": [
+    "EMF",
+    "TS"
+  ],
   "author": {
     "name": "Susanne Göbel",
     "email": "goebel@uni-koblenz.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/softlang/EMFular/tree/main/projects/emfular"
+    "url": "https://github.com/softlang/EMFular-core"
   },
-  "peerDependencies": {
-    "@types/uuid": "^10.0.0"
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "main": "./dist/public-api.js",
+  "types": "./dist/public-api.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/public-api.d.ts",
+      "import": "./dist/public-api.js",
+      "require": "./dist/public-api.js"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.lib.json",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "reflect-metadata": "^0.2.2",
+    "tslib": "^2.3.0",
+    "uuid": "^11.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^26.1.1",
+    "vitest": "^4.1.10"
   },
   "sideEffects": false
 }

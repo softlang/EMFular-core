@@ -1,8 +1,8 @@
 import { SerializationContext } from './serialization-context';
-import {ReferencableTester} from "../referencing/test/referencable-tester";
+import { describe, expect, it } from 'vitest';
 
 describe('SerializationContext', () => {
   it('should create an instance', () => {
-    expect(new SerializationContext(new ReferencableTester())).toBeTruthy();
+    expect(new SerializationContext()).toBeTruthy();
   });
 });
