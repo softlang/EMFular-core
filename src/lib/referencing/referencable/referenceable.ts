@@ -19,6 +19,7 @@ import {ReTreeParentContainer} from "./container/shallow/re-tree-parent-containe
 const TREE_CHILDREN = Symbol("treeChildren");
 const LINKS = Symbol("links");
 const PARENT = Symbol("parent");
+const VIOLATIONS = Symbol("violations");
 
 const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
@@ -42,8 +43,7 @@ export abstract class Referencable<
 
   private [TREE_CHILDREN]: ReTreeChildrenContainer<any>[] = [];
   private [LINKS]: ReLinkContainer<any,Parent>[] = [];
-
-  private $violations: Map<string, string> = new Map<string, string>;
+  private [VIOLATIONS]: Map<string, string> = new Map<string, string>();
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -65,6 +65,10 @@ export abstract class Referencable<
 
   get $otherLinks(): ReLinkContainer<any, Parent>[] {
     return this[REFERENCE_INTERNAL_API].otherLinks();
+  }
+
+  get $violations(): Map<string, string> {
+    return this[REFERENCE_INTERNAL_API].violations();
   }
 
   $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
@@ -207,7 +211,7 @@ export abstract class Referencable<
 
     treeChildren: (): ReTreeChildrenContainer<any>[] => this[TREE_CHILDREN],
     otherLinks: (): ReLinkContainer<any,Parent>[] => this[LINKS],
-
+    violations: (): Map<string, string> => this[VIOLATIONS],
 
   getContainer: <
         U extends Referencable<any>
@@ -257,57 +261,57 @@ export abstract class Referencable<
     }
   }
 
-    public collectConstraintViolations() {
-        this.$violations = new Map<string, string>;
-        for (const symbol of Object.getOwnPropertySymbols(this)) {
-            if (symbol.description === undefined) {
-                continue
-            }
-            const ref = this.$classMeta.references[symbol.description];
-            if (!ref) {
-                continue
-            }
-            const container = (this as any)[symbol];
-            if (ref.derivingMethod !== undefined) {
-                const derivedContainer = container as ReContainer<any, any> & {
-                    checkDerivationMethodExistence(): string | undefined;
-                    checkDerivationMethodImpl(): string | undefined;
-                }
-                const methodExistenceViolation = derivedContainer.checkDerivationMethodExistence();
-                if (methodExistenceViolation !== undefined) {
-                    this.$violations.set(derivedContainer.referenceName, methodExistenceViolation);
-                } else {
-                    const implementationViolation = derivedContainer.checkDerivationMethodImpl();
-                    if (implementationViolation !== undefined) {
-                        this.$violations.set(derivedContainer.referenceName, implementationViolation);
-                    } else {
-                        const cardinalityViolation = derivedContainer.checkCardinalityConstraints();
-                        if (cardinalityViolation !== undefined) {
-                            this.$violations.set(derivedContainer.referenceName, cardinalityViolation);
-                        }
-                    }
-                }
-            }
-            if (ref.isParent === true) {
-                const parentContainer = (this as any)[symbol] as ReTreeParentContainer<any>;
-                if (parentContainer.meta.min === 1 && this.$getEParent() === undefined) {
-                    this.$violations.set(parentContainer.referenceName, parentContainer.checkCardinalityConstraints());
-                }
-            }
-        }
-        this.$otherLinks.forEach(refContainer => {
-            const cardinalityViolation = refContainer.checkCardinalityConstraints();
-            if (cardinalityViolation !== undefined) {
-                this.$violations.set(refContainer.referenceName, cardinalityViolation);
-            }
-        });
-        this.$treeChildren.forEach(child => {
-            const cardinalityViolation = child.checkCardinalityConstraints();
-            if (cardinalityViolation !== undefined) {
-                this.$violations.set(child.referenceName, cardinalityViolation);
-            }
-        });
-    }
+  public collectConstraintViolations() {
+      this[VIOLATIONS] = new Map<string, string>();
+      for (const symbol of Object.getOwnPropertySymbols(this)) {
+          if (symbol.description === undefined) {
+              continue
+          }
+          const ref = this.$classMeta.references[symbol.description];
+          if (!ref) {
+              continue
+          }
+          const container = this[REFERENCE_INTERNAL_API].getContainer(symbol.description);
+          if (ref.derivingMethod !== undefined) {
+              const derivedContainer = container as ReContainer<any, any> & {
+                  checkDerivationMethodExistence(): string | undefined;
+                  checkDerivationMethodImpl(): string | undefined;
+              }
+              const methodExistenceViolation = derivedContainer.checkDerivationMethodExistence();
+              if (methodExistenceViolation !== undefined) {
+                  this.$violations.set(derivedContainer.referenceName, methodExistenceViolation);
+              } else {
+                  const implementationViolation = derivedContainer.checkDerivationMethodImpl();
+                  if (implementationViolation !== undefined) {
+                      this.$violations.set(derivedContainer.referenceName, implementationViolation);
+                  } else {
+                      const cardinalityViolation = derivedContainer.checkCardinalityConstraints();
+                      if (cardinalityViolation !== undefined) {
+                          this.$violations.set(derivedContainer.referenceName, cardinalityViolation);
+                      }
+                  }
+              }
+          }
+          if (ref.isParent === true) {
+              const parentContainer = container as ReTreeParentContainer<any>;
+              if (parentContainer.meta.min === 1 && this.$getEParent() === undefined) {
+                  this.$violations.set(parentContainer.referenceName, parentContainer.checkCardinalityConstraints());
+              }
+          }
+      }
+      this[REFERENCE_INTERNAL_API].otherLinks().forEach(refContainer => {
+          const cardinalityViolation = refContainer.checkCardinalityConstraints();
+          if (cardinalityViolation !== undefined) {
+              this.$violations.set(refContainer.referenceName, cardinalityViolation);
+          }
+      });
+      this[REFERENCE_INTERNAL_API].treeChildren().forEach(child => {
+          const cardinalityViolation = child.checkCardinalityConstraints();
+          if (cardinalityViolation !== undefined) {
+              this.$violations.set(child.referenceName, cardinalityViolation);
+          }
+      });
+  }
 
 }
 
@@ -334,6 +338,7 @@ export interface ReferenceApi<
   // *************** container accessors *******************
   treeChildren: () => ReTreeChildrenContainer<any>[];
   otherLinks: () => ReLinkContainer<any,Parent>[];
+  violations: () => Map<string, string>;
   getContainer: <U extends Referencable<any>>(refName: string) => ReContainer<U, Parent>;
   // parent
   getParentContainer: () => ReTreeChildrenContainer<Self>|undefined,

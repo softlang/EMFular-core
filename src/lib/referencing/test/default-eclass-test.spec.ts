@@ -4,6 +4,7 @@ import {
     ReContainersWithSingleChildRefs
 } from "./re-containers-with-single-child";
 import {EClasses, RootWithChildren, RootWithChildrenRefs} from "./referencables-with-children";
+import { describe, it, expect } from 'vitest';
 
 
 describe('defaultEClass initialization for containment references', () => {

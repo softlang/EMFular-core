@@ -107,15 +107,15 @@ describe('ReLinkSingleContainer', () => {
     tester.child = middle;
     middle.otherLink = elem;
     middle.collectConstraintViolations()
-    expect(middle.violations.size).toBe(0)
-    tester.$treeChildren[0].remove(middle)
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(0)
+    tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)
     middle.collectConstraintViolations()
-    expect(middle.violations.size).toBe(1)
-    elem.$otherReferences[0].remove(middle)
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(1)
+    elem[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle)
     middle.collectConstraintViolations()
-    expect(middle.violations.size).toBe(2)
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(2)
     tester.child = middle;
     middle.collectConstraintViolations()
-    expect(middle.violations.size).toBe(1)
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(1)
   })
 });
