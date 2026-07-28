@@ -290,12 +290,12 @@ export abstract class Referencable<
             }
             if (ref.isParent === true) {
                 const parentContainer = (this as any)[symbol] as ReTreeParentContainer<any>;
-                if (parentContainer.meta.min === 1 && this.$parent === undefined) {
+                if (parentContainer.meta.min === 1 && this.$getEParent() === undefined) {
                     this.$violations.set(parentContainer.referenceName, parentContainer.checkCardinalityConstraints());
                 }
             }
         }
-        this.$otherReferences.forEach(refContainer => {
+        this.$otherLinks.forEach(refContainer => {
             const cardinalityViolation = refContainer.checkCardinalityConstraints();
             if (cardinalityViolation !== undefined) {
                 this.$violations.set(refContainer.referenceName, cardinalityViolation);
