@@ -50,8 +50,8 @@ implements ReListInterface<T, P>{
 
     swap(from: number, to: number) {
         const le = this._instance.length;
-        if(from<0 || to<0 || from>=le || to>=le ) {
-            throw new Error("Swap called with index out of bounds: length "+le+" and indices from "+from+" and to "+to+".");
+        if (from < 0 || to < 0 || from >= le || to >= le) {
+            throw new Error("Swap called with index out of bounds: length " + le + " and indices from " + from + " and to " + to + ".");
         } else {
             const fromElem = this._instance[from];
             this._instance[from] = this._instance[to];
@@ -59,4 +59,12 @@ implements ReListInterface<T, P>{
         }
     }
 
+    checkCardinalityConstraints(): string | undefined {
+        if (this.meta.min !== undefined && this._instance.length < this.meta.min) {
+            return `Minimum cardinality violation: current length ${this._instance.length} is below the required minimum of ${this.meta.min}.`;
+        } else if (this.meta.max !== undefined && this.meta.max !== -1 && this._instance.length > this.meta.max) {
+            return `Maximum cardinality violation: current length ${this._instance.length} exceeds the allowed maximum of ${this.meta.max}.`;
+        }
+        return
+    }
 }

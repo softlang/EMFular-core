@@ -99,4 +99,23 @@ describe('ReLinkSingleContainer', () => {
     expect(elem1.link).toBeUndefined();
     expect(elem2.link).toBeUndefined();
   });
+
+  it("should find constraint violations", () => {
+    let tester = new ReContainersWithSingleChild2();
+    let middle = new ReSingleChildExample2();
+    let elem = new ReContainersWithSingleChild2();
+    tester.child = middle;
+    middle.otherLink = elem;
+    middle.collectConstraintViolations()
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(0)
+    tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)
+    middle.collectConstraintViolations()
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(1)
+    elem[REFERENCE_INTERNAL_API].otherLinks()[0].remove(middle)
+    middle.collectConstraintViolations()
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(2)
+    tester.child = middle;
+    middle.collectConstraintViolations()
+    expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(1)
+  })
 });

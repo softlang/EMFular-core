@@ -10,6 +10,18 @@ export class ReDerivationResolver<P, R> {
         }
     }
 
+    canResolve(parent: P): boolean {
+        if (this.computeFn) {
+            return true;
+        }
+
+        if (!this.derivingSymbol) {
+            return false;
+        }
+
+        return typeof Reflect.get(parent as any, this.derivingSymbol) === "function";
+    }
+
     resolve(parent: P): R {
         if (!this.computeFn) {
             if (!this.derivingSymbol) {
