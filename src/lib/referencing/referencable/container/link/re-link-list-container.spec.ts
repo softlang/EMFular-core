@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ReLinkListContainer } from './re-link-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {RootWithChildren, ReChild3, ReChild4, Middle2WithChildren} from "../../../test/referencables-with-children";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 describe('ReLinkListContainer', () => {
   it('should create an instance', () => {
@@ -89,5 +90,24 @@ describe('ReLinkListContainer', () => {
     expect(elem1.parentPointer).toBeDefined()
     expect(elem2.parentPointer).toBeUndefined()
     expect(elem1.parentPointer).toEqual(middle)
+  })
+
+  it("should find constraint violations", () => {
+    let tester = new RootWithChildren()
+    let middle = new Middle2WithChildren()
+    let elem1 = new ReChild4()
+    tester.link4.push(elem1)
+    middle.child4.push(elem1)
+    elem1.collectConstraintViolations()
+    expect(elem1[REFERENCE_INTERNAL_API].violations().size).toBe(0)
+    tester.link4.remove(elem1)
+    elem1.collectConstraintViolations()
+    expect(elem1[REFERENCE_INTERNAL_API].violations().size).toBe(1)
+    middle.child4.remove(elem1)
+    elem1.collectConstraintViolations()
+    expect(elem1[REFERENCE_INTERNAL_API].violations().size).toBe(2)
+    tester.link4.push(elem1)
+    elem1.collectConstraintViolations()
+    expect(elem1[REFERENCE_INTERNAL_API].violations().size).toBe(1)
   })
 });
