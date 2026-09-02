@@ -24,6 +24,7 @@ const VIOLATIONS = Symbol("violations");
 const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
 const INIT_REFERENCES = Symbol("initReferences");
+const COLLECT_LOCAL_VIOLATIONS = Symbol("collectLocalViolations");
 
 
 /** base class for CORE models.
@@ -261,7 +262,31 @@ export abstract class Referencable<
     }
   }
 
-  public collectConstraintViolations() {
+  public collectConstraintViolations(): Map<string, Map<string, string>> {
+      const modelViolations = new Map<string, Map<string, string>>();
+
+      this[COLLECT_LOCAL_VIOLATIONS]();
+      if (this[VIOLATIONS].size > 0) {
+          modelViolations.set(this.$gId, this[VIOLATIONS]);
+      }
+
+      for (const childContainer of this[TREE_CHILDREN]) {
+          const contained = childContainer.get();
+          if (contained === undefined) {
+              continue;
+          }
+          const children = Array.isArray(contained) ? contained : [contained];
+          for (const child of children) {
+              child.collectConstraintViolations().forEach((violations: Map<string, string>, gId: string) => {
+                  modelViolations.set(gId, violations);
+              });
+          }
+      }
+
+      return modelViolations;
+  }
+
+  private [COLLECT_LOCAL_VIOLATIONS]() {
       this[VIOLATIONS] = new Map<string, string>();
       for (const symbol of Object.getOwnPropertySymbols(this)) {
           if (symbol.description === undefined) {
