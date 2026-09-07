@@ -118,23 +118,4 @@ describe('ReLinkSingleContainer', () => {
     middle.collectConstraintViolations()
     expect(middle[REFERENCE_INTERNAL_API].violations().size).toBe(1)
   })
-
-  it("should collect violations recursively, keyed by graphical id", () => {
-    let root = new ReContainersWithSingleChild2();
-    let child = new ReSingleChildExample2();
-    root.child = child; // child now has a parent, but is missing its required otherLink
-
-    const modelViolations = root.collectConstraintViolations();
-
-    // only the child violates a constraint (missing required otherLink)
-    expect(modelViolations.size).toBe(1);
-    expect(modelViolations.has(root.$gId)).toBeFalsy();
-    expect(modelViolations.has(child.$gId)).toBeTruthy();
-    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
-    expect(modelViolations.get(child.$gId)!.has("otherLink")).toBeTruthy();
-
-    // once the child is complete, the model has no violations
-    child.otherLink = new ReContainersWithSingleChild2();
-    expect(root.collectConstraintViolations().size).toBe(0);
-  })
 });

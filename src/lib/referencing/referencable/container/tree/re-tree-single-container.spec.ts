@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { ReTreeSingleContainer } from './re-tree-single-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
-import {ReContainersWithSingleChild, ReSingleChildExample} from "../../../test/re-containers-with-single-child";
+import {
+  ReContainersWithSingleChild, ReContainersWithSingleChild2,
+  ReSingleChildExample,
+  ReSingleChildExample2
+} from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
@@ -54,4 +58,18 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toBeUndefined();
     expect(elem1.link).toBeUndefined();
   });
+
+  it("should collect violations recursively, keyed by graphical id", () => {
+    let root = new ReContainersWithSingleChild2();
+    let child = new ReSingleChildExample2();
+    root.child = child;
+    const modelViolations = root.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("otherLink")).toBeTruthy();
+    child.otherLink = new ReContainersWithSingleChild2();
+    expect(root.collectConstraintViolations().size).toBe(0);
+  })
 });

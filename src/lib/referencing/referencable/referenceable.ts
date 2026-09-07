@@ -262,8 +262,13 @@ export abstract class Referencable<
     }
   }
 
-  public collectConstraintViolations(): Map<string, Map<string, string>> {
+  public collectConstraintViolations(visited: Set<string> = new Set<string>()): Map<string, Map<string, string>> {
       const modelViolations = new Map<string, Map<string, string>>();
+
+      if (visited.has(this.$gId)) {
+          return modelViolations;
+      }
+      visited.add(this.$gId);
 
       this[COLLECT_LOCAL_VIOLATIONS]();
       if (this[VIOLATIONS].size > 0) {
@@ -277,7 +282,7 @@ export abstract class Referencable<
           }
           const children = Array.isArray(contained) ? contained : [contained];
           for (const child of children) {
-              child.collectConstraintViolations().forEach((violations: Map<string, string>, gId: string) => {
+              child.collectConstraintViolations(visited).forEach((violations: Map<string, string>, gId: string) => {
                   modelViolations.set(gId, violations);
               });
           }

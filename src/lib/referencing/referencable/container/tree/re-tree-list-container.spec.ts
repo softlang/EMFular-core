@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { ReTreeListContainer } from './re-tree-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
 import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren} from "../../../test/referencables-with-children";
+import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 describe('ReferencableTreeListContainer', () => {
   it('should create an instance', () => {
@@ -88,5 +89,22 @@ describe('ReferencableTreeListContainer', () => {
     expect(elem2.link1.length).toBe(0)
     expect(elem1.parentPointer).toBeUndefined()
     expect(elem2.parentPointer).toBeUndefined()
+  })
+
+  it("should collect violations recursively, keyed by graphical id", () => {
+    let root = new RootWithChildren();
+    let middleChild = new Middle2WithChildren();
+    let child = new ReChild4();
+    root.child2.push(middleChild);
+    middleChild.child4.push(child);
+    const modelViolations = child.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(middleChild.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("link1")).toBeTruthy();
+    child.link1.push(new RootWithChildren());
+    expect(root.collectConstraintViolations().size).toBe(0);
   })
 });
