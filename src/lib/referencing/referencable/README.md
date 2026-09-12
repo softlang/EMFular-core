@@ -1,6 +1,6 @@
 # Referencable Runtime
 
-This directory contains the reference runtime for EMFular model elements. The code here is responsible for object identity, containment parents, containment children, cross-object links, inverse reference updates, serialization references, deserialization hooks, and controlled list mutation.
+This directory contains the reference runtime for EMFular model elements. The code here is responsible for object identity, containment parents, containment children, cross-object links, inverse reference updates, serialization references, deserialization hooks, controlled list mutation, and meta-model constraint violation checking.
 
 The implementation has three reference categories:
 
@@ -25,7 +25,11 @@ Public modeling API:
 
 - `$getEParent()`: returns the current containment parent by reading the hidden parent container.
 - `$getEClass()`: resolves the instance eClass through `ModelRegistry`.
+- `$treeChildren`: getter exposing the registered tree child containers (delegates to the internal API).
+- `$otherLinks`: getter exposing the registered link containers (delegates to the internal API).
+- `$violations`: getter exposing the constraint violation map (delegates to the internal API). The map keys are reference names and the values are human-readable violation messages.
 - `$destruct(mode = DeletionMode.RELAXED)`: removes this object from its containment parent, removes inverse links from linked objects, and deletes contained tree children. Parent removal is always performed in relaxed mode to avoid recursive deletion loops.
+- `collectConstraintViolations()`: rebuilds this object's violation map by checking every reference against its meta-model constraints. For derived references it checks derivation-method existence, then derivation-method implementation (by running the computation and capturing thrown errors), then cardinality. For parent references it records a violation when a required parent (`meta.min === 1`) is missing. For link containers and tree child containers it records cardinality violations. Each detected violation is stored in the map under its reference name.
 - `toJson(ctxOpt?)`: serializes the object. If no `SerializationContext` is provided, it walks to the tree root first and assigns `Ref` paths from the root downward before serializing attributes and references.
 
 Private serialization helpers:
@@ -44,6 +48,7 @@ Internal API methods:
 - `deserializeOtherReferences(context, json)`: resolves link references and then resolves references inside tree children.
 - `treeChildren()`: returns registered tree child containers.
 - `otherLinks()`: returns registered link containers.
+- `violations()`: returns the hidden constraint violation map (reference name to violation message).
 - `getContainer(refName)`: finds the reference metadata on the prototype chain and returns the initialized hidden container.
 - `getParentContainer()`: returns the tree container that currently owns this instance.
 - `setParentContainer(parent)`: switches the owner container, removing the instance from the previous owner first.
@@ -81,6 +86,7 @@ Methods:
 - `remove(item, mode?)`: abstract removal hook.
 - `delete(mode?)`: abstract cleanup hook for deleting all values owned by the container.
 - `toJson(ctx)`: abstract serialization hook.
+- `checkCardinalityConstraints()`: abstract hook returning a violation message string when the container's current contents violate its `min`/`max` cardinality, or `undefined` otherwise.
 
 ### `container/re-single-container.ts`
 
@@ -88,6 +94,7 @@ Defines `ReSingleContainer<T, P>`, the base for single-valued references.
 
 - `_instance`: protected optional stored reference.
 - `get()`: returns `_instance`.
+- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when `meta.min === 1` and no instance is set, otherwise `undefined`.
 
 ### `container/re-list-container.ts`
 
@@ -99,6 +106,7 @@ Defines `ReListContainer<T, P>`, the base for list-valued references.
 - `delete(mode = RELAXED)`: destructs every element from the changing list through `ListUpdater`.
 - `move(from, to)`: moves an item inside the backing array and throws on invalid indexes.
 - `swap(from, to)`: swaps two items and throws on invalid indexes.
+- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when the list is shorter than `meta.min`, a maximum-cardinality violation message when it exceeds `meta.max` (ignoring the unbounded `-1` sentinel), otherwise `undefined`.
 
 ### `container/re-single-interface.ts`
 
@@ -207,12 +215,14 @@ Single-valued shallow view of an object's containment parent.
 - `remove(item, mode = RELAXED)`: removes this object from the inverse tree reference on `item`.
 - `delete()`: no-op.
 - `toJson(ctx)`: returns `undefined`.
+- `checkCardinalityConstraints()`: always returns a minimum-cardinality violation message. `collectConstraintViolations()` only calls it after confirming a required parent (`meta.min === 1`) is missing.
 
 ### `container/shallow/re-derivation-resolver.ts`
 
 Helper for derived references.
 
 - `constructor(computeOrSymbol)`: accepts either a compute function or a symbol identifying a method on the parent.
+- `canResolve(parent)`: returns `true` when a compute function is stored, or when the deriving symbol resolves to a function on the parent instance; returns `false` otherwise. Used to detect missing derivation methods.
 - `resolve(parent)`: resolves and caches the compute function, binding symbol-derived methods to the parent instance, then returns the computed value.
 
 ### `container/shallow/re-derived-single-container.ts`
@@ -225,6 +235,9 @@ Read-only single-valued derived reference.
 - `addWithoutTypeCheck(item)`: returns `false`.
 - `remove(item)`: returns `false`.
 - `delete()`: no-op.
+- `checkDerivationMethodExistence()`: returns a derivation violation message when the resolver cannot resolve a derivation function, otherwise `undefined`.
+- `checkDerivationMethodImpl()`: runs `get()` and returns the error message if the derivation throws, otherwise `undefined`.
+- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when `meta.min === 1` and the derived value is `undefined`, otherwise `undefined`.
 
 ### `container/shallow/re-derived-list-container.ts`
 
@@ -239,6 +252,9 @@ Read-only list-valued derived reference.
 - `delete()`: no-op.
 - `move(from, to)`: no-op.
 - `swap(from, to)`: no-op.
+- `checkDerivationMethodExistence()`: returns a derivation violation message when the resolver cannot resolve a derivation function, otherwise `undefined`.
+- `checkDerivationMethodImpl()`: runs `get()` and returns the error message if the derivation throws, otherwise `undefined`.
+- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when the derived list is shorter than `meta.min`, a maximum-cardinality violation message when it exceeds `meta.max` (ignoring the unbounded `-1` sentinel), otherwise `undefined`.
 
 ## Hidden List Proxy Files
 
