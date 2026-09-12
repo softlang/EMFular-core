@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ReTreeListContainer } from './re-tree-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
-import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren} from "../../../test/referencables-with-children";
+import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren, ReChildCircle} from "../../../test/referencables-with-children";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 describe('ReferencableTreeListContainer', () => {
@@ -106,5 +106,45 @@ describe('ReferencableTreeListContainer', () => {
     expect(modelViolations.get(child.$gId)!.has("link1")).toBeTruthy();
     child.link1.push(new RootWithChildren());
     expect(root.collectConstraintViolations().size).toBe(0);
+  })
+
+  it("should collect violations recursively, keyed by graphical id", () => {
+    let root = new RootWithChildren();
+    let middleChild = new Middle2WithChildren();
+    let child = new ReChild4();
+    root.child2.push(middleChild);
+    middleChild.child4.push(child);
+    const modelViolations = root.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(middleChild.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("link1")).toBeTruthy();
+    child.link1.push(new RootWithChildren());
+    expect(root.collectConstraintViolations().size).toBe(0);
+  })
+
+  it("should detect circular containment", () => {
+    let root = new RootWithChildren();
+    let child = new ReChildCircle();
+    root.circleChild.push(child);
+    child.closeCircle.push(root);
+    const modelViolations = root.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("closeCircle")).toBeTruthy();
+    child.closeCircle.remove(root);
+    expect(root.collectConstraintViolations().size).toBe(0);
+  })
+
+  it("create infinite loop from toJson() call", () => {
+    let root = new RootWithChildren();
+    let child = new ReChildCircle();
+    root.circleChild.push(child);
+    child.closeCircle.push(root);
+    root.toJson();
   })
 });

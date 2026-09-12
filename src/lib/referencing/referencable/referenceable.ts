@@ -265,9 +265,6 @@ export abstract class Referencable<
   public collectConstraintViolations(visited: Set<string> = new Set<string>()): Map<string, Map<string, string>> {
       const modelViolations = new Map<string, Map<string, string>>();
 
-      if (visited.has(this.$gId)) {
-          return modelViolations;
-      }
       visited.add(this.$gId);
 
       this[COLLECT_LOCAL_VIOLATIONS]();
@@ -282,10 +279,18 @@ export abstract class Referencable<
           }
           const children = Array.isArray(contained) ? contained : [contained];
           for (const child of children) {
+              if (visited.has(child.$gId)) {
+                this[VIOLATIONS].set(childContainer.referenceName, `Cyclic reference detected to ${child.$gId}`);
+                continue;
+              }
               child.collectConstraintViolations(visited).forEach((violations: Map<string, string>, gId: string) => {
                   modelViolations.set(gId, violations);
               });
           }
+      }
+
+      if (this[VIOLATIONS].size > 0) {
+          modelViolations.set(this.$gId, this[VIOLATIONS]);
       }
 
       return modelViolations;

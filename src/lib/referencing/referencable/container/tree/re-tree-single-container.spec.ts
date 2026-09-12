@@ -4,7 +4,8 @@ import {ReferencableTester, refTesterRef} from "../../../test/referencable-teste
 import {
   ReContainersWithSingleChild, ReContainersWithSingleChild2,
   ReSingleChildExample,
-  ReSingleChildExample2
+  ReSingleChildExample2,
+  ReSingleCircleChild
 } from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
@@ -70,6 +71,21 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
     expect(modelViolations.get(child.$gId)!.has("otherLink")).toBeTruthy();
     child.otherLink = new ReContainersWithSingleChild2();
+    expect(root.collectConstraintViolations().size).toBe(0);
+  })
+
+  it("should detect circular containment", () => {
+    let root = new ReContainersWithSingleChild();
+    let child = new ReSingleCircleChild();
+    root.circleChild = child;
+    child.closeCircle = root;
+    const modelViolations = root.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("closeCircle")).toBeTruthy();
+    child.closeCircle = undefined;
     expect(root.collectConstraintViolations().size).toBe(0);
   })
 });
