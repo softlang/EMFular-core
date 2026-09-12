@@ -9,7 +9,7 @@ It consists of two parts:
 ## Referencing
 Referencing consists of two classes:
  * The **Ref** class consists of an XPath reference $ref and the EClass eClass. It holds basic facilities to work with XPath, including traversal and path concatenation and is the basis for working with references in the JSON form that emf-jackson exports.
- * The **Referencable** class defines a contract for the core representation: Referencables have a UUID gId which is used for global identification and cross-referencing on graphical components. There are also references to all EMF-tree-children. These relationships are used on object creation and destruction. Each object also holds a Ref which might be out-dated but is updated and used on serialization into json. The necessary methods to prepare the XPath references are included.
+ * The **Referencable** ([README.md](src/lib/referencing/referencable/README.md)) class defines a contract for the core representation: Referencables have a UUID gId which is used for global identification and cross-referencing on graphical components. There are also references to all EMF-tree-children. These relationships are used on object creation and destruction. Each object also holds a Ref which might be out-dated but is updated and used on serialization into json. The necessary methods to prepare the XPath references are included.
 
 ## Deserialization
 
