@@ -82,7 +82,7 @@ export const ModelSingleChild: ModelDefinition = {
 // Generated ergonomic reference accessors
 export const ReContainersWithSingleChildRefs = {
     child: ModelSingleChild.classes["ReContainersWithSingleChild"].references["child"],
-    link: ModelSingleChild.classes["ReContainersWithSingleChild"].references["link"],
+    link: ModelSingleChild.classes["ReContainersWithSingleChild"].references["link"]
 };
 
 export const ReContainersWithSingleChild2Refs = {
