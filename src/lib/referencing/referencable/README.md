@@ -102,17 +102,29 @@ the root and includes references using model `Ref` values.
 
 ### `collectConstraintViolations()` and `$violations`
 
-Call `collectConstraintViolations()` to validate reference cardinalities and
-derived-reference constraints for the current state. Read the resulting
-messages from `$violations`, keyed by reference name:
+Call `collectConstraintViolations()` to validate the current model subtree.
+It checks each object in the containment tree, clears the local violation map,
+and rebuilds violations for derived references, required parent references,
+link cardinality, and tree-child cardinality. It also detects cycles while
+walking the tree.
+
+The method returns a nested `Map<string, Map<string, string>>` keyed first by
+object `$gId`, then by reference name. The current object's local map is also
+available through `$violations`:
 
 ```ts
-model.collectConstraintViolations();
+const violations = model.collectConstraintViolations();
+
+for (const [gId, refViolations] of violations) {
+  for (const [referenceName, message] of refViolations) {
+    console.warn(gId, referenceName, message);
+  }
+}
 
 for (const [referenceName, message] of model.$violations) {
   console.warn(referenceName, message);
 }
 ```
 
-The violation map is rebuilt on each call. Validation is not performed
-automatically after every model mutation.
+Validation is not triggered automatically after every mutation; you must call
+`collectConstraintViolations()` when you want to inspect the current state.
