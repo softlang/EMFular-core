@@ -91,7 +91,12 @@ export abstract class Referencable<
       //1) first find the root
       let root: Referencable<any>|undefined = this
       let oldRoot: Referencable<any>|undefined = this
+      let visited: Set<string> = new Set<string>()
       while (root !== undefined) {
+        if (visited.has(root.$gId)) {
+            throw new Error(`Cyclic containment detected at ${root.$gId}`)
+        }
+        visited.add(root.$gId)
         oldRoot = root
         root = root.$getEParent()
       }
