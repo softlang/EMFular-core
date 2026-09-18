@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { ReTreeSingleContainer } from './re-tree-single-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
-import {ReContainersWithSingleChild, ReSingleChildExample} from "../../../test/re-containers-with-single-child";
+import {
+  ReContainersWithSingleChild, ReContainersWithSingleChild2,
+  ReSingleChildExample,
+  ReSingleChildExample2
+} from "../../../test/re-containers-with-single-child";
 import {DeletionMode} from "../../../../utils/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
+import {RootA, RootB} from "../../../test/circular-containments-single";
 
 describe('ReferencableTreeSingletonContainer', () => {
   it('should create an instance', () => {
@@ -54,4 +59,33 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toBeUndefined();
     expect(elem1.link).toBeUndefined();
   });
+
+  it("should collect violations recursively, keyed by graphical id", () => {
+    let root = new ReContainersWithSingleChild2();
+    let child = new ReSingleChildExample2();
+    root.child = child;
+    const modelViolations = root.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(root.$gId)).toBeFalsy();
+    expect(modelViolations.has(child.$gId)).toBeTruthy();
+    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(child.$gId)!.has("otherLink")).toBeTruthy();
+    child.otherLink = new ReContainersWithSingleChild2();
+    expect(root.collectConstraintViolations().size).toBe(0);
+  })
+
+  it("should detect circular containment", () => {
+    let rootA = new RootA();
+    let rootB = new RootB();
+    rootA.childB = rootB;
+    rootB.childA = rootA;
+    const modelViolations = rootA.collectConstraintViolations();
+    expect(modelViolations.size).toBe(1);
+    expect(modelViolations.has(rootA.$gId)).toBeFalsy();
+    expect(modelViolations.has(rootB.$gId)).toBeTruthy();
+    expect(modelViolations.get(rootB.$gId)).toBe(rootB[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(rootB.$gId)!.has("childA")).toBeTruthy();
+    rootB.childA = undefined;
+    expect(rootA.collectConstraintViolations().size).toBe(0);
+  })
 });
