@@ -16,7 +16,7 @@ describe('ReContainersWithSingleChild tests', () => {
         const child: ReSingleChildExample = new ReSingleChildExample()
 
 
-        expect(root[REFERENCE_INTERNAL_API].treeChildren().length).toBe(2)
+        expect(root[REFERENCE_INTERNAL_API].treeChildren().length).toBe(1)
         expect(root[REFERENCE_INTERNAL_API].otherLinks().length).toBe(1)
 
         expect(child[REFERENCE_INTERNAL_API].treeChildren().length).toBe(0)

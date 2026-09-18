@@ -34,12 +34,6 @@ export const ModelWithChildren: ModelDefinition = {
                     opposite: "link1",
                     min: 0,
                     max: -1
-                },
-                circleChild: {
-                    target: "ReChildCircle",
-                    containment: true,
-                    min: 0,
-                    max: -1
                 }
             }
         },
@@ -110,16 +104,6 @@ export const ModelWithChildren: ModelDefinition = {
                     max: 1
                 }
             }
-        },
-        ReChildCircle: {
-            references: {
-                closeCircle: {
-                    target: "RootWithChildren",
-                    containment: true,
-                    min: 0,
-                    max: -1
-                }
-            }
         }
     }
 } as const;
@@ -127,8 +111,7 @@ export const ModelWithChildren: ModelDefinition = {
 export const RootWithChildrenRefs = {
     child2: ModelWithChildren.classes["RootWithChildren"].references["child2"],
     link3: ModelWithChildren.classes["RootWithChildren"].references["link3"],
-    link4: ModelWithChildren.classes["RootWithChildren"].references["link4"],
-    circleChild: ModelWithChildren.classes["RootWithChildren"].references["circleChild"]
+    link4: ModelWithChildren.classes["RootWithChildren"].references["link4"]
 } as const;
 export const Middle2WithChildrenRefs = {
     child3: ModelWithChildren.classes["Middle2WithChildren"].references["child3"],
@@ -144,9 +127,6 @@ export const ReChild4Refs = {
     parentPointer: ModelWithChildren.classes["ReChild4"].references["parentPointer"],
     link1Derived: ModelWithChildren.classes["ReChild4"].references["link1Derived"]
 } as const;
-export const ReChildCircleRefs = {
-    closeCircle: ModelWithChildren.classes["ReChildCircle"].references["closeCircle"]
-}
 
 export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',
@@ -157,7 +137,7 @@ export enum EClasses {
 }
 
 @eClass(ModelWithChildren, "RootWithChildren")
-export class RootWithChildren extends Referencable<ReChildCircle> {
+export class RootWithChildren extends Referencable<any> {
 
     @reference(RootWithChildrenRefs.child2)
     declare child2: ModelList<Middle2WithChildren>
@@ -165,8 +145,6 @@ export class RootWithChildren extends Referencable<ReChildCircle> {
     declare link3: ModelList<ReChild3>;
     @reference(RootWithChildrenRefs.link4)
     declare link4: ModelList<ReChild4>;
-    @reference(RootWithChildrenRefs.circleChild)
-    declare circleChild: ModelList<ReChildCircle>;
 
     @attribute()
     name: string = "referencable1";
@@ -234,23 +212,9 @@ export class ReChild4 extends Referencable<Middle2WithChildren> {
     }
 }
 
-@eClass(ModelWithChildren, "ReChildCircle")
-export class ReChildCircle extends Referencable<RootWithChildren> {
-    @reference(ReChildCircleRefs.closeCircle)
-    declare closeCircle: ModelList<RootWithChildren>
-
-    @attribute()
-    name: string = "referencable5";
-
-    constructor() {
-        super();
-    }
-}
-
 
 export type RootWithChildrenJson = JsonOf<RootWithChildren>
 export type Middle2WithChildrenJson = JsonOf<Middle2WithChildren>
 export type ReChild3Json = JsonOf<ReChild3>
 export type ReChild4Json = JsonOf<ReChild4>
-export type ReChildCircleJson = JsonOf<ReChildCircle>
 

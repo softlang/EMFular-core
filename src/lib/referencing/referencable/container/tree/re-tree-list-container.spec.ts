@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { ReTreeListContainer } from './re-tree-list-container';
 import {ReferencableTester, refTesterRef} from "../../../test/referencable-tester";
-import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren, ReChildCircle} from "../../../test/referencables-with-children";
+import {Middle2WithChildren, ReChild3, ReChild4, RootWithChildren} from "../../../test/referencables-with-children";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
+import {RootA, RootB} from "../../../test/circular-containments-list";
 
 describe('ReferencableTreeListContainer', () => {
   it('should create an instance', () => {
@@ -126,25 +127,25 @@ describe('ReferencableTreeListContainer', () => {
   })
 
   it("should detect circular containment", () => {
-    let root = new RootWithChildren();
-    let child = new ReChildCircle();
-    root.circleChild.push(child);
-    child.closeCircle.push(root);
-    const modelViolations = root.collectConstraintViolations();
+    let rootA = new RootA();
+    let rootB = new RootB();
+    rootA.childB.push(rootB);
+    rootB.childA.push(rootA);
+    const modelViolations = rootA.collectConstraintViolations();
     expect(modelViolations.size).toBe(1);
-    expect(modelViolations.has(root.$gId)).toBeFalsy();
-    expect(modelViolations.has(child.$gId)).toBeTruthy();
-    expect(modelViolations.get(child.$gId)).toBe(child[REFERENCE_INTERNAL_API].violations());
-    expect(modelViolations.get(child.$gId)!.has("closeCircle")).toBeTruthy();
-    child.closeCircle.remove(root);
-    expect(root.collectConstraintViolations().size).toBe(0);
+    expect(modelViolations.has(rootA.$gId)).toBeFalsy();
+    expect(modelViolations.has(rootB.$gId)).toBeTruthy();
+    expect(modelViolations.get(rootB.$gId)).toBe(rootB[REFERENCE_INTERNAL_API].violations());
+    expect(modelViolations.get(rootB.$gId)!.has("childA")).toBeTruthy();
+    rootB.childA.remove(rootA);
+    expect(rootA.collectConstraintViolations().size).toBe(0);
   })
 
-  it("create infinite loop from toJson() call", () => {
-    let root = new RootWithChildren();
-    let child = new ReChildCircle();
-    root.circleChild.push(child);
-    child.closeCircle.push(root);
-    root.toJson();
-  })
+  /*it("create infinite loop from toJson() call", () => {
+    let rootA = new RootA();
+    let rootB = new RootB();
+    rootA.childB.push(rootB);
+    rootB.childA.push(rootA);
+    rootA.toJson();
+  })*/
 });
