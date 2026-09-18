@@ -132,8 +132,7 @@ export enum EClasses {
     'RootWithChildren' = 'namespace/RootWithChildren',
     'Middle2WithChildren' = 'namespace/Middle2WithChildren',
     'ReChild3' = 'namespace/ReChild3',
-    'ReChild4' = 'namespace/ReChild4',
-    'ReChildCircle' = 'namespace/ReChildCircle'
+    'ReChild4' = 'namespace/ReChild4'
 }
 
 @eClass(ModelWithChildren, "RootWithChildren")
