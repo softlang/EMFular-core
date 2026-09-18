@@ -24,11 +24,6 @@ export const ModelSingleChild: ModelDefinition = {
                     target: "ReSingleChildExample",
                     opposite: "otherLink",
                     max: 1
-                },
-                circleChild: {
-                    target: "ReSingleCircleChild",
-                    containment: true,
-                    max: 1
                 }
             }
         },
@@ -80,15 +75,6 @@ export const ModelSingleChild: ModelDefinition = {
                     max: 1
                 }
             }
-        },
-        ReSingleCircleChild: {
-            references: {
-                closeCircle: {
-                    target: "ReContainersWithSingleChild",
-                    containment: true,
-                    max: 1
-                }
-            }
         }
     }
 } as const;
@@ -97,7 +83,6 @@ export const ModelSingleChild: ModelDefinition = {
 export const ReContainersWithSingleChildRefs = {
     child: ModelSingleChild.classes["ReContainersWithSingleChild"].references["child"],
     link: ModelSingleChild.classes["ReContainersWithSingleChild"].references["link"],
-    circleChild: ModelSingleChild.classes["ReContainersWithSingleChild"].references["circleChild"]
 };
 
 export const ReContainersWithSingleChild2Refs = {
@@ -115,29 +100,21 @@ export const ReSingleChildExample2Refs = {
     otherLink: ModelSingleChild.classes["ReSingleChildExample2"].references["otherLink"]
 };
 
-export const ReSingleCircleChildRefs = {
-    closeCircle: ModelSingleChild.classes["ReSingleCircleChild"].references["closeCircle"]
-}
-
 export enum EClassesSingleChild {
     'ReContainersWithSingleChild' = 'class://ReContainersWithSingleChild',
     'ReContainersWithSingleChild2' = 'class://ReContainersWithSingleChild2',
     'ReSingleChildExample' = 'class://ReSingleChildExample',
-    'ReSingleChildExample2' = 'class://ReSingleChildExample2',
-    'ReSingleCircleChild' = 'class://ReSingleCircleChild'
+    'ReSingleChildExample2' = 'class://ReSingleChildExample2'
 }
 
 @eClass(ModelSingleChild, "ReContainersWithSingleChild")
-export class ReContainersWithSingleChild extends Referencable<ReSingleCircleChild> {
+export class ReContainersWithSingleChild extends Referencable<any> {
 
     @reference(ReContainersWithSingleChildRefs.child)
     declare child: ReSingleChildExample | undefined;
 
     @reference(ReContainersWithSingleChildRefs.link)
     declare link: ReSingleChildExample | undefined;
-
-    @reference(ReContainersWithSingleChildRefs.circleChild)
-    declare circleChild: ReSingleCircleChild | undefined;
 
     @attribute()
     name: string = "re1";
@@ -205,20 +182,6 @@ export class ReSingleChildExample2 extends Referencable<ReContainersWithSingleCh
 
     @reference(ReSingleChildExample2Refs.otherLink)
     declare otherLink: ReContainersWithSingleChild2 | undefined;
-
-    @attribute()
-    myBool = true;
-
-    constructor() {
-        super();
-    }
-}
-
-@eClass(ModelSingleChild, "ReSingleCircleChild")
-export class ReSingleCircleChild extends Referencable<ReContainersWithSingleChild> {
-
-    @reference(ReSingleCircleChildRefs.closeCircle)
-    declare closeCircle: ReContainersWithSingleChild | undefined;
 
     @attribute()
     myBool = true;
