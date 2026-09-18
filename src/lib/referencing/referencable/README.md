@@ -1,315 +1,118 @@
-# Referencable Runtime
+# Referencable model API
 
-This directory contains the reference runtime for EMFular model elements. The code here is responsible for object identity, containment parents, containment children, cross-object links, inverse reference updates, serialization references, deserialization hooks, controlled list mutation, and meta-model constraint violation checking.
+`Referencable` is the base class for generated model elements. Model classes
+normally expose references as properties decorated with `@reference`. The
+property type and metadata determine whether a reference is a containment,
+non-containment, parent, or derived reference, and whether it contains one
+object or a list. This README describes the API used when creating and editing models.
 
-The implementation has three reference categories:
+## References
 
-- Tree references own their children and serialize them inline.
-- Link references point to existing objects and serialize as `Ref` values.
-- Shallow and derived references expose computed or parent relationships without owning serialized state.
+### Single-valued references
 
-## Top-Level Files
+A single-valued reference is read and written like a normal property:
 
-### `referenceable.ts`
+```ts
+book.author = author;
+const author = book.author;
+book.author = undefined; // clears the reference
+```
 
-Defines `Referencable<Parent>`, the abstract base class for generated model classes.
+Assigning a new value updates the reference. If the reference declares an
+opposite, the opposite reference is updated as well. Values must be instances
+of the reference's declared target class.
 
-Fields and metadata:
+### List-valued references
 
-- `$gId`: generated UUID for graphical identity.
-- `$classMeta`: class metadata supplied by the binding layer.
-- `$modelMeta`: model metadata supplied by the binding layer.
-- `$ParentType`: TypeScript-only marker for the expected containment parent type.
+A multi-valued reference is exposed as a controlled, array-like model list:
 
-Public modeling API:
+```ts
+book.chapters.push(chapter);
+book.chapters.remove(chapter);
+book.chapters.removeCascade(chapter);
+```
 
-- `$getEParent()`: returns the current containment parent by reading the hidden parent container.
-- `$getEClass()`: resolves the instance eClass through `ModelRegistry`.
-- `$treeChildren`: getter exposing the registered tree child containers (delegates to the internal API).
-- `$otherLinks`: getter exposing the registered link containers (delegates to the internal API).
-- `$violations`: getter exposing the constraint violation map (delegates to the internal API). The map keys are reference names and the values are human-readable violation messages.
-- `$destruct(mode = DeletionMode.RELAXED)`: removes this object from its containment parent, removes inverse links from linked objects, and deletes contained tree children. Parent removal is always performed in relaxed mode to avoid recursive deletion loops.
-- `collectConstraintViolations()`: rebuilds this object's violation map by checking every reference against its meta-model constraints. For derived references it checks derivation-method existence, then derivation-method implementation (by running the computation and capturing thrown errors), then cardinality. For parent references it records a violation when a required parent (`meta.min === 1`) is missing. For link containers and tree child containers it records cardinality violations. Each detected violation is stored in the map under its reference name.
-- `toJson(ctxOpt?)`: serializes the object. If no `SerializationContext` is provided, it walks to the tree root first and assigns `Ref` paths from the root downward before serializing attributes and references.
+Model lists support normal read operations such as indexing, iteration,
+`length`, and array helpers. Use list operations rather than assigning an
+index or replacing the list:
 
-Private serialization helpers:
+```ts
+for (const chapter of book.chapters) {
+  // ...
+}
 
-- `attributesToJson(json)`: serializes decorated attributes, skips `undefined`, empty strings, `false`, and configured default values, and respects `jsonName` aliases.
-- `referencesToJson(json, ctx)`: serializes tree and link containers, omitting `undefined` and empty arrays.
-- `initReferences()`: executes prototype reference initializers stored under `REFERENCE_INITIALIZERS`.
+book.chapters[0] = anotherChapter; // unsupported
+book.chapters = [];                // unsupported
+```
 
-`ReferenceApi<Self, Parent>` is the symbol-backed internal API exposed through `REFERENCE_INTERNAL_API`. Containers use it to interact with a `Referencable` without accessing private fields directly.
+The mutation operations are:
 
-Internal API methods:
+- `push(...items)`, `pop()`, `shift()`, and `splice(...)` add and remove
+  referenced objects while preserving reference bookkeeping.
+- `remove(...items)` removes objects from the reference without destructing
+  them.
+- `removeCascade(...items)` removes and destructs the selected objects.
+- `delete()` removes and destructs every object in the list.
+- `move(from, to)` and `swap(from, to)` reorder the list.
 
-- `serialize_assignRefs(ctx, path)`: stores this object's `Ref` in the context and asks tree children to assign their refs.
-- `deserializeAttributes(json)`: applies JSON attribute values and configured defaults.
-- `deserializeChildren(context, parent, json)`: builds containment children from JSON.
-- `deserializeOtherReferences(context, json)`: resolves link references and then resolves references inside tree children.
-- `treeChildren()`: returns registered tree child containers.
-- `otherLinks()`: returns registered link containers.
-- `violations()`: returns the hidden constraint violation map (reference name to violation message).
-- `getContainer(refName)`: finds the reference metadata on the prototype chain and returns the initialized hidden container.
-- `getParentContainer()`: returns the tree container that currently owns this instance.
-- `setParentContainer(parent)`: switches the owner container, removing the instance from the previous owner first.
-- `addToReference(name, item)`: adds an item to a named reference. Link containers use this for inverse updates.
-- `removeFromReference(name, item, mode)`: removes an item from a named reference. In cascade mode, if a required reference becomes empty, the owning parent is destructed.
+Containment lists own their children, so destructing or cascading removal of a
+contained object also removes it from the model tree. Link lists only manage
+the relationship; configured opposite references are kept in sync.
 
-### `referencable-symbols.ts`
+## Derived and parent references
 
-Exports the symbols used for hidden reference machinery.
+Derived references are read-only. Their value is computed by the derivation
+function declared by the model, so they cannot be assigned, added to, removed
+from, or reordered.
 
-- `REFERENCE_INTERNAL_API`: key for each instance's internal reference API.
-- `REFERENCE_INITIALIZERS`: key for per-class hidden container initializer functions.
+A parent reference is a read-only view of the element's containment parent. For
+general parent lookup, use `$getEParent()` on the model element:
 
-## Base Container Files
+```ts
+const parent = chapter.$getEParent();
+```
 
-### `container/re-container.ts`
+It returns `undefined` when the element is not currently contained.
 
-Defines `ReContainer<T, P>`, the abstract base for every reference container.
+## `Referencable` methods and properties
 
-Constructor state:
+### `$getEClass()`
 
-- `_parent`: object that owns the container.
-- `meta`: `ReferenceMeta` describing the reference.
-- `referenceName`: name used for metadata and JSON fields.
-- `inverseName`: configured opposite reference, if any.
-- `isRequired`: true when `meta.min` is greater than zero.
+Returns the registered eClass identifier for the instance.
 
-Methods:
+### `$getEParent()`
 
-- `get()`: abstract read method returning one object, many objects, or `undefined`.
-- `add(item)`: checks the item type against the target eClass and calls `addWithoutTypeCheck`; returns `false` for rejected types.
-- `addWithoutTypeCheck(item)`: subclass hook for actual insertion.
-- `isAcceptableItem(item)`: checks whether the item is an instance of the target class from `ModelRegistry`.
-- `isAcceptableEclass(eClass)`: instantiates the class for an eClass and validates it with `isAcceptableItem`.
-- `remove(item, mode?)`: abstract removal hook.
-- `delete(mode?)`: abstract cleanup hook for deleting all values owned by the container.
-- `toJson(ctx)`: abstract serialization hook.
-- `checkCardinalityConstraints()`: abstract hook returning a violation message string when the container's current contents violate its `min`/`max` cardinality, or `undefined` otherwise.
+Returns the current containment parent, or `undefined` for a root object.
 
-### `container/re-single-container.ts`
+### `$destruct(mode?)`
 
-Defines `ReSingleContainer<T, P>`, the base for single-valued references.
+Removes the object from its parent, removes its inverse links, and destructs
+its contained children. The optional deletion mode controls how linked and
+contained objects are cleaned up; omit it for the default relaxed behavior.
 
-- `_instance`: protected optional stored reference.
-- `get()`: returns `_instance`.
-- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when `meta.min === 1` and no instance is set, otherwise `undefined`.
+Use this when an object and its owned subtree should be removed from the model.
+For removing an item from a list without destructing it, use `remove()` on the
+reference instead.
 
-### `container/re-list-container.ts`
+### `toJson()`
 
-Defines `ReListContainer<T, P>`, the base for list-valued references.
+Serializes the object and its model subtree to the repository's JSON model
+format. Calling it on any contained object serializes the complete tree from
+the root and includes references using model `Ref` values.
 
-- `_instance`: backing array.
-- `proxy`: lazily-created `ModelList<T>` wrapper from `createListProxy`.
-- `get()`: returns the backing array.
-- `delete(mode = RELAXED)`: destructs every element from the changing list through `ListUpdater`.
-- `move(from, to)`: moves an item inside the backing array and throws on invalid indexes.
-- `swap(from, to)`: swaps two items and throws on invalid indexes.
-- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when the list is shorter than `meta.min`, a maximum-cardinality violation message when it exceeds `meta.max` (ignoring the unbounded `-1` sentinel), otherwise `undefined`.
+### `collectConstraintViolations()` and `$violations`
 
-### `container/re-single-interface.ts`
+Call `collectConstraintViolations()` to validate reference cardinalities and
+derived-reference constraints for the current state. Read the resulting
+messages from `$violations`, keyed by reference name:
 
-Defines the single-reference interface.
+```ts
+model.collectConstraintViolations();
 
-- `get()`: returns one referenced object or `undefined`.
+for (const [referenceName, message] of model.$violations) {
+  console.warn(referenceName, message);
+}
+```
 
-### `container/re-list-interface.ts`
-
-Defines the list-reference interface.
-
-- `proxy`: controlled array-like `ModelList<T>`.
-- `get()`: returns the referenced objects.
-- `move(from, to)`: reorders an object.
-- `swap(from, to)`: swaps two objects.
-
-## Tree Container Files
-
-Tree containers implement containment. They register themselves with `treeChildren()` on the parent, serialize children inline, and maintain each child's parent container.
-
-### `container/tree/re-tree-children-container.ts`
-
-Shared interface for containment containers.
-
-- `assignRefs(ctx, path)`: assigns serialization refs to contained children.
-- `toJson(ctx)`: serializes contained children.
-- `fromJson(formerPrefix, context, json)`: creates child backbones from JSON.
-- `createRefsOnChildren(context, json)`: resolves child links after the containment backbone exists.
-
-### `container/tree/re-tree-single-container.ts`
-
-Single-valued containment container.
-
-- `constructor(parent, referenceName, refMeta, eClass?)`: stores an optional default eClass and registers the container as a tree child container.
-- `assignRefs(ctx, path)`: assigns the contained child's ref path using the reference name.
-- `toJson(ctx)`: serializes the contained child or returns `undefined`.
-- `addWithoutTypeCheck(item)`: sets the item as the contained child and updates its parent container; returns `false` if the same item is already set.
-- `remove(item, mode = RELAXED)`: in relaxed mode clears the reference and parent container; in cascade mode destructs the child.
-- `delete(mode = RELAXED)`: cascades destruction in cascade mode, otherwise removes the current child from its parent container.
-- `fromJson(formerPrefix, context, json)`: determines the eClass, creates a `Ref`, creates the tree backbone via `Deserializer`, and adds it.
-- `createRefsOnChildren(context, json)`: resolves the contained child's non-containment references.
-
-### `container/tree/re-tree-list-container.ts`
-
-List-valued containment container.
-
-- `constructor(parent, name, refMeta, eClass?)`: stores an optional default eClass and registers the container as a tree child container.
-- `assignRefs(ctx, path)`: assigns indexed child ref paths.
-- `toJson(ctx)`: serializes each contained child.
-- `addWithoutTypeCheck(item)`: moves the item out of its old parent, updates its parent container, and adds it if missing.
-- `remove(item, mode = RELAXED)`: in relaxed mode removes the item and clears its parent container; in cascade mode destructs the item if present.
-- `fromJson(formerPrefix, context, json)`: determines all child eClasses, creates child refs, creates child backbones, and adds them.
-- `createRefsOnChildren(context, json)`: resolves each child's non-containment references when the JSON array length matches the current list.
-
-## Link Container Files
-
-Link containers implement non-containment references. They register with `otherLinks()` on the parent, serialize as refs from `SerializationContext`, and maintain configured opposite references.
-
-### `container/link/re-link-container.ts`
-
-Shared interface for link containers.
-
-- `removeFromInverse(item, mode?)`: removes inverse references related to the supplied item.
-- `toJson(ctx)`: serializes links as one `Ref`, many `Ref` values, or `undefined`.
-
-### `container/link/re-link-single-container.ts`
-
-Single-valued non-containment link.
-
-- `constructor(parent, referenceName, refMeta)`: registers the container as a link container.
-- `set(instance)`: replaces the stored instance and updates the configured inverse reference. The old inverse is removed in relaxed mode.
-- `addWithoutTypeCheck(item)`: sets the link unless the item is already linked.
-- `remove(item, mode = RELAXED)`: clears the link and removes the inverse reference when configured.
-- `delete(mode = RELAXED)`: destructs the currently linked instance.
-- `removeFromInverse(item, mode = RELAXED)`: asks the linked instance to remove the supplied item from the inverse reference.
-- `toJson(ctx)`: returns the linked instance's `Ref` or `undefined`.
-
-### `container/link/re-link-list-container.ts`
-
-List-valued non-containment link.
-
-- `constructor(parent, name, refMeta)`: registers the container as a link container.
-- `addWithoutTypeCheck(item)`: adds the item if missing and updates the configured inverse reference.
-- `toJson(ctx)`: returns a `Ref` for every linked item.
-- `remove(item, mode = RELAXED)`: removes the item and updates the configured inverse reference.
-- `delete(mode = RELAXED)`: removes every linked item through `remove()`, so inverse references are cleaned up as the list is emptied.
-- `removeFromInverse(item, mode = RELAXED)`: asks every linked child to remove the supplied item from the inverse reference.
-
-## Shallow And Derived Container Files
-
-Shallow and derived containers expose relationships that are not stored as normal serialized references.
-
-### `container/shallow/re-shallow-interface.ts`
-
-Shared interface for shallow references.
-
-- `toJson(ctx)`: returns either `undefined` or an empty list because shallow references do not serialize owned state.
-
-### `container/shallow/re-tree-parent-container.ts`
-
-Single-valued shallow view of an object's containment parent.
-
-- `constructor(parent, referenceName, refMeta)`: creates the shallow parent container. The reference name is not used directly.
-- `get()`: returns `_parent.$getEParent()`.
-- `addWithoutTypeCheck(item)`: adds this object to the inverse tree reference on `item`.
-- `remove(item, mode = RELAXED)`: removes this object from the inverse tree reference on `item`.
-- `delete()`: no-op.
-- `toJson(ctx)`: returns `undefined`.
-- `checkCardinalityConstraints()`: always returns a minimum-cardinality violation message. `collectConstraintViolations()` only calls it after confirming a required parent (`meta.min === 1`) is missing.
-
-### `container/shallow/re-derivation-resolver.ts`
-
-Helper for derived references.
-
-- `constructor(computeOrSymbol)`: accepts either a compute function or a symbol identifying a method on the parent.
-- `canResolve(parent)`: returns `true` when a compute function is stored, or when the deriving symbol resolves to a function on the parent instance; returns `false` otherwise. Used to detect missing derivation methods.
-- `resolve(parent)`: resolves and caches the compute function, binding symbol-derived methods to the parent instance, then returns the computed value.
-
-### `container/shallow/re-derived-single-container.ts`
-
-Read-only single-valued derived reference.
-
-- `constructor(parent, computeOrSymbol, referenceName, refMeta)`: creates a resolver-backed reference.
-- `get()`: returns the resolver result.
-- `toJson(ctx)`: returns `undefined`.
-- `addWithoutTypeCheck(item)`: returns `false`.
-- `remove(item)`: returns `false`.
-- `delete()`: no-op.
-- `checkDerivationMethodExistence()`: returns a derivation violation message when the resolver cannot resolve a derivation function, otherwise `undefined`.
-- `checkDerivationMethodImpl()`: runs `get()` and returns the error message if the derivation throws, otherwise `undefined`.
-- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when `meta.min === 1` and the derived value is `undefined`, otherwise `undefined`.
-
-### `container/shallow/re-derived-list-container.ts`
-
-Read-only list-valued derived reference.
-
-- `constructor(parent, computeOrSymbol, referenceName, refMeta)`: creates a resolver-backed derived list.
-- `proxy`: lazily-created controlled `ModelList<T>`.
-- `get()`: returns a defensive copy of the resolver result.
-- `toJson(ctx)`: returns an empty list.
-- `addWithoutTypeCheck(item)`: returns `false`.
-- `remove(item)`: returns `false`.
-- `delete()`: no-op.
-- `move(from, to)`: no-op.
-- `swap(from, to)`: no-op.
-- `checkDerivationMethodExistence()`: returns a derivation violation message when the resolver cannot resolve a derivation function, otherwise `undefined`.
-- `checkDerivationMethodImpl()`: runs `get()` and returns the error message if the derivation throws, otherwise `undefined`.
-- `checkCardinalityConstraints()`: returns a minimum-cardinality violation message when the derived list is shorter than `meta.min`, a maximum-cardinality violation message when it exceeds `meta.max` (ignoring the unbounded `-1` sentinel), otherwise `undefined`.
-
-## Hidden List Proxy Files
-
-### `container/hide/model-list.ts`
-
-Defines the array-like types used by list containers.
-
-- `RefKind`: union of `tree`, `link`, and `parent` reference kinds.
-- `SingleRef<T, Kind>`: single-value reference type alias.
-- `ModelList<T>`: public list proxy type alias.
-- `MetaAwareModelList<T, Kind>`: array interface with controlled mutation helpers.
-
-`MetaAwareModelList` adds:
-
-- `move(from, to)`
-- `swap(from, to)`
-- `remove(...items)`
-- `removeCascade(...items)`
-- `delete()`
-- `__item` and `__kind` type markers
-
-Direct index assignment is marked deprecated because the proxy rejects it at runtime.
-
-### `container/hide/list-proxy.ts`
-
-Defines `createListProxy(container)`, which wraps a `ReListInterface` in an array-like `Proxy`.
-
-Read behavior:
-
-- Numeric property reads return items from `container.get()`.
-- `length`, `in`, own keys, and iteration reflect the current container contents.
-- Non-mutating array methods are delegated to `Array.prototype` on the current list.
-
-Supported mutation behavior:
-
-- `push(...items)`: adds through `container.add()` and returns the new length.
-- `remove(...items)`: removes items in relaxed mode and returns whether any removal happened.
-- `removeCascade(...items)`: removes items in cascade mode and returns whether any removal happened.
-- `delete(mode?)`: calls `container.delete(mode)`.
-- `pop(mode?)`: removes and returns the last item.
-- `shift(mode?)`: removes and returns the first item.
-- `unshift(...items)`: rebuilds the list with new items at the front.
-- `splice(start, deleteCount, ...items)`: removes, adds, and reorders through container operations.
-- `move(from, to)`: delegates to `container.move()`.
-- `swap(from, to)`: bounds-checks and swaps via container moves.
-- `sort(compareFn?)`: sorts a copy and reorders through `container.move()`.
-- `reverse()`: reverses by reordering through `container.move()`.
-
-Rejected operations:
-
-- `at()`
-- `fill()`
-- `copyWithin()`
-- Direct numeric index assignment
-- Direct `length` assignment
-- Deleting non-index properties
-
-Deleting a numeric index destructs the object at that index when the index exists.
+The violation map is rebuilt on each call. Validation is not performed
+automatically after every model mutation.
