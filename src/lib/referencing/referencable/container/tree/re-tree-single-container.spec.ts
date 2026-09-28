@@ -16,6 +16,20 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(new ReTreeSingleContainer(tester, 'test', refTesterRef.references.test)).toBeTruthy();
   });
 
+  it('should return an empty list when the reference is undefined', () => {
+    const tester = new ReferencableTester();
+    const container = new ReTreeSingleContainer( tester, 'test', refTesterRef.references.test );
+    expect(container.getAsList()).toEqual([]);
+  });
+
+  it('should return the single referenced element as a list', () => {
+    const tester = new ReContainersWithSingleChild();
+    const child = new ReSingleChildExample();
+    tester.child = child;
+    const container = tester.$treeChildren[0];
+    expect(container.getAsList()).toEqual([child]);
+  });
+
   it('should remove child from specified container without it being deleted from any other references', () => {
     let tester = new ReContainersWithSingleChild();
     let middle = new ReSingleChildExample();
@@ -30,7 +44,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toEqual(elem1);
     expect(elem1.link).toBeDefined();
     expect(elem1.link).toEqual(middle);
-    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle)).toBeTruthy();
+    expect(tester.$treeChildren[0].remove(middle)).toBeTruthy();
     expect(tester.child).toBeUndefined();
     expect(middle.myParent).toBeUndefined();
     expect(middle.otherLink).toBeDefined();
@@ -53,7 +67,7 @@ describe('ReferencableTreeSingletonContainer', () => {
     expect(middle.otherLink).toEqual(elem1);
     expect(elem1.link).toBeDefined();
     expect(elem1.link).toEqual(middle);
-    expect(tester[REFERENCE_INTERNAL_API].treeChildren()[0].remove(middle, DeletionMode.CASCADE)).toBeTruthy();
+    expect(tester.$treeChildren[0].remove(middle, DeletionMode.CASCADE)).toBeTruthy();
     expect(tester.child).toBeUndefined();
     expect(middle.myParent).toBeUndefined();
     expect(middle.otherLink).toBeUndefined();
