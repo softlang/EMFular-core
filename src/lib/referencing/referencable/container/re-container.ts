@@ -24,6 +24,14 @@ export abstract class ReContainer<
 
     abstract get(): T[] | T | undefined;
 
+    getAsList(): T[] {
+        const value: T[] | T | undefined = this.get();
+        if (value == undefined) {
+            return [];
+        }
+        return Array.isArray(value) ? value : [value];
+    }
+
     protected abstract addWithoutTypeCheck(item: T): boolean;
     add(item: T): boolean {
         if (this.isAcceptableItem(item)) {
