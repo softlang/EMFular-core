@@ -72,6 +72,29 @@ export abstract class Referencable<
     return this[REFERENCE_INTERNAL_API].violations();
   }
 
+  get $label(): string {
+      //0. only use @attributes, aka proper model parts
+      const attrs = getAllAttributes(this.constructor);
+      // 1. If the model has a "name" @attribute → use it
+      const nameOpt = attrs.get("name");
+      if (nameOpt) {
+          const value = (this as any).name;
+          if (value) {
+              return `${value}`;
+          }
+      }
+
+      //2. use the first string or number on @attributes
+      for (const [key] of attrs) {
+          const value = (this as any)[key];
+          if (typeof value === "string" || typeof value === "number") {
+              return `${value}`;
+          }
+      }
+      // fallback: gId
+      return this.$gId
+  }
+
   $destruct(mode: DeletionMode = DeletionMode.RELAXED) {
     // removal from parent is always called with deletion mode RELAXED, otherwise infinite loops occur (see remove in re-tree-list/single-container.ts)
     // tests in files re-link-list/single-container.spec.ts and re-tree-list/single-container.spec.ts fail when not setting RELAXED mode explicitly
