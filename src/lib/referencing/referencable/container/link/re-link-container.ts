@@ -2,7 +2,7 @@ import {Referencable} from "../../referenceable";
 import { ReContainer } from "../re-container";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {Ref} from "../../../ref/ref";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import { DeletionMode } from "../../deletion-mode";
 
 export interface ReLinkContainer<
     T extends Referencable<any>,

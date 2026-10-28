@@ -5,7 +5,7 @@ import {ReLinkContainer} from "./re-link-container";
 import {ListUpdater} from "../../../../utils/list-updater";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {DeletionMode} from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 export class ReLinkListContainer<

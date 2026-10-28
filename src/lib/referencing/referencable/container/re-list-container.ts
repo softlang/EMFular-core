@@ -5,7 +5,7 @@ import {ModelList} from "./hide/model-list";
 import {createListProxy} from "./hide/list-proxy";
 import {ReListInterface} from "./re-list-interface";
 import {ReferenceMeta} from "../../../binding/model-definition";
-import {DeletionMode} from "../../../utils/deletion-mode";
+import {DeletionMode} from "../deletion-mode";
 
 
 export abstract class ReListContainer<

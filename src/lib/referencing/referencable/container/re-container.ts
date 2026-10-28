@@ -2,7 +2,7 @@ import {Referencable} from "../referenceable";
 import {SerializationContext} from "../../../serialization/serialization-context";
 import {ReferenceMeta} from "../../../binding/model-definition";
 import {ModelRegistry} from "../../../binding/model-registry";
-import {DeletionMode} from "../../../utils/deletion-mode";
+import {DeletionMode} from "../deletion-mode";
 
 export abstract class ReContainer<
     T extends Referencable<any>,

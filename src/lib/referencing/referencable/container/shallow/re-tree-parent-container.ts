@@ -4,7 +4,7 @@ import {ReContainer} from "../re-container";
 import {ReSingleInterface} from "../re-single-interface";
 import {ReShallowInterface} from "./re-shallow-interface";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import { DeletionMode } from "../../../../utils/deletion-mode";
+import { DeletionMode } from "../../deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 export class ReTreeParentContainer<
