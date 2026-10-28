@@ -141,11 +141,16 @@ describe('ReferencableTreeListContainer', () => {
     expect(rootA.collectConstraintViolations().size).toBe(0);
   })
 
-  /*it("create infinite loop from toJson() call", () => {
+  it("should detect infinite loop from toJson() call", () => {
     let rootA = new RootA();
     let rootB = new RootB();
+    let rootC = new RootA();
     rootA.childB.push(rootB);
     rootB.childA.push(rootA);
-    rootA.toJson();
-  })*/
+    //rootA is no longer parent of rootB thus rootB removes itself from children container of rootA
+    rootC.childB.push(rootB);
+    rootB.childA.push(rootC);
+    //infinite loop still would occur since rootB remains parent of rootA
+    expect(() => rootA.toJson()).toThrow(`Cyclic containment detected at ${rootB.$gId}`);
+  })
 });
