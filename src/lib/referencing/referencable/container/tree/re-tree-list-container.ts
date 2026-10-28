@@ -5,7 +5,7 @@ import {JsonOf} from "../../../../serialization/json-deserializable";
 import {SerializationContext} from "../../../../serialization/serialization-context";
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ListUpdater} from "../../../../utils/list-updater";
-import {DeletionMode} from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../deletion-mode";
 import {ReListContainer} from "../re-list-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";

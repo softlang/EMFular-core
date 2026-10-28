@@ -1,5 +1,5 @@
 import {Referencable} from "../referencing/referencable/referenceable";
-import { DeletionMode } from "./deletion-mode";
+import { DeletionMode } from "../referencing/referencable/deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../referencing/referencable/referencable-symbols";
 
 export class ListUpdater {

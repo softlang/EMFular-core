@@ -6,7 +6,7 @@ import {
   ReSingleChildExample,
   ReSingleChildExample2
 } from "../../../test/re-containers-with-single-child";
-import {DeletionMode} from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 import {RootA, RootB} from "../../../test/circular-containments-single";
 

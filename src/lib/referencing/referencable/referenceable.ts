@@ -11,7 +11,7 @@ import {ReTreeChildrenContainer} from "./container/tree/re-tree-children-contain
 import {ReLinkContainer} from "./container/link/re-link-container";
 import {ModelRegistry} from "../../binding/model-registry";
 import {ClassMeta, ModelDefinition, ReferenceMeta} from "../../binding/model-definition";
-import {DeletionMode} from "../../utils/deletion-mode";
+import {DeletionMode} from "./deletion-mode";
 import {REFERENCE_INITIALIZERS, REFERENCE_INTERNAL_API} from "./referencable-symbols";
 import {ReTreeParentContainer} from "./container/shallow/re-tree-parent-container";
 

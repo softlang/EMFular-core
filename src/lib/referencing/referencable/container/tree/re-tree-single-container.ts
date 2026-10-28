@@ -6,7 +6,7 @@ import {SerializationContext} from "../../../../serialization/serialization-cont
 import {ReTreeChildrenContainer} from "./re-tree-children-container";
 import {ReSingleContainer} from "../re-single-container";
 import {ReferenceMeta} from "../../../../binding/model-definition";
-import {DeletionMode} from "../../../../utils/deletion-mode";
+import {DeletionMode} from "../../deletion-mode";
 import {REFERENCE_INTERNAL_API} from "../../referencable-symbols";
 
 export class ReTreeSingleContainer<
