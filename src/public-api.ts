@@ -5,6 +5,7 @@
 export * from './lib/referencing/ref/ref';
 export * from './lib/referencing/ref/ref-handler';
 export * from './lib/referencing/referencable/referenceable';
+export * from './lib/referencing/referencable/deletion-mode';
 
 export * from './lib/referencing/referencable/container/re-container';
 export * from './lib/referencing/referencable/container/re-list-interface';
@@ -30,6 +31,7 @@ export * from './lib/referencing/referencable/container/hide/model-list'
 export * from './lib/serialization/deserializer';
 export * from './lib/serialization/json-deserializable';
 export * from './lib/serialization/serialization-context';
+
 export * from './lib/utils/list-updater';
 export * from './lib/utils/json-comparer';
 
