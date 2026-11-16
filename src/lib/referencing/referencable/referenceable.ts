@@ -25,6 +25,7 @@ const REFERENCES_TO_JSON = Symbol("referenceToJson");
 const ATTRIBUTES_TO_JSON = Symbol("attributesToJson");
 const INIT_REFERENCES = Symbol("initReferences");
 const COLLECT_LOCAL_VIOLATIONS = Symbol("collectLocalViolations");
+const INCOMING_LINKS = Symbol("incomingLinks");
 
 
 /** base class for CORE models.
@@ -45,6 +46,8 @@ export abstract class Referencable<
   private [TREE_CHILDREN]: ReTreeChildrenContainer<any>[] = [];
   private [LINKS]: ReLinkContainer<any,Parent>[] = [];
   private [VIOLATIONS]: Map<string, string> = new Map<string, string>();
+
+  private [INCOMING_LINKS]: Set<ReLinkContainer<any, any>> = new Set();
 
   protected constructor() {
     this.$gId = uuidv4();
@@ -102,6 +105,10 @@ export abstract class Referencable<
     this[LINKS].forEach(refContainer => {
       refContainer.removeFromInverse(this, mode)
     })
+    this[INCOMING_LINKS].forEach(container => {
+        container.remove(this, mode);
+    })
+    this[INCOMING_LINKS].clear();
     this[TREE_CHILDREN].forEach(child => {
       child.delete(mode)
     })
@@ -236,6 +243,14 @@ export abstract class Referencable<
         }
       }
       return result
+    },
+
+    registerIncomingLink: (container: ReLinkContainer<any, any>) => {
+        this[INCOMING_LINKS].add(container);
+    },
+
+    unregisterIncomingLink: (container: ReLinkContainer<any, any>) => {
+        this[INCOMING_LINKS].delete(container);
     },
 
     treeChildren: (): ReTreeChildrenContainer<any>[] => this[TREE_CHILDREN],
@@ -414,5 +429,7 @@ export interface ReferenceApi<
       item: U,
       mode?: DeletionMode
   ) => boolean;
+  registerIncomingLink: (container: ReLinkContainer<any, any>) => void;
+  unregisterIncomingLink: (container: ReLinkContainer<any, any>) => void;
 
 }

@@ -24,6 +24,8 @@ implements ReLinkContainer<T, P> {
         if (res) {
             if(this.inverseName !== undefined) {
                 return item[REFERENCE_INTERNAL_API].addToReference(this.inverseName, this._parent)
+            } else {
+                item[REFERENCE_INTERNAL_API].registerIncomingLink(this);
             }
             return true;
         } else {
@@ -40,6 +42,8 @@ implements ReLinkContainer<T, P> {
         if (res) {
             if(this.inverseName !== undefined) {
                 item[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, mode)
+            } else {
+                item[REFERENCE_INTERNAL_API].unregisterIncomingLink(this);
             }
         }
         return res; //todo behaviour of flag different to add??
