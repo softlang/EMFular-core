@@ -6,8 +6,14 @@ import {reference} from "../../binding/reference-decorator";
 import {ModelList} from "../referencable/container/hide/model-list";
 
 export const elem1Refs = {
-    children: {
+    children1: {
         target: "DemoElement2",
+        containment: true,
+        min: 0,
+        max: -1,
+    } satisfies ReferenceMeta,
+    children2: {
+        target: "DemoElement3",
         containment: true,
         min: 0,
         max: -1,
@@ -22,6 +28,14 @@ export const elem2Refs = {
     } satisfies ReferenceMeta
 }
 
+export const elem3Refs = {
+    friend: {
+        target: "DemoElement3",
+        min: 0,
+        max: 1
+    } satisfies ReferenceMeta
+}
+
 export const DemoElementMeta: ModelDefinition = {
     name: "demo",
     prefix: "demo",
@@ -32,6 +46,9 @@ export const DemoElementMeta: ModelDefinition = {
         },
         DemoElement2: {
             references: elem2Refs
+        },
+        DemoElement3: {
+            references: elem3Refs
         }
     }
 }
@@ -47,8 +64,11 @@ export class DemoElement1 extends Referencable<any>{
     @attribute()
     name?: string;
 
-    @reference(elem1Refs.children)
-    declare children: ModelList<DemoElement2>
+    @reference(elem1Refs.children1)
+    declare children1: ModelList<DemoElement2>
+
+    @reference(elem1Refs.children2)
+    declare children2: ModelList<DemoElement3>
 }
 
 @eClass(DemoElementMeta, "DemoElement2")
@@ -64,4 +84,19 @@ export class DemoElement2 extends Referencable<any>{
 
     @reference(elem2Refs.friends)
     declare friends: ModelList<DemoElement2>
+}
+
+@eClass(DemoElementMeta, "DemoElement3")
+export class DemoElement3 extends Referencable<any>{
+
+    @attribute()
+    id?: string;
+
+    constructor(id?: string) {
+        super();
+        this.id = id;
+    }
+
+    @reference(elem3Refs.friend)
+    declare friend: DemoElement3 | undefined;
 }
