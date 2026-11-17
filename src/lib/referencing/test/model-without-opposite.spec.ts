@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {DemoElement1, DemoElement2, DemoElement3} from "./model-without-opposite";
 
 describe('Model Deletion with Uni-directional References', () => {
-    it('leaves a dangling reference in a list link', () => {
+    it('should not leave dangling reference in a list link', () => {
         const root = new DemoElement1('root');
         const elem1 = new DemoElement2('elem1');
         const elem2 = new DemoElement2('elem2');
@@ -12,7 +12,7 @@ describe('Model Deletion with Uni-directional References', () => {
         expect(root.children1).not.toContain(elem2);
         expect(elem1.friends).not.toContain(elem2);
     });
-    it('leaves a dangling reference in a single link', () => {
+    it('should not leave dangling reference in a single link', () => {
         const root = new DemoElement1('root');
         const elem1 = new DemoElement3('elem1');
         const elem2 = new DemoElement3('elem2');
