@@ -25,6 +25,7 @@ implements ReLinkContainer<T, P> {
             instance[REFERENCE_INTERNAL_API].addToReference(this.inverseName, this._parent)
         } else {
             this._instance = instance;
+            instance[REFERENCE_INTERNAL_API].registerIncomingLink(this);
         }
     }
 
@@ -42,6 +43,8 @@ implements ReLinkContainer<T, P> {
             this._instance = undefined;
             if (this.inverseName != undefined) {
                 item[REFERENCE_INTERNAL_API].removeFromReference(this.inverseName, this._parent, mode)
+            }else {
+                item[REFERENCE_INTERNAL_API].unregisterIncomingLink(this)
             }
             return true;
         } else {
